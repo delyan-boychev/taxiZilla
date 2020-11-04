@@ -1,8 +1,10 @@
 import { Injectable } from '@nestjs/common';
+import { join } from 'path';
 
 @Injectable()
 export class AppService {
-  getHello(): string {
-    return 'Hello World!';
+  getMainPage(): string {
+    const fs = require("fs");
+  return fs.readFileSync(join(__dirname, "/../staticFiles/pages/index.html")).toString();
   }
 }
