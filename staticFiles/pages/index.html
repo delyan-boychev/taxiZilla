@@ -81,7 +81,7 @@ header,
                               <a class="nav-link" href="#gallery">Gallery</a>
                           </li>
                           <li class="nav-item">
-                              <a class="nav-link" href="#contact">Contact</a>
+                              <a class="nav-link" onclick="pageRegisterUser()">Login</a>
                           </li>
                       </ul>
                       <!-- Links -->
@@ -141,7 +141,7 @@ header,
           <!--/.Mask-->
   
       </header>
-      <main class="mt-5">
+      <main id="pageContent" class="mt-5">
         <div class="container">
 
             <!--Section: Best Features-->
@@ -522,5 +522,16 @@ header,
   <script type="text/javascript" src="./assets/js/bootstrap.min.js"></script>
   <!-- MDB core JavaScript -->
   <script type="text/javascript" src="./assets/js/mdb.min.js"></script>
+  <script>
+      function pageRegisterUser()
+      {$.get('http://localhost:3000/pages/registerPageUser.html', function( data, textStatus, jqXHR ) {
+        document.getElementById("pageContent").innerHTML = data;
+      });
+      $.getScript('http://localhost:3000/js/registerUser.js', function( data, textStatus, jqXHR ) {
+        document.body.innerHTML += "<script>" + data + "<//script>";
+      });
+          
+      }
+  </script>
 </body>
 </html>
