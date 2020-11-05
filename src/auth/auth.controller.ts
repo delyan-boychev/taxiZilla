@@ -12,4 +12,9 @@ export class AuthController {
   {
     return await this.authService.registerUser(registerUserDto);
   }
+  @Post("/loginUser/")
+  async loginUser(@Body("email", ValidationPipe) email: string, @Body("password", ValidationPipe) password: string)
+  {
+    return await this.authService.loginUser(email, password);
+  }
 }
