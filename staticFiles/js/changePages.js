@@ -10,3 +10,9 @@ function homePage()
 });
           
 }
+function loginPage()
+{$.get('http://'+ window.location.host +'/pages/loginPage.html', function( data, textStatus, jqXHR ) {
+        document.getElementById("pageContent").innerHTML = data;
+});
+          
+}

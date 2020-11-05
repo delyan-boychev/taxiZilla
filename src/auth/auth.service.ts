@@ -23,9 +23,13 @@ export class AuthService {
     const ver = await this.userRepository.loginUser(email, password);
     if (!ver)
     {
-      throw new UnauthorizedException('Invalid credentials');  
+      return false;
     }
+    else
+    {
     const payload: JWTPayload = { email };
     const JWTToken = this.jwtService.sign(payload);
+    return true;
+    }
   }
 }
