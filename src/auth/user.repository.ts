@@ -11,6 +11,10 @@ export class UserRepository extends Repository<User>
   {
     let user:User = new User();
     const { fName, lName, email, phoneNumber, password } = registerUserDto;
+    const dupUser = await User.findOne({email: email});
+    let exists = dupUser==undefined;
+    if(exists)
+    {
     user.email = email;
     user.fName = fName;
     user.lName = lName;
@@ -23,6 +27,7 @@ export class UserRepository extends Repository<User>
     user.passHash = passHash;
     user.salt = salt;
     await user.save();
-    return user;
+    }
+    return exists;
   }
 }
