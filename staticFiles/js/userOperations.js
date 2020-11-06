@@ -32,4 +32,9 @@ function registerSubmit()
         );
         return false;
     }
+async function isLoggedIn()
+{
+    let response = await fetch(document.location);
+    return response.headers.get('isLoggedIn');
+}
 

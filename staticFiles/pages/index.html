@@ -11,7 +11,7 @@
   <!-- Bootstrap core CSS -->
   <link href="./assets/css/bootstrap.min.css" rel="stylesheet">
   <!-- Material Design Bootstrap -->
-  <link href="./assets/css/mdb.min.css" rel="stylesheet">
+  <link href="./assets/css/mdb.css" rel="stylesheet">
   <!-- Your custom styles (optional) -->
   <link href="./assets/css/style.css" rel="stylesheet">
 </head>
@@ -36,6 +36,7 @@ header,
     background-color: #24355C;
   }
   @media (max-width: 768px) {
+
     .navbar:not(.top-nav-collapse) {
       background-color: #24355C;
     }
@@ -48,42 +49,46 @@ header,
   </style>
 
           <!--Navbar-->
-          <nav class="navbar navbar-expand-lg navbar-dark fixed-top scrolling-navbar primary-color">
-  
-              <div class="container">
+          <nav id="navbar" class="navbar navbar-expand-lg navbar-light bg-primary fixed-top scrolling-navbar" style="background-image: url('http://localhost:3000/assets/img/navbar.png'); background-size: cover; background-position: top right;">
+              <div class="container"> 
   
                   <!-- Navbar brand -->
-                  <a class="navbar-brand" href="#">taxiZilla</a>
-  
-                  <!-- Collapse button -->
-                  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#basicExampleNav"
-                      aria-controls="basicExampleNav" aria-expanded="false" aria-label="Toggle navigation">
-                      <span class="navbar-toggler-icon"></span>
+                  <div>
+                    <button class="navbar-toggler text-secondary"  onclick="collapse()" type="button" data-toggle="collapse" data-target="#collapse"
+                      aria-controls="collapse" aria-expanded="false" aria-label="Toggle navigation">
+                      <span class="navbar-toggler-icon text-secondary"></span>
                   </button>
-  
-                  <!-- Collapsible content -->
-                  <div class="collapse navbar-collapse" id="basicExampleNav">
-  
-                      <!-- Links -->
-                      <ul class="navbar-nav mr-auto smooth-scroll">
-                          <li class="nav-item">
-                              <a class="nav-link" onclick="homePage()">Начална страница</a>
-                          </li>
-                          <li class="nav-item">
-                              <a class="nav-link" onclick="pageRegisterUser()">Регистриране като клиент</a>
-                          </li>
-                          <li class="nav-item">
-                            <a class="nav-link" onclick="loginPage()">Влизане</a>
-                        </li>
-                      </ul>
-                      <!-- Links -->
+                    <a class="navbar-brand text-secondary" ><img src="./assets/img/logo.png" /></a>
+                    
                   </div>
+                  
+
+                  <div class="collapse navbar-collapse" id="collapse">
+  
+                    <!-- Links -->
+                    <ul class="navbar-nav smooth-scroll">
+                        <li class="nav-item">
+                            <a class="nav-link text-secondary" onclick="homePage()">Начална страница</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-secondary" onclick="pageRegisterUser()">Регистриране като клиент</a>
+                        </li>
+                        <li class="nav-item">
+                          <a class="nav-link text-secondary" onclick="loginPage()">Влизане</a>
+                      </li>
+                    </ul>
+                    <!-- Links -->
+                </div>
+                  <!-- Collapse button -->
+                  
+  
                   <!-- Collapsible content -->
-  
-              </div>
-  
+                  
+                  <!-- Collapsible content -->
+                </div>
+              
           </nav>
-      <main id="pageContent" class="mt-2 pt-5">
+      <main id="pageContent" style="margin-top: 93px;">
         <section id="best-features" class="text-center w-90 p-3" style="background-image: url('http://localhost:3000/assets/img/showcase.jpg'); background-size: cover;"> 
 
             <!-- Heading -->
@@ -109,9 +114,9 @@ header,
 
                 <!--Grid column-->
                 <div class="col-md-4 mb-5">
-                    <i class="fa fa-taxi fa-4x yellow-text"></i>
-                    <h4 class="my-4 font-weight-bold yellow-text">Бързо намиране на такси</h4>
-                    <p class="yellow-text">Поръчай такси само като попълниш име и телефонен номер.</p>
+                    <i class="fa fa-taxi fa-4x text-primary"></i>
+                    <h4 class="my-4 font-weight-bold text-primary">Бързо намиране на такси</h4>
+                    <p class="text-primary">Поръчай такси само като попълниш име и телефонен номер.</p>
                 </div>
                 <!--Grid column-->
 
@@ -125,9 +130,9 @@ header,
 
                 <!--Grid column-->
                 <div class="col-md-4 mb-1">
-                    <i class="fa fa-truck-loading fa-4x yellow-text"></i>
-                    <h4 class="my-4 font-weight-bold yellow-text">Напазарувай от вкъщи</h4>
-                    <p class="yellow-text">Чрез нашата платформа Вие имате възможност да изпратите списък с продуктите и шофьорът да ги достави до Вашата врата.</p>
+                    <i class="fa fa-truck-loading fa-4x text-primary"></i>
+                    <h4 class="my-4 font-weight-bold text-primary">Напазарувай от вкъщи</h4>
+                    <p class="text-primary">Чрез нашата платформа Вие имате възможност да изпратите списък с продуктите и шофьорът да ги достави до Вашата врата.</p>
                 </div>
                 <!--Grid column-->
 
@@ -148,6 +153,13 @@ header,
   <script type="text/javascript" src="./assets/js/mdb.min.js"></script>
   <script src="./js/changePages.js":></script>
   <script src="./js/userOperations.js"></script>
-
+  <script src="./js/design.js"></script>
+  <script>
+    isLoggedIn().then(a =>
+    {
+      if(a == "true") console.log("yesss");
+      else console.log("nooooo");
+    });
+  </script>
 </body>
 </html>

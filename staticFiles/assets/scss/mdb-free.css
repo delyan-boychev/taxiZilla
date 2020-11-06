@@ -1264,16 +1264,16 @@
   pointer-events: none !important; }
 
 a {
-  color: #007bff;
+  color: #ffed00;
   text-decoration: none;
   cursor: pointer;
   transition: all 0.2s ease-in-out; }
   a:hover {
-    color: #0056b3;
+    color: #b3a600;
     text-decoration: none;
     transition: all 0.2s ease-in-out; }
   a.disabled:hover, a:disabled:hover {
-    color: #007bff; }
+    color: #ffed00; }
 
 a:not([href]):not([tabindex]), a:not([href]):not([tabindex]):focus, a:not([href]):not([tabindex]):hover {
   color: inherit;
