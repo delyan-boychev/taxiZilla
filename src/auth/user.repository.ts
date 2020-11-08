@@ -49,4 +49,9 @@ export class UserRepository extends Repository<User>
     return undefined;
     
   }
+  async getProfile(email: string)
+  {
+    const user: User = await this.findOne({ email });
+    return user;
+  }
 }

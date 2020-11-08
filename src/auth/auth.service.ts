@@ -1,9 +1,11 @@
 import { Injectable, Session, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
+import { toNamespacedPath } from 'path';
 import { RegisterUserDTO } from './dto/registerUser.dto';
 import { JWTPayload } from './jwt-payload';
 import { JwtStrategy } from './jwt-strategy';
+import { User } from './user.entity';
 import { UserRepository } from './user.repository';
 
 @Injectable()
@@ -31,6 +33,21 @@ export class AuthService {
     const JWTToken = this.jwtService.sign(payload);
     session.token = JWTToken;
     return true;
+    }
+  }
+  async getProfile(@Session() session: {token?: string}):Promise<User>
+  {
+    console.log(session.token);
+    let userJSON = await this.jwtService.decode(session.token);
+    if (userJSON === null)
+    {
+      throw new UnauthorizedException("Unauthorised");  
+    }
+    else
+    {
+      //console.log(userJSON["email"]);
+      const user = await this.userRepository.getProfile(userJSON["email"]);
+      return user;
     }
   }
 }

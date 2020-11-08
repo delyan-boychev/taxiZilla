@@ -1,4 +1,4 @@
-import { Body, Controller, Post, Session, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Get, Post, Session, ValidationPipe } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { RegisterUserDTO } from './dto/registerUser.dto';
 
@@ -16,5 +16,10 @@ export class AuthController {
   async loginUser(@Body("email", ValidationPipe) email: string, @Body("password", ValidationPipe) password: string, @Session() session: { token?: string })
   {
     return await this.authService.loginUser(email, password, session);
+  }
+  @Get("/profile/")
+  async getProfile(@Session() session: { token?: string })
+  {
+    return await this.authService.getProfile(session);
   }
 }
