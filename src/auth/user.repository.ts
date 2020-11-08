@@ -52,6 +52,8 @@ export class UserRepository extends Repository<User>
   async getProfile(email: string)
   {
     const user: User = await this.findOne({ email });
+    delete user.passHash;
+    delete user.salt;
     return user;
   }
 }
