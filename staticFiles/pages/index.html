@@ -66,14 +66,21 @@ header,
                   <div class="collapse navbar-collapse" id="collapse">
   
                     <!-- Links -->
-                    <ul class="navbar-nav smooth-scroll">
+                    <ul class="navbar-nav smooth-scroll" id="navElements">
                         <li class="nav-item">
                             <a class="nav-link text-secondary" onclick="homePage()">Начална страница</a>
                         </li>
-                        <li class="nav-item">
+                        <li class="nav-item dropdown" id="registerNav">
+                          <a class="nav-link dropdown-toggle  text-secondary" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Регистриране
+                          </a>
+                          <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                             <a class="nav-link text-secondary" onclick="pageRegisterUser()">Регистриране като клиент</a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item  text-secondary" href="#">Регистриране като фирма</a>
+                          </div>
                         </li>
-                        <li class="nav-item">
+                        <li class="nav-item" id="loginNav">
                           <a class="nav-link text-secondary" onclick="loginPage()">Влизане</a>
                       </li>
                     </ul>
@@ -155,11 +162,7 @@ header,
   <script src="./js/userOperations.js"></script>
   <script src="./js/design.js"></script>
   <script>
-    isLoggedIn().then(a =>
-    {
-      if(a == "true") console.log("yesss");
-      else console.log("nooooo");
-    });
+    isLoggedIn().then(designChangeOnStart);
   </script>
 </body>
 </html>

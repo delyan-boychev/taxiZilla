@@ -13,8 +13,13 @@ export class AppController {
     if(!session.token) isLoggedIn = "false";
     else isLoggedIn = "true";
     res.set("isLoggedIn", isLoggedIn);
-    console.log(isLoggedIn);
     res.send(this.appService.getMainPage());
+  }
+  @Get("/logout/")
+  logout(@Session() session:{token?:String}, @Res() res:Response)
+  {
+    if(session.token) session.token = "";
+    res.redirect("/");
   }
 
 }

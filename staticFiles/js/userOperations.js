@@ -1,4 +1,4 @@
-
+var loggedIn;
 function loginSubmit()
 {
     $.post("/auth/loginUser",
@@ -15,7 +15,7 @@ function loginSubmit()
     return false;
 }
 function registerSubmit()
-    {
+{
         $.post("/auth/registerUser",
         {
             fName: $("#fName").val(),
@@ -31,7 +31,7 @@ function registerSubmit()
         }
         );
         return false;
-    }
+}
 async function isLoggedIn()
 {
     let response = await fetch(document.location);

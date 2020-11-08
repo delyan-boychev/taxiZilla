@@ -12,3 +12,15 @@ function collapse()
         document.getElementById("navbar").style.removeProperty("background-image");
     }
 }
+function designChangeOnStart(loggedIn)
+{
+    var nav = document.getElementById("navElements");
+    if(loggedIn == "true")
+    {
+        var a = document.getElementById("loginNav");
+        var b = document.getElementById("registerNav");
+        nav.removeChild(a);
+        nav.removeChild(b);
+        nav.innerHTML += '<li class="nav-item" id="loginNav"><a class="nav-link text-secondary" onclick="document.location = \'./logout\'">Излизане</a></li>';
+    }
+}
