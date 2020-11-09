@@ -27,6 +27,9 @@ export class Firm extends BaseEntity
 
   @Column()
   salt: string;
+
+  @Column()
+  verified: boolean;
   
   @OneToMany(type => User, user => user.firm, { eager: true })
   drivers: User[];

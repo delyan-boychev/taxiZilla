@@ -13,7 +13,9 @@ export class AuthController {
   @Post("/registerUser/")
   async registerUser(@Body(ValidationPipe) registerUserDto:RegisterUserDTO)
   {
-    return await this.authService.registerUser(registerUserDto);
+    const user = await this.authService.registerUser(registerUserDto);
+    this.authService.sendVerify(registerUserDto.email);
+    return user;
   }
   @Post("/loginUser/")
   async loginUser(@Body("email", ValidationPipe) email: string, @Body("password", ValidationPipe) password: string, @Session() session: { token?: string })
@@ -25,9 +27,9 @@ export class AuthController {
   {
     return await this.authService.getProfile(session);
   }
-  @Get("/sendVerify/:user")
-  async sendVerify(@Param("user") user:string)
+  @Get("/verify/:code")
+  async verify(@Param("code") code:string)
   {
-    return await this.authService.sendVerify(user);
+    return await this.authService.verify(code);
   }
 }
