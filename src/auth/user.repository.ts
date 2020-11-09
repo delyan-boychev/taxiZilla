@@ -94,6 +94,22 @@ export class UserRepository extends Repository<User>
       return undefined;
     }
   }
+  async changePassword(email: string, oldPass: string, newPass: string)
+  {
+    let user = await this.findOne({ email });
+    let hashed = bcrypt.hash(oldPass, user.salt);
+    if (hashed === user.passHash)
+    {
+      let hash2 = bcrypt.hash(newPass, user.salt);
+      user.passHash = hash2;
+      await user.save();
+      return "Changed password";
+    }
+    else
+    {
+      return "Incorrect old password";
+    }
+  }
   async deleteUser(email:string, pass:string)
   {
     let user = await this.findOne({ email });

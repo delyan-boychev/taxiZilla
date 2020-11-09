@@ -42,4 +42,9 @@ export class AuthController {
   {
     return await this.authService.deleteUser(session,pass);
   }
+  @Post("/changePassword/")
+  async changePassword(@Session() session: { token?: string }, @Body("oldPass") oldPass: string, @Body("newPass") newPass: string)
+  {
+    return await this.authService.changePassword(session, oldPass, newPass);
+  }
 }

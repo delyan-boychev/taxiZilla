@@ -67,6 +67,18 @@ export class AuthService {
       return await this.userRepository.deleteUser(userJSON["email"],pass);  
     }
   }
+  async chnagePassword(@Session() session: { token?: string }, oldPass: string, newPass: string)
+  {
+    let userJSON = await this.jwtService.decode(session.token);
+    if (userJSON === null) {
+      throw new UnauthorizedException("Unauthorized"); 
+    }
+    else
+    {
+      return await this.userRepository.changePassword(userJSON["email"],oldPass,newPass);  
+    }
+    
+  }
   async getProfile(@Session() session: {token?: string}):Promise<User>
   {
     console.log(session.token);
