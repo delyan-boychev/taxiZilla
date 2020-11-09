@@ -38,8 +38,8 @@ export class AuthController {
     return this.authService.checkUser(session, password);
   }
   @Post("/deleteUser/")
-  async deleteUser(@Session() session: {token?: string})
+  async deleteUser(@Session() session: {token?: string}, @Body("password") pass:string)
   {
-    return await this.authService.deleteUser(session);
+    return await this.authService.deleteUser(session,pass);
   }
 }

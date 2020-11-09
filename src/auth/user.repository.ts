@@ -94,11 +94,19 @@ export class UserRepository extends Repository<User>
       return undefined;
     }
   }
-  async deleteUser(email:string)
+  async deleteUser(email:string, pass:string)
   {
     let user = await this.findOne({ email });
-    await user.remove();
-    return;
+    let hashed = await bcrypt.hash(pass, user.salt);
+    if (user.passHash === hashed)
+    {
+      await user.remove();
+      return true;
+    }
+    else
+    {
+      return false;  
+    }
   }
   async getProfile(email: string)
   {

@@ -56,7 +56,7 @@ export class AuthService {
       return await this.userRepository.checkPassword(userJSON["email"], password);
     }
   }
-  async deleteUser(@Session() session: { token?: string })
+  async deleteUser(@Session() session: { token?: string }, pass:string)
   {
     let userJSON = await this.jwtService.decode(session.token);
     if (userJSON === null) {
@@ -64,7 +64,7 @@ export class AuthService {
     }
     else
     {
-      return await this.userRepository.deleteUser(userJSON["email"]);  
+      return await this.userRepository.deleteUser(userJSON["email"],pass);  
     }
   }
   async getProfile(@Session() session: {token?: string}):Promise<User>
