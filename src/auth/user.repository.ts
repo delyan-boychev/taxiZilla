@@ -36,9 +36,16 @@ export class UserRepository extends Repository<User>
   async verifyUser(email: string)
   {
     let user: User = await this.findOne({ email });
-    user.verified = true;
-    await user.save();
-    return "Verified";
+    if (user.verified)
+    {
+      return "User is already verified";  
+    }
+    else
+    {
+      user.verified = true;
+      await user.save();
+      return "Verified";
+    }
   }
   async loginUser(email: string, password: string)
   {
