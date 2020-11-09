@@ -3,6 +3,7 @@ import { RegisterUserDTO } from "./dto/registerUser.dto";
 import { UserRoles } from "./enums/userRoles.enum";
 import { User } from "./user.entity";
 import * as bcrypt from 'bcrypt';
+import { UseGuards } from "@nestjs/common";
 
 
 @EntityRepository(User)
@@ -52,7 +53,14 @@ export class UserRepository extends Repository<User>
       return undefined;  
     }
     if (hashed === user.passHash) {
-      return email; 
+      if (user.verified === true)
+      {
+        return email; 
+      }
+      else
+      {
+        return "notVerified";
+      }
     }
     return undefined;
     

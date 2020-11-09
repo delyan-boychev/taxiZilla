@@ -31,10 +31,17 @@ export class AuthService {
     }
     else
     {
-    const payload: JWTPayload = { email };
-    const JWTToken = this.jwtService.sign(payload);
-    session.token = JWTToken;
-    return true;
+      if (ver === "notVerified")
+      {
+        return ver;
+      }
+      else
+      {
+        const payload: JWTPayload = { email };
+        const JWTToken = this.jwtService.sign(payload);
+        session.token = JWTToken;
+        return true;
+      }
     }
   }
   async getProfile(@Session() session: {token?: string}):Promise<User>
