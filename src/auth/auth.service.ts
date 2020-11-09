@@ -44,6 +44,29 @@ export class AuthService {
       }
     }
   }
+  async checkUser(@Session() session: { token?: string }, password: string)
+  {
+    let userJSON = await this.jwtService.decode(session.token);
+    if (userJSON === null)
+    {
+      throw new UnauthorizedException("Unauthorized");  
+    }
+    else
+    {
+      return await this.userRepository.checkPassword(userJSON["email"], password);
+    }
+  }
+  async deleteUser(@Session() session: { token?: string })
+  {
+    let userJSON = await this.jwtService.decode(session.token);
+    if (userJSON === null) {
+      throw new UnauthorizedException("Unauthorized"); 
+    }
+    else
+    {
+      return await this.userRepository.deleteUser(userJSON["email"]);  
+    }
+  }
   async getProfile(@Session() session: {token?: string}):Promise<User>
   {
     console.log(session.token);

@@ -32,4 +32,14 @@ export class AuthController {
   {
     return await this.authService.verify(code);
   }
+  @Post("/checkUser/")
+  async checkUser(@Session() session: { token?: string }, @Body("password") password: string)
+  {
+    return this.authService.checkUser(session, password);
+  }
+  @Post("/deleteUser/")
+  async deleteUser(@Session() session: {token?: string})
+  {
+    return await this.authService.deleteUser(session);
+  }
 }

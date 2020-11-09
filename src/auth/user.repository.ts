@@ -4,6 +4,7 @@ import { UserRoles } from "./enums/userRoles.enum";
 import { User } from "./user.entity";
 import * as bcrypt from 'bcrypt';
 import { UseGuards } from "@nestjs/common";
+import e from "express";
 
 
 @EntityRepository(User)
@@ -71,6 +72,33 @@ export class UserRepository extends Repository<User>
     }
     return undefined;
     
+  }
+  async checkPassword(email: string, password: string)
+  {
+    const user = await this.findOne({ email });
+    let hashed = "";
+    if (user)
+    {
+      hashed = await bcrypt.hash(password, user.salt);
+      if (hashed === user.passHash)
+      {
+        return true;  
+      }
+      else
+      {
+        return false;
+      }
+    }
+    else
+    {
+      return undefined;
+    }
+  }
+  async deleteUser(email:string)
+  {
+    let user = await this.findOne({ email });
+    await user.remove();
+    return;
   }
   async getProfile(email: string)
   {
