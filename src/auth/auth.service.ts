@@ -3,10 +3,12 @@ import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
 import { toNamespacedPath } from 'path';
 import { RegisterUserDTO } from './dto/registerUser.dto';
+import { transport } from './email.transport';
 import { JWTPayload } from './jwt-payload';
 import { JwtStrategy } from './jwt-strategy';
 import { User } from './user.entity';
 import { UserRepository } from './user.repository';
+import * as Cryptr from 'cryptr';
 
 @Injectable()
 export class AuthService {
@@ -49,5 +51,25 @@ export class AuthService {
       const user = await this.userRepository.getProfile(userJSON["email"]);
       return user;
     }
+  }
+  async verify(code:string)
+  {
+    const encrypter = new Cryptr("mXb35Bw^FvCz9MLN");
+    const username = encrypter.decrypt(code);
+    return await this.userRepository.verifyUser(username);
+  }
+  async sendVerify(username:string)
+  {
+    const encrypter = new Cryptr("mXb35Bw^FvCz9MLN");
+    const link = encrypter.encrypt(username);
+    const htmlcode = "<a href='http://localhost:3000/auth/verify/" + link + "'>ТУК</a>"
+    const info = await transport.sendMail({
+      from: 'Taxi Zilla',
+      to: username,
+      subject: 'Потвърждение на email',
+      text: '',
+      html: '<b>За да потвърдиш email адреса си натисни </b>'+htmlcode,
+    });
+    return "Sended";
   }
 }

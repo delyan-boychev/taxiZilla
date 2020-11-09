@@ -5,6 +5,9 @@ import { AppService } from './app.service';
 import { NestSessionOptions, SessionModule } from 'nestjs-session';
 import { AuthModule } from './auth/auth.module';
 import { User } from './auth/user.entity';
+import { MailerModule, MailerService } from '@nestjs-modules/mailer';
+import { PugAdapter } from '@nestjs-modules/mailer/dist/adapters/pug.adapter';
+import { Firm } from './auth/firm.entity';
 
 @Module({
   imports: [
@@ -14,7 +17,7 @@ import { User } from './auth/user.entity';
       username: 'taxiZilla',
       password: 'VhCNrHnMEB3sE?9_',
       database: 'taxiZilla',
-      entities:[User],
+      entities:[User,Firm],
       synchronize:true,
     })
     

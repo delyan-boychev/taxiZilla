@@ -1,5 +1,6 @@
-import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { BaseEntity, Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { UserRoles } from "./enums/userRoles.enum";
+import { Firm } from "./firm.entity";
 
 @Entity()
 export class User extends BaseEntity
@@ -27,4 +28,10 @@ export class User extends BaseEntity
 
   @Column()
   salt: string;
+
+  @Column()
+  verified: boolean;
+
+  @ManyToOne(type => Firm, firm => firm.drivers)
+  firm: Firm;
 }

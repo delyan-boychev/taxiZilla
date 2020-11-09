@@ -16,20 +16,28 @@ export class UserRepository extends Repository<User>
     let exists = dupUser==undefined;
     if(exists)
     {
-    user.email = email;
-    user.fName = fName;
-    user.lName = lName;
-    user.telephone = phoneNumber;
-    user.role = UserRoles.USER;
-    const bcrypt = require('bcrypt');
-    const saltRounds = 10;
-    const salt = await bcrypt.genSalt(saltRounds);
-    const passHash = await bcrypt.hash(password, salt);
-    user.passHash = passHash;
-    user.salt = salt;
-    await user.save();
+      user.email = email;
+      user.fName = fName;
+      user.lName = lName;
+      user.telephone = phoneNumber;
+      user.role = UserRoles.USER;
+      user.verified = false;
+      const bcrypt = require('bcrypt');
+      const saltRounds = 10;
+      const salt = await bcrypt.genSalt(saltRounds);
+      const passHash = await bcrypt.hash(password, salt);
+      user.passHash = passHash;
+      user.salt = salt;
+      await user.save();
     }
     return exists;
+  }
+  async verifyUser(email: string)
+  {
+    let user: User = await this.findOne({ email });
+    user.verified = true;
+    await user.save();
+    return "Verified";
   }
   async loginUser(email: string, password: string)
   {
