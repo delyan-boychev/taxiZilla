@@ -24,14 +24,6 @@ header,
     height: 100%;
 }
 
-#intro {
-    background: url("https://mdbootstrap.com/img/Photos/Horizontal/Nature/full%20page/img%20%283%29.jpg")no-repeat center center fixed;
-    -webkit-background-size: cover;
-    -moz-background-size: cover;
-    -o-background-size: cover;
-    background-size: cover;
-}
-
 .top-nav-collapse {
     background-color: #24355C;
   }
@@ -83,6 +75,7 @@ header,
                         <li class="nav-item" id="loginNav">
                           <a class="nav-link text-secondary" onclick="loginPage()">Влизане</a>
                       </li>
+                      
                     </ul>
                     <!-- Links -->
                 </div>
@@ -96,7 +89,7 @@ header,
               
           </nav>
       <main id="pageContent" style="margin-top: 93px;">
-        <section id="best-features" class="text-center w-90 p-3" style="background-image: url('http://localhost:3000/assets/img/showcase.jpg'); background-size: cover;"> 
+        <section id="best-features" class="text-center w-90 p-3" style="background-image: url('http://localhost:3000/assets/img/showcase.jpeg'); background-size: cover;"> 
 
             <!-- Heading -->
             <h2 class="mb-5 font-weight-bold white-text">Извикай си такси бързо и лесно!</h2>
@@ -151,6 +144,24 @@ header,
            
         </div>
     </main>
+    <div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Съобщение</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body" id="messageText">
+            
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary black-text" data-dismiss="modal">Затвори</button>
+          </div>
+        </div>
+      </div>
+    </div>
     <script type="text/javascript" src="./assets/js/jquery.min.js"></script>
   <!-- Bootstrap tooltips -->
   <script type="text/javascript" src="./assets/js/popper.min.js"></script>

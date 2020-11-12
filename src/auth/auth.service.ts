@@ -1,7 +1,7 @@
 import { Injectable, Session, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
-import { toNamespacedPath } from 'path';
+import { join, toNamespacedPath } from 'path';
 import { RegisterUserDTO } from './dto/registerUser.dto';
 import { transport } from './email.transport';
 import { JWTPayload } from './jwt-payload';
@@ -98,7 +98,14 @@ export class AuthService {
   {
     const encrypter = new Cryptr("mXb35Bw^FvCz9MLN");
     const username = encrypter.decrypt(code);
-    return await this.userRepository.verifyUser(username);
+    let result = await this.userRepository.verifyUser(username);
+    return this.getVerifyPage(result);
+  }
+  getVerifyPage(verified:boolean):string
+  {
+    const fs = require("fs");
+    if(verified === true) return fs.readFileSync(join(__dirname, "/../../staticFiles/pages/verifiedTrue.html")).toString();
+    else return fs.readFileSync(join(__dirname, "/../../staticFiles/pages/verifiedFalse.html")).toString();
   }
   async sendVerify(username:string)
   {

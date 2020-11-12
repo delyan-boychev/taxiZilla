@@ -3,17 +3,8 @@
 <div class="text-center p-5"  id="regForm">
 
     <p class="h4 mb-4">Регистрация като клиент</p>
-
-    <div class="form-row mb-4">
-        <div class="col">
-            <!-- First name -->
-            <input type="text" id="fName" class="form-control" placeholder="Име" required>
-        </div>
-        <div class="col">
-            <!-- Last name -->
-            <input type="text" id="lName" class="form-control" placeholder="Фамилия" required> 
-        </div>
-    </div>
+    <input type="text" id="fName" class="form-control mb-4" placeholder="Име" required>
+    <input type="text" id="lName" class="form-control mb-4" placeholder="Фамилия" required> 
 
     <!-- E-mail -->
     <input type="email" id="email" class="form-control mb-4" placeholder="Имейл" required>
@@ -21,7 +12,7 @@
     <!-- Password -->
     <input type="password" id="password" class="form-control" placeholder="Парола" aria-describedby="defaultRegisterFormPasswordHelpBlock" required>
     <small id="defaultRegisterFormPasswordHelpBlock" class="form-text text-muted mb-4">
-        At least 8 characters and 1 digit
+        Паролата трябва да е по-дълга от 7 символа и да съдържа поне 1 цифра.
     </small>
 
     <!-- Phone number -->
@@ -31,22 +22,4 @@
     <button class="btn btn-primary black-text my-4 btn-block" type="submit" onclick="registerSubmit()">Регистрация</button>
 
 
-</div>
-<div class="modal fade" id="registerMessage" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Съобщение</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body" id="messageText">
-        
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-primary black-text" data-dismiss="modal">Затвори</button>
-      </div>
-    </div>
-  </div>
 </div>

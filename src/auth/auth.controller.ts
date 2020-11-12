@@ -1,9 +1,10 @@
-import { Body, Controller, Get, Param, Post, Session, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Res, Session, ValidationPipe } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { RegisterUserDTO } from './dto/registerUser.dto';
 import * as nodemailer from 'nodemailer';
 import { PrimaryGeneratedColumn } from 'typeorm';
 import { transport } from './email.transport';
+import { Response } from 'express';
 
 @Controller('auth')
 export class AuthController {
@@ -30,7 +31,9 @@ export class AuthController {
   @Get("/verify/:code")
   async verify(@Param("code") code:string)
   {
-    return await this.authService.verify(code);
+    let verified = await this.authService.verify(code);
+    // res.set("verified", verified.toString());
+    return verified;
   }
   @Post("/checkUser/")
   async checkUser(@Session() session: { token?: string }, @Body("password") password: string)

@@ -39,13 +39,13 @@ export class UserRepository extends Repository<User>
     let user: User = await this.findOne({ email });
     if (user.verified)
     {
-      return "User is already verified";  
+      return false;  
     }
     else
     {
       user.verified = true;
       await user.save();
-      return "Verified";
+      return true;
     }
   }
   async loginUser(email: string, password: string)
@@ -97,17 +97,17 @@ export class UserRepository extends Repository<User>
   async changePassword(email: string, oldPass: string, newPass: string)
   {
     let user = await this.findOne({ email });
-    let hashed = bcrypt.hash(oldPass, user.salt);
+    let hashed = await bcrypt.hash(oldPass, user.salt);
     if (hashed === user.passHash)
     {
-      let hash2 = bcrypt.hash(newPass, user.salt);
+      let hash2 = await bcrypt.hash(newPass, user.salt);
       user.passHash = hash2;
       await user.save();
-      return "Changed password";
+      return true;
     }
     else
     {
-      return "Incorrect old password";
+      return false;
     }
   }
   async deleteUser(email:string, pass:string)

@@ -16,3 +16,9 @@ function loginPage()
 });
           
 }
+function profilePage()
+{$.get('http://'+ window.location.host +'/pages/profilePage.html', function( data, textStatus, jqXHR ) {
+        document.getElementById("pageContent").innerHTML = data;
+});
+getProfile();
+}

@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <title>Material Design Bootstrap</title>
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css">
+  <!-- Bootstrap core CSS -->
+  <link href="../../assets/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Material Design Bootstrap -->
+  <link href="../../assets/css/mdb.css" rel="stylesheet">
+  <!-- Your custom styles (optional) -->
+  <link href="../../assets/css/style.css" rel="stylesheet">
+</head>
+<body>
+  <style>
+    html,
+body,
+header,
+#intro {
+    height: 100%;
+}
+
+.top-nav-collapse {
+    background-color: #24355C;
+  }
+  @media (max-width: 768px) {
+
+    .navbar:not(.top-nav-collapse) {
+      background-color: #24355C;
+    }
+  }
+  @media (min-width: 800px) and (max-width: 850px) {
+    .navbar:not(.top-nav-collapse) {
+      background-color: #24355C;
+    }
+  }
+  </style>
+
+          <!--Navbar-->
+          <nav id="navbar" class="navbar navbar-expand-lg navbar-light bg-primary fixed-top scrolling-navbar" style="background-image: url('http://localhost:3000/assets/img/navbar.png'); background-size: cover; background-position: top right;">
+              <div class="container"> 
+  
+                  <!-- Navbar brand -->
+                  <div>
+                    <button class="navbar-toggler text-secondary"  onclick="collapse()" type="button" data-toggle="collapse" data-target="#collapse"
+                      aria-controls="collapse" aria-expanded="false" aria-label="Toggle navigation">
+                      <span class="navbar-toggler-icon text-secondary"></span>
+                  </button>
+                    <a class="navbar-brand text-secondary" ><img src="../../assets/img/logo.png" /></a>
+                    
+                  </div>
+                  
+
+                  <div class="collapse navbar-collapse" id="collapse">
+  
+                    <!-- Links -->
+                    <ul class="navbar-nav smooth-scroll" id="navElements">
+                        <li class="nav-item">
+                            <a class="nav-link text-secondary" onclick="window.location='/';">Начална страница</a>
+                        </li>
+                      
+                    </ul>
+                    <!-- Links -->
+                </div>
+                  <!-- Collapse button -->
+                  
+  
+                  <!-- Collapsible content -->
+                  
+                  <!-- Collapsible content -->
+                </div>
+              
+          </nav>
+      <main id="pageContent" style="margin-top: 93px;">
+        <h1 class="text-center primary-text pt-5">Профилът е потвърден успешно!</h1>
+    </main>
+    <script type="text/javascript" src="../../assets/js/jquery.min.js"></script>
+  <!-- Bootstrap tooltips -->
+  <script type="text/javascript" src="../../assets/js/popper.min.js"></script>
+  <!-- Bootstrap core JavaScript -->
+  <script type="text/javascript" src="../../assets/js/bootstrap.min.js"></script>
+  <!-- MDB core JavaScript -->
+  <script type="text/javascript" src="../../assets/js/mdb.min.js"></script>
+</body>
+</html>
