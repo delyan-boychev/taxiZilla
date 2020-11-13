@@ -17,11 +17,7 @@ function loginSubmit()
 }
 function registerSubmit()
 {
-    $('#fName').tooltip('hide');
-    $('#lName').tooltip('hide');
-    $('#password').tooltip('hide');
-    $('#email').tooltip('hide');
-    $('#phoneNumber').tooltip('hide');
+    hideTooltips();
     var isChecked = true;
     var isDigit = /^\d+$/;
     var hasNumber = /\d/;
@@ -89,8 +85,7 @@ function changePassword()
 {
     var hasNumber = /\d/;
     var isChecked = true;
-    $('#oldPass').tooltip('hide');
-    $('#newPass').tooltip('hide');
+    hideTooltips();
     if($("#oldPass").val().length == 0)
     {
         $('#oldPass').tooltip({'placement':'left','trigger': 'manual', 'title': 'Не сте въвели старата парола!'}).tooltip('show');
@@ -101,18 +96,20 @@ function changePassword()
         $('#newPass').tooltip({'placement':'left','trigger': 'manual', 'title': 'Новата парола трябва да съдържа поне 1 цифра и да е по-дълга от 7 символа!'}).tooltip('show');
         isChecked = false;
     }
-
+    if(checked == true)
+    {
     $.post("/auth/changePassword",
         {
             oldPass: $("#oldPass").val(),
             newPass: $("#newPass").val()
         },
         function(data,status){
-            if(data=="true") document.getElementById("messageText").innerText="Вие се регистрирахте успешно!";
-            else document.getElementById("messageText").innerText="Вече съществува профил с този имейл адрес!";
+            if(data=="true") document.getElementById("messageText").innerText="Паролата е сменена успешно!";
+            else document.getElementById("messageText").innerText="Въвели сте грешна стара парола!";
             $("#modal").modal();
         }
         );
+    }
 }
 function delProfile()
 {

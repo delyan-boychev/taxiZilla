@@ -1,4 +1,11 @@
-
+function refreshPage()
+{
+    location.reload();
+}
+function hideTooltips()
+{
+    $('.tooltip').tooltip('hide');
+}
 function collapse()
 {
     if($("#collapse").is(":visible"))

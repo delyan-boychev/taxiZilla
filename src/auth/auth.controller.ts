@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, Res, Session, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Req, Res, Session, ValidationPipe } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { RegisterUserDTO } from './dto/registerUser.dto';
 import * as nodemailer from 'nodemailer';
@@ -19,8 +19,10 @@ export class AuthController {
     return user;
   }
   @Post("/loginUser/")
-  async loginUser(@Body("email", ValidationPipe) email: string, @Body("password", ValidationPipe) password: string, @Session() session: { token?: string })
+  async loginUser(@Req() req,@Body("email", ValidationPipe) email: string, @Body("password", ValidationPipe) password: string, @Session() session: { token?: string })
   {
+    var hour = 1800000
+    req.session.cookie.expires = new Date(Date.now() + hour)
     return await this.authService.loginUser(email, password, session);
   }
   @Get("/profile/")
