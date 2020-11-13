@@ -132,7 +132,7 @@ export class AuthService {
   {
     const encrypter = new Cryptr("mXb35Bw^FvCz9MLN");
     const link = encrypter.encrypt(registerFirmDto.eik);
-    const htmlcode = "<a href='http://localhost:3000/auth/verifyFirm/'"+link+"'>ТУК</a>";
+    const htmlcode = "<a href='http://localhost:3000/auth/verifyFirm/"+link+"'>ТУК</a>";
     const info = await transport.sendMail({
       from: "Taxi Zilla",
       to:registerFirmDto.email,

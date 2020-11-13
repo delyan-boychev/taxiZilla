@@ -15,7 +15,12 @@ export class AuthController {
   @Post("/registerFirm/")
   async registerFirm(@Body(ValidationPipe) registerFirmDto:RegisterFirmDTO)
   {
-    return await this.authService.registerFirm(registerFirmDto);
+    const registered = await this.authService.registerFirm(registerFirmDto);
+    if(registered == true)
+    {
+      this.authService.sendVerifyFirm(registerFirmDto);
+    }
+    return registered;
   }
   @Get('/verifyFirm/:code')
   async verifyFirm(@Param("code")code:string)

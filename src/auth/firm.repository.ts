@@ -25,6 +25,8 @@ export class FirmRepository extends Repository<Firm>
       const hashed = await bcrypt.hash(password,salt);
       firm.salt=salt;
       firm.passHash=hashed;
+      firm.verified = false;
+      firm.moderationVerified = false;
       await firm.save();
       return true;
 
@@ -36,15 +38,16 @@ export class FirmRepository extends Repository<Firm>
   }
   async verifyFirm(eik:string)
   {
-    let firm:Firm = await this.findOne({eik});
-    if(firm!==undefined)
+    let firm:Firm = await this.findOne({ eik });
+    if (firm.verified)
     {
-      firm.verified=true;
-      return true;
+      return false;  
     }
     else
     {
-      return false;
+      firm.verified = true;
+      await firm.save();
+      return true;
     }
   }
 }

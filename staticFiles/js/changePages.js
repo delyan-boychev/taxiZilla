@@ -4,7 +4,15 @@ function pageRegisterUser()
         $.get('http://'+ window.location.host +'/pages/registerPageUser.html', function( data, textStatus, jqXHR ) {
         document.getElementById("pageContent").innerHTML = data;
 });
+
           
+}
+function pageRegisterFirm()
+{
+        hideTooltips();
+        $.get('http://'+ window.location.host +'/pages/registerPageFirm.html', function( data, textStatus, jqXHR ) {
+        document.getElementById("pageContent").innerHTML = data;
+});
 }
 function homePage()
 {
