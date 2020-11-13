@@ -5,18 +5,33 @@ import * as nodemailer from 'nodemailer';
 import { PrimaryGeneratedColumn } from 'typeorm';
 import { transport } from './email.transport';
 import { Response } from 'express';
+import { RegisterFirmDTO } from './dto/registerFirm.dto';
 
 @Controller('auth')
 export class AuthController {
   constructor(
     private authService: AuthService,
   ) { };
+  @Post("/registerFirm/")
+  async registerFirm(@Body(ValidationPipe) registerFirmDto:RegisterFirmDTO)
+  {
+    return await this.authService.registerFirm(registerFirmDto);
+  }
+  @Get('/verifyFirm/:code')
+  async verifyFirm(@Param("code")code:string)
+  {
+    let verified = this.authService.verifyFirm(code);
+    return verified;
+  }
   @Post("/registerUser/")
   async registerUser(@Body(ValidationPipe) registerUserDto:RegisterUserDTO)
   {
-    const user = await this.authService.registerUser(registerUserDto);
-    this.authService.sendVerify(registerUserDto.email);
-    return user;
+    const registered = await this.authService.registerUser(registerUserDto);
+    if(registered===true)
+    {
+      this.authService.sendVerify(registerUserDto.email);
+    }
+    return registered;
   }
   @Post("/loginUser/")
   async loginUser(@Req() req,@Body("email", ValidationPipe) email: string, @Body("password", ValidationPipe) password: string, @Session() session: { token?: string })

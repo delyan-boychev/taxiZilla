@@ -30,8 +30,12 @@ export class User extends BaseEntity
   salt: string;
 
   @Column()
+  address:string;
+
+  @Column()
   verified: boolean;
 
   @ManyToOne(type => Firm, firm => firm.drivers)
   firm: Firm;
+
 }

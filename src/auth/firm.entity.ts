@@ -9,6 +9,9 @@ export class Firm extends BaseEntity
 
   @Column()
   eik: string;
+
+  @Column()
+  email:string;
   
   @Column()
   firmName: string;
@@ -30,6 +33,9 @@ export class Firm extends BaseEntity
 
   @Column()
   verified: boolean;
+
+  @Column()
+  moderationVerified:boolean;
   
   @OneToMany(type => User, user => user.firm, { eager: true })
   drivers: User[];
