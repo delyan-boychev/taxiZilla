@@ -3,21 +3,30 @@
 <div class="text-center p-5"  id="regForm">
 
     <p class="h4 mb-4">Регистрация като клиент</p>
-    <input type="text" id="fName" class="form-control mb-4" placeholder="Име" required>
-    <input type="text" id="lName" class="form-control mb-4" placeholder="Фамилия" required> 
-
+    <div class="input-group">
+    <input type="text" id="fName" class="form-control" placeholder="Име" required>
+    <div class="invalid-feedback">Името трябва да е по-дълго от 2 символа!</div>
+    </div>
+    <div class="input-group">
+    <input type="text" id="lName" class="form-control mt-4" placeholder="Фамилия" required> 
+    <div class="invalid-feedback">Фамилията трябва да е по-дълга от 2 символа!</div>
+    </div>
     <!-- E-mail -->
-    <input type="email" id="email" class="form-control mb-4" placeholder="Имейл" required>
+    <div class="input-group">
+    <input type="email" id="email" class="form-control mt-4" placeholder="Имейл" required>
+    <div class="invalid-feedback">Имейл адресът е невалиден!</div>
+    </div>
 
     <!-- Password -->
-    <input type="password" id="password" class="form-control" placeholder="Парола" aria-describedby="defaultRegisterFormPasswordHelpBlock" required>
-    <small id="defaultRegisterFormPasswordHelpBlock" class="form-text text-muted mb-4">
-        Паролата трябва да е по-дълга от 7 символа и да съдържа поне 1 цифра.
-    </small>
-
+    <div class="input-group">
+    <input type="password" id="password" class="form-control mt-4" placeholder="Парола" aria-describedby="defaultRegisterFormPasswordHelpBlock" required>
+    <div class="invalid-feedback">Паролата трябва да е по-дълга от 7 символа и да съдържа поне 1 цифра.</div>
+    </div> 
     <!-- Phone number -->
-    <input type="text" id="phoneNumber" class="form-control" placeholder="Телефонен номер" aria-describedby="defaultRegisterFormPhoneHelpBlock" required>
-
+    <div class="input-group">
+    <input type="text" id="phoneNumber" class="form-control mt-4" placeholder="Телефонен номер" aria-describedby="defaultRegisterFormPhoneHelpBlock" required>
+    <div class="invalid-feedback">Телефонният номер е невалиден!</div>
+    </div>  
     <!-- Sign up button -->
     <button class="btn btn-primary black-text my-4 btn-block" type="submit" onclick="registerSubmit()">Регистрация</button>
 

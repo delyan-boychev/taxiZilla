@@ -126,36 +126,41 @@ function registerFirmSubmit()
 }
 function registerSubmit()
 {
-    hideTooltips();
+    $("input").removeClass("is-invalid");
     var isChecked = true;
     var isDigit = /^\d+$/;
     var hasNumber = /\d/;
     var isEmail = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
     if($("#fName").val().length < 2)
     {
-        $('#fName').tooltip({'placement':'left','trigger': 'manual', 'title': 'Името трябва да е по-дълго от 2 символа!'}).tooltip('show');
+        $('#fName').addClass("is-invalid");
         isChecked = false;
     }
+    else $('#fName').addClass("is-valid");
     if($("#lName").val().length < 2)
     {
-        $('#lName').tooltip({'placement':'left', 'trigger': 'manual', 'title': 'Фамилията трябва да е по-дългa от 2 символа!'}).tooltip('show');
+        $('#lName').addClass("is-invalid");
         isChecked = false;
     }
+    else $('#lName').addClass("is-valid");
     if(!isEmail.test($("#email").val()))
     {
-        $('#email').tooltip({ 'placement':'left','trigger': 'manual', 'title': 'Имейл адресът е невалиден!'}).tooltip('show');
+        $('#email').addClass("is-invalid");
         isChecked = false;
     }
+    else $('#email').addClass("is-valid");
     if($("#password").val().length < 8 || !hasNumber.test($("#password").val()))
     {
-        $('#password').tooltip({'placement':'left','trigger': 'manual', 'title': 'Паролата трябва да съдържа поне 1 число и да е по-дълга от 7 символа!'}).tooltip('show');
+        $('#password').addClass("is-invalid");
         isChecked = false;
     }
-    if($("#phoneNumber").val().length < 10 || phoneNumber.charAt(0) != '0' || !isDigit.test($("#phoneNumber").val()))
+    else $('#password').addClass("is-valid");
+    if($("#phoneNumber").val().length < 10 || $("#phoneNumber").val().charAt(0) != '0' || !isDigit.test($("#phoneNumber").val()))
     {
-        $('#phoneNumber').tooltip({'placement':'left','trigger': 'manual', 'title': 'Телефонният номер е невалиден!'}).tooltip('show');
+        $('#phoneNumber').addClass("is-invalid");
         isChecked = false;
     }
+    else $('#phoneNumber').addClass("is-valid");
     if(isChecked == true)
     {
         $.post("/auth/registerUser",
@@ -192,15 +197,15 @@ function changePassword()
     hideTooltips();
     if($("#oldPass").val().length == 0)
     {
-        $('#oldPass').tooltip({'placement':'left','trigger': 'manual', 'title': 'Не сте въвели старата парола!'}).tooltip('show');
+        $('#oldPass').tooltip({'placement':'right','trigger': 'manual', 'title': 'Не сте въвели старата парола!'}).tooltip('show');
         isChecked = false;
     }
     if($("#newPass").val().length < 8 && !hasNumber.test($("#newPass").val()))
     {
-        $('#newPass').tooltip({'placement':'left','trigger': 'manual', 'title': 'Новата парола трябва да съдържа поне 1 цифра и да е по-дълга от 7 символа!'}).tooltip('show');
+        $('#newPass').tooltip({'placement':'right','trigger': 'manual', 'title': 'Новата парола трябва да съдържа поне 1 цифра и да е по-дълга от 7 символа!'}).tooltip('show');
         isChecked = false;
     }
-    if(checked == true)
+    if(isChecked == true)
     {
     $.post("/auth/changePassword",
         {
