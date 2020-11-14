@@ -11,6 +11,7 @@ import { UserRepository } from './user.repository';
 import * as Cryptr from 'cryptr';
 import { RegisterFirmDTO } from './dto/registerFirm.dto';
 import { FirmRepository } from './firm.repository';
+import { JWTPayloadFirm } from './jwt2-payload';
 
 @Injectable()
 export class AuthService {
@@ -25,7 +26,7 @@ export class AuthService {
     return await this.userRepository.registerUser(registerUserDto);
 
   }
-  async loginUser(email: string, password: string, @Session() session: { token?: string })
+  async loginUser(email: string, password: string, @Session() session: { token?: string, type?:string })
   {
     const ver = await this.userRepository.loginUser(email, password);
     if (!ver)
@@ -43,11 +44,35 @@ export class AuthService {
         const payload: JWTPayload = { email };
         const JWTToken = this.jwtService.sign(payload);
         session.token = JWTToken;
+        session.type="User";
         return true;
       }
     }
   }
-  async checkUser(@Session() session: { token?: string }, password: string)
+  async loginFirm(eik:string,password:string, @Session() session:{token?: string, type?:string})
+  {
+    const ver = await this.firmRepository.loginFirm(eik,password);
+    if(!ver)
+    {
+      return false;
+    }
+    else
+    {
+      if(ver==="notVerified")
+      {
+        return ver;
+      }
+      else
+      {
+        const payload:JWTPayloadFirm = {eik};
+        const JWTToken = this.jwtService.sign(payload);
+        session.token=JWTToken;
+        session.type="Frim";
+        return true;
+      }
+    }
+  }
+  async checkUser(@Session() session: { token?: string, type?:string }, password: string)
   {
     let userJSON = await this.jwtService.decode(session.token);
     if (userJSON === null)
@@ -59,7 +84,7 @@ export class AuthService {
       return await this.userRepository.checkPassword(userJSON["email"], password);
     }
   }
-  async deleteUser(@Session() session: { token?: string }, pass:string)
+  async deleteUser(@Session() session: { token?: string , type?:string}, pass:string)
   {
     let userJSON = await this.jwtService.decode(session.token);
     if (userJSON === null) {
@@ -70,7 +95,7 @@ export class AuthService {
       return await this.userRepository.deleteUser(userJSON["email"],pass);  
     }
   }
-  async changePassword(@Session() session: { token?: string }, oldPass: string, newPass: string)
+  async changePassword(@Session() session: { token?: string , type?:string}, oldPass: string, newPass: string)
   {
     let userJSON = await this.jwtService.decode(session.token);
     if (userJSON === null) {
@@ -82,7 +107,7 @@ export class AuthService {
     }
     
   }
-  async getProfile(@Session() session: {token?: string}):Promise<User>
+  async getProfile(@Session() session: {token?: string, type?:string}):Promise<User>
   {
     console.log(session.token);
     let userJSON = await this.jwtService.decode(session.token);

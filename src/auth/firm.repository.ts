@@ -2,6 +2,7 @@ import { EntityRepository, Repository } from "typeorm";
 import { RegisterFirmDTO } from "./dto/registerFirm.dto";
 import { Firm } from "./firm.entity";
 import * as bcrypt from 'bcrypt';
+import e from "express";
 
 @EntityRepository(Firm)
 export class FirmRepository extends Repository<Firm>
@@ -34,6 +35,33 @@ export class FirmRepository extends Repository<Firm>
     else 
     {
       return false;
+    }
+  }
+  async loginFirm(eik:string,password:string)
+  {
+    const firm:Firm = await this.findOne({eik});
+    if(!firm)
+    {
+      return undefined;
+    } 
+    else
+    {
+      const hashed = bcrypt.hash(password,firm.salt);
+      if(hashed === firm.passHash)
+      {
+        if(!firm.verified)
+        {
+          return "notVerified";
+        }
+        else
+        {
+          return true;
+        }
+      }
+      else
+      {
+        return undefined;
+      }
     }
   }
   async verifyFirm(eik:string)

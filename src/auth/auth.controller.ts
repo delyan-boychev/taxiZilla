@@ -39,14 +39,21 @@ export class AuthController {
     return registered;
   }
   @Post("/loginUser/")
-  async loginUser(@Req() req,@Body("email", ValidationPipe) email: string, @Body("password", ValidationPipe) password: string, @Session() session: { token?: string })
+  async loginUser(@Req() req,@Body("email", ValidationPipe) email: string, @Body("password", ValidationPipe) password: string, @Session() session: { token?: string, type?:string })
   {
-    var hour = 1800000
-    req.session.cookie.expires = new Date(Date.now() + hour)
+    let time = 1800000;
+    req.session.cookie.expires = new Date(Date.now() + time)
     return await this.authService.loginUser(email, password, session);
   }
+  @Post("/loginFirm/")
+  async loginFirm(@Req() req, @Body("email",ValidationPipe)email:string, @Body("password",ValidationPipe) password:string,session:{token?:string, type?:string})
+  {
+    let time = 1800000;
+    req.session.cookie.expires = new Date(Date.now()+time);
+    return await this.authService.loginFirm(email,password,session);
+  }
   @Get("/profile/")
-  async getProfile(@Session() session: { token?: string })
+  async getProfile(@Session() session: { token?: string , type?:string})
   {
     return await this.authService.getProfile(session);
   }
@@ -58,17 +65,17 @@ export class AuthController {
     return verified;
   }
   @Post("/checkUser/")
-  async checkUser(@Session() session: { token?: string }, @Body("password") password: string)
+  async checkUser(@Session() session: { token?: string , type?:string}, @Body("password") password: string)
   {
     return this.authService.checkUser(session, password);
   }
   @Post("/deleteUser/")
-  async deleteUser(@Session() session: {token?: string}, @Body("password") pass:string)
+  async deleteUser(@Session() session: {token?: string, type?:string}, @Body("password") pass:string)
   {
     return await this.authService.deleteUser(session,pass);
   }
   @Post("/changePassword/")
-  async changePassword(@Session() session: { token?: string }, @Body("oldPass") oldPass: string, @Body("newPass") newPass: string)
+  async changePassword(@Session() session: { token?: string , type?:string}, @Body("oldPass") oldPass: string, @Body("newPass") newPass: string)
   {
     return await this.authService.changePassword(session, oldPass, newPass);
   }
