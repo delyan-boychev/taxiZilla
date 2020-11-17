@@ -64,7 +64,7 @@ export class UserRepository extends Repository<User>
     if (hashed === user.passHash) {
       if (user.verified === true)
       {
-        return email; 
+        return user; 
       }
       else
       {

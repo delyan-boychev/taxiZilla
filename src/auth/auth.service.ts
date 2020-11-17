@@ -45,7 +45,7 @@ export class AuthService {
         const JWTToken = this.jwtService.sign(payload);
         session.token = JWTToken;
         session.type="User";
-        return true;
+        return ver;
       }
     }
   }
