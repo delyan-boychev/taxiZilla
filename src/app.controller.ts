@@ -8,10 +8,11 @@ export class AppController {
   constructor(private readonly appService: AppService) {}
 
   @Get()
-  async getMainPage(@Session() session:{token?:String}, @Res() res:Response) {
+  async getMainPage(@Session() session:{token?:String, isUsingBrowser?:Boolean}, @Res() res:Response) {
     var isLoggedIn;
     if(!session.token) isLoggedIn = "false";
     else isLoggedIn = "true";
+    session.isUsingBrowser = true;
     res.set("isLoggedIn", isLoggedIn);
     res.send(this.appService.getMainPage());
   }

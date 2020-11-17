@@ -155,6 +155,12 @@ function registerSubmit()
         isChecked = false;
     }
     else $('#password').addClass("is-valid");
+    if($("#repeatPass").val() != $("#password").val())
+    {
+        $('#repeatPass').addClass("is-invalid");
+        isChecked = false;
+    }
+    else $('#repeatPass').addClass("is-valid");
     if($("#phoneNumber").val().length < 10 || $("#phoneNumber").val().charAt(0) != '0' || !isDigit.test($("#phoneNumber").val()))
     {
         $('#phoneNumber').addClass("is-invalid");
@@ -247,4 +253,3 @@ async function isLoggedIn()
     let response = await fetch(document.location);
     return response.headers.get('isLoggedIn');
 }
-

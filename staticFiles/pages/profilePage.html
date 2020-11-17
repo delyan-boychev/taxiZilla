@@ -45,9 +45,9 @@
             <div class="tab-pane active" id="profile">
               <h6>Информация за профила</h6>
               <hr>
-              <form>
                 <div class="form-group">
                   <input type="text" class="form-control" id="fName" aria-describedby="fullNameHelp" placeholder="Име">
+                
                 </div>
                 <div class="form-group">
                   <input type="text" class="form-control" id="lName" placeholder="Фамилия">
@@ -59,15 +59,13 @@
                   <input type="text" class="form-control" id="address" placeholder="Адрес">
                 </div>
                 <button type="button" class="btn btn-primary text-secondary">Редактиране на профила</button>
-              </form>
             </div>
             <div class="tab-pane" id="account">
               <h6>Настройки на профила</h6>
               <hr>
-              <form>
                 <div class="form-group">
                   <input type="text" class="form-control" id="email" placeholder="Имейл">
-                  <button class="btn btn-primary text-secondary" type="button" onclick="delProfile()">Смяна на имейл</button>
+                  <button class="btn btn-primary text-secondary" type="button" onclick="changeEmail()">Смяна на имейл</button>
                 </div>
                 <hr>
                 <div class="form-group">
@@ -75,8 +73,8 @@
                   <p class="text-muted font-size-sm">При изтриване на профила никога няма да можете да достъпите информацията от него!</p>
                 </div>
                 <input type="password" class="form-control mb-4" id="passDel" placeholder="Парола">
+                <div class="invalid-feedback">Не сте въвели парола!</div>
                 <button class="btn btn-danger" type="button" onclick="delProfile()">Изтриване на профил</button>
-              </form>
             </div>
             <div class="tab-pane" id="security">
               <h6>Сигурност</h6>
@@ -84,7 +82,9 @@
                 <div class="form-group">
                   <label class="d-block">Смяна на парола</label>
                   <input type="password" class="form-control" id="oldPass" placeholder="Стара парола">
+                  <div class="invalid-feedback">Не сте въвели парола!</div>
                   <input type="password" class="form-control mt-4" id="newPass" placeholder="Нова парола">
+                  <div class="invalid-feedback">Паролата трябва да е по-дълга от 7 символа и да съдържа поне едно число!</div>
                   <button type="button" class="btn btn-primary text-secondary" onclick="changePassword()">Смяна на парола</button>
                 </div>
               <hr>

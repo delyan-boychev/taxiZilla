@@ -1,11 +1,13 @@
 import { Body, Controller, Get, Param, Post, Req, Res, Session, ValidationPipe } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { RegisterUserDTO } from './dto/registerUser.dto';
+import { RegisterUserDTO } from './dto/RegisterUser.dto';
 import * as nodemailer from 'nodemailer';
 import { PrimaryGeneratedColumn } from 'typeorm';
 import { transport } from './email.transport';
 import { Response } from 'express';
+import * as requestIp from 'request-ip';
 import { RegisterFirmDTO } from './dto/registerFirm.dto';
+import { IpAddress } from './ipaddress.decorator';
 
 @Controller('auth')
 export class AuthController {
@@ -39,10 +41,12 @@ export class AuthController {
     return registered;
   }
   @Post("/loginUser/")
-  async loginUser(@Req() req,@Body("email", ValidationPipe) email: string, @Body("password", ValidationPipe) password: string, @Session() session: { token?: string, type?:string })
+  async loginUser( @Req() req,@Body("email", ValidationPipe) email: string, @Body("password", ValidationPipe) password: string, @Session() session: { token?: string, type?:string, isUsingBrowser?:Boolean })
   {
+    console.log(session.isUsingBrowser); 
     let time = 1800000;
     req.session.cookie.expires = new Date(Date.now() + time)
+    console.log(session.isUsingBrowser);
     return await this.authService.loginUser(email, password, session);
   }
   @Post("/loginFirm/")
