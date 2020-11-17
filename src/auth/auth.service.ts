@@ -12,6 +12,7 @@ import * as Cryptr from 'cryptr';
 import { RegisterFirmDTO } from './dto/registerFirm.dto';
 import { FirmRepository } from './firm.repository';
 import { JWTPayloadFirm } from './jwt2-payload';
+import { UserRoles } from './enums/userRoles.enum';
 
 @Injectable()
 export class AuthService {
@@ -26,9 +27,9 @@ export class AuthService {
     return await this.userRepository.registerUser(registerUserDto);
 
   }
-  async loginUser(email: string, password: string, @Session() session: { token?: string, type?:string })
+  async loginUser(email: string, password: string, @Session() session: { token?: string, type?:string, role?:UserRoles})
   {
-    const ver = await this.userRepository.loginUser(email, password);
+    const ver = await this.userRepository.loginUser(email, password,session);
     if (!ver)
     {
       return false;
@@ -45,7 +46,8 @@ export class AuthService {
         const JWTToken = this.jwtService.sign(payload);
         session.token = JWTToken;
         session.type="User";
-        return ver;
+        session.role=ver.role;
+        return ver.email;
       }
     }
   }
@@ -72,7 +74,7 @@ export class AuthService {
       }
     }
   }
-  async checkUser(@Session() session: { token?: string, type?:string }, password: string)
+  async checkUser(@Session() session: { token?: string, type?:string, role:UserRoles }, password: string)
   {
     let userJSON = await this.jwtService.decode(session.token);
     if (userJSON === null)
@@ -84,7 +86,7 @@ export class AuthService {
       return await this.userRepository.checkPassword(userJSON["email"], password);
     }
   }
-  async deleteUser(@Session() session: { token?: string , type?:string}, pass:string)
+  async deleteUser(@Session() session: { token?: string , type?:string, role:UserRoles}, pass:string)
   {
     let userJSON = await this.jwtService.decode(session.token);
     if (userJSON === null) {
@@ -95,7 +97,7 @@ export class AuthService {
       return await this.userRepository.deleteUser(userJSON["email"],pass);  
     }
   }
-  async changePassword(@Session() session: { token?: string , type?:string}, oldPass: string, newPass: string)
+  async changePassword(@Session() session: { token?: string , type?:string, role:UserRoles}, oldPass: string, newPass: string)
   {
     let userJSON = await this.jwtService.decode(session.token);
     if (userJSON === null) {
@@ -107,7 +109,7 @@ export class AuthService {
     }
     
   }
-  async getProfile(@Session() session: {token?: string, type?:string}):Promise<User>
+  async getProfile(@Session() session: {token?: string, type?:string, role:UserRoles}):Promise<User>
   {
     console.log(session.token);
     let userJSON = await this.jwtService.decode(session.token);

@@ -3,7 +3,7 @@ import { RegisterUserDTO } from "./dto/registerUser.dto";
 import { UserRoles } from "./enums/userRoles.enum";
 import { User } from "./user.entity";
 import * as bcrypt from 'bcrypt';
-import { UseGuards } from "@nestjs/common";
+import { Session, UseGuards } from "@nestjs/common";
 import e from "express";
 
 
@@ -49,7 +49,7 @@ export class UserRepository extends Repository<User>
       return true;
     }
   }
-  async loginUser(email: string, password: string)
+  async loginUser(email: string, password: string, @Session() session: { token?: string, type?:string, role?:UserRoles})
   {
     const user = await this.findOne({ email });
     let hashed = "";
