@@ -1,6 +1,7 @@
+
 function refreshPage()
 {
-    location.reload();
+    window.location.reload();
 }
 function hideTooltips()
 {
@@ -19,15 +20,25 @@ function collapse()
         document.getElementById("navbar").style.removeProperty("background-image");
     }
 }
-function designChangeOnStart(loggedIn)
+function designChangeOnStart(headers)
 {
     var nav = document.getElementById("navElements");
-    if(loggedIn == "true")
+    if(headers["isloggedin"] == "true")
     {
+        if(headers["type"] == "Firm")
+        {
+        var a = document.getElementById("loginNav");
+        var b = document.getElementById("registerNav");
+        nav.removeChild(a);
+        nav.removeChild(b);
+        }
+        else
+        {
         var a = document.getElementById("loginNav");
         var b = document.getElementById("registerNav");
         nav.removeChild(a);
         nav.removeChild(b);
         nav.innerHTML += '<li class="nav-item" id="loginNav"><a class="nav-link text-secondary" onclick="document.location = \'./logout\'">Излизане</a></li> <li class="nav-item" id="loginNav"><a class="nav-link text-secondary" onclick="profilePage()">Моят профил</a></li>';
     }
+   }
 }

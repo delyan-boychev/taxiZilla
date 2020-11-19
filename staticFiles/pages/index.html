@@ -44,13 +44,22 @@
                             Регистриране
                           </a>
                           <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <a class="nav-link text-secondary" onclick="pageRegisterUser()">Регистриране като клиент</a>
+                            <a class="nav-link text-secondary" onclick="pageRegisterUser()">Регистриране като потребител</a>
                             <div class="dropdown-divider"></div>
                             <a class="dropdown-item  text-secondary" onclick="pageRegisterFirm()">Регистриране като фирма</a>
                           </div>
                         </li>
+                        <li class="nav-item dropdown" id="registerNav">
+                          <a class="nav-link dropdown-toggle  text-secondary" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Влизане
+                          </a>
+                          <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <a class="nav-link text-secondary" onclick="loginPage()">Влизане като потребител</a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item  text-secondary" onclick="loginFirmPage()">Влизане като фирма</a>
+                          </div>
+                        </li>
                         <li class="nav-item" id="loginNav">
-                          <a class="nav-link text-secondary" onclick="loginPage()">Влизане</a>
                       </li>
                       
                     </ul>
@@ -150,7 +159,6 @@
   <script src="./js/userOperations.js"></script>
   <script src="./js/design.js"></script>
   <script>
-    hi();
     isLoggedIn().then(designChangeOnStart);
   </script>
 </body>

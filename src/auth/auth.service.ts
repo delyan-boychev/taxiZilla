@@ -47,7 +47,7 @@ export class AuthService {
         session.token = JWTToken;
         session.type="User";
         session.role=ver.role;
-        return ver.email;
+        return true;
       }
     }
   }
@@ -64,12 +64,16 @@ export class AuthService {
       {
         return ver;
       }
+      else if(ver==="notModerationVerified")
+      {
+        return ver;
+      }
       else
       {
         const payload:JWTPayloadFirm = {eik};
         const JWTToken = this.jwtService.sign(payload);
         session.token=JWTToken;
-        session.type="Frim";
+        session.type="Firm";
         return true;
       }
     }
@@ -111,7 +115,6 @@ export class AuthService {
   }
   async getProfile(@Session() session: {token?: string, type?:string, role:UserRoles}):Promise<User>
   {
-    console.log(session.token);
     let userJSON = await this.jwtService.decode(session.token);
     if (userJSON === null)
     {
@@ -119,7 +122,6 @@ export class AuthService {
     }
     else
     {
-      //console.log(userJSON["email"]);
       const user = await this.userRepository.getProfile(userJSON["email"]);
       return user;
     }

@@ -30,6 +30,14 @@ function loginPage()
 });
           
 }
+function loginFirmPage()
+{
+        hideTooltips();
+        $.get('http://'+ window.location.host +'/pages/loginFirmPage.html', function( data, textStatus, jqXHR ) {
+        document.getElementById("pageContent").innerHTML = data;
+});
+          
+}
 function profilePage()
 {
         hideTooltips()

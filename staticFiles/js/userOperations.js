@@ -1,4 +1,4 @@
-var loggedIn;
+var loggedIn = false;
 function loginSubmit()
 {
     $.post("/auth/loginUser",
@@ -11,6 +11,30 @@ function loginSubmit()
         else if(data=="notVerified") document.getElementById("messageText").innerText="Моля проверете имейла си и потвърдете профила!";
         else document.getElementById("messageText").innerText="Неправилна парола или имейл адрес!";
         $("#modal").modal();
+        loggedIn = true;
+    }
+    );
+    return false;
+}
+function loginFirmSubmit()
+{
+    var checked = true;
+    if($("#eik").val().length < 13)
+    {
+        
+    }
+    $.post("/auth/loginFirm",
+    {
+        eik: $("#eik").val(),
+        password: $("#password").val(),
+    },
+    function(data,status){
+        if(data=="true") document.getElementById("messageText").innerText="Успешно  влязохте в профила си!";
+        else if(data=="notVerified") document.getElementById("messageText").innerText="Моля проверете имейла си и потвърдете профила!";
+        else if(data=="notModerationVerified") document.getElementById("messageText").innerText="Фирмата все още не е преминала одобрение от модераторите! Обикновено това отнема няколко дни!";
+        else document.getElementById("messageText").innerText="Неправилна парола или ЕИК!";
+        $("#modal").modal();
+        loggedIn = true;
     }
     );
     return false;
@@ -63,46 +87,59 @@ function check_eik(eik_str){
 }
 function registerFirmSubmit()
 {
-    hideTooltips();
+    $("input").removeClass("is-invalid");
     var isChecked = true;
     var isDigit = /^\d+$/;
     var hasNumber = /\d/;
     var isEmail = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
     if($("#firmName").val().length < 3)
     {
-        $('#firmName').tooltip({'placement':'left','trigger': 'manual', 'title': 'Името на фирмата трябва да е по-дълго от 2 символа!'}).tooltip('show');
+        $('#firmName').addClass("is-invalid");
         isChecked = false;
     }
+    else $('#firmName').addClass("is-valid");
     if(!check_eik($("#eik").val()))
     {
-        $('#eik').tooltip({'placement':'left', 'trigger': 'manual', 'title': 'Въвели сте неправилен ЕИК!'}).tooltip('show');
+        $('#eik').addClass("is-invalid");
         isChecked = false;
     }
+    else $('#eik').addClass("is-valid");
     if($("#city").val().length < 3)
     {
-        $('#city').tooltip({'placement':'left', 'trigger': 'manual', 'title': 'Не сте въвели град!'}).tooltip('show');
+        $('#city').addClass("is-invalid");
         isChecked = false;
     }
+    else $('#city').addClass("is-valid");
     if($("#address").val().length < 3)
     {
-        $('#address').tooltip({'placement':'left', 'trigger': 'manual', 'title': 'Не сте въвели адрес!'}).tooltip('show');
+        $('#address').addClass("is-invalid");
         isChecked = false;
     }
+    else $('#address').addClass("is-valid");
     if(!isEmail.test($("#email").val()))
     {
-        $('#email').tooltip({ 'placement':'left','trigger': 'manual', 'title': 'Имейл адресът е невалиден!'}).tooltip('show');
+        $('#email').addClass("is-invalid");
         isChecked = false;
     }
+    else $('#email').addClass("is-valid");
     if($("#password").val().length < 8 || !hasNumber.test($("#password").val()))
     {
-        $('#password').tooltip({'placement':'left','trigger': 'manual', 'title': 'Паролата трябва да съдържа поне 1 число и да е по-дълга от 7 символа!'}).tooltip('show');
+        $('#password').addClass("is-invalid");
         isChecked = false;
     }
+    else $('#password').addClass("is-valid");
+    if($("#password").val() != $("#repeatPass").val())
+    {
+        $('#repeatPass').addClass("is-invalid");
+        isChecked = false;
+    }
+    else $('#repeatPass').addClass("is-valid");
     if($("#phoneNumber").val().length < 10 || $("#phoneNumber").val().charAt(0) != '0' || !isDigit.test($("#phoneNumber").val()))
     {
-        $('#phoneNumber').tooltip({'placement':'left','trigger': 'manual', 'title': 'Телефонният номер е невалиден!'}).tooltip('show');
+        $('#phoneNumber').addClass("is-invalid");
         isChecked = false;
     }
+    else $('#phoneNumber').addClass("is-valid");
     if(isChecked == true)
     {
         $.post("/auth/registerFirm",
@@ -249,7 +286,17 @@ function delProfile()
     }
 }
 async function isLoggedIn()
-{
-    let response = await fetch(document.location);
-    return response.headers.get('isLoggedIn');
+{ 
+    var a = {};
+    var response = await fetch(document.location);
+    response.headers.forEach((val, key) => {
+            a[key] = val;
+    });
+    return a;
 }
+$('#modal').on('hidden.bs.modal', function () {
+    if(loggedIn == true)
+    {
+   window.location.reload();
+    }
+  });

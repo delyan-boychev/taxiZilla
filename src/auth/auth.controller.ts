@@ -49,11 +49,11 @@ export class AuthController {
     return await this.authService.loginUser(email, password, session);
   }
   @Post("/loginFirm/")
-  async loginFirm(@Req() req,@Body("email",ValidationPipe)email:string, @Body("password",ValidationPipe) password:string,session:{token?:string, type?:string,role?:UserRoles})
+  async loginFirm(@Req() req,@Body("eik",ValidationPipe)eik:string, @Body("password",ValidationPipe) password:string,session:{token?:string, type?:string,role?:UserRoles})
   {
     let time = 1800000;
     req.session.cookie.expires = new Date(Date.now()+time);
-    return await this.authService.loginFirm(email,password,session);
+    return await this.authService.loginFirm(eik,password,session);
   }
   @Get("/profile/")
   async getProfile(@Session() session: { token?: string , type?:string,role:UserRoles})

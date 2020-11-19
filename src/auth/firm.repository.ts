@@ -46,12 +46,16 @@ export class FirmRepository extends Repository<Firm>
     } 
     else
     {
-      const hashed = bcrypt.hash(password,firm.salt);
+      const hashed = await bcrypt.hash(password,firm.salt);
       if(hashed === firm.passHash)
       {
         if(!firm.verified)
         {
           return "notVerified";
+        }
+        else if(!firm.moderationVerified)
+        {
+          return "notModerationVerified";
         }
         else
         {
