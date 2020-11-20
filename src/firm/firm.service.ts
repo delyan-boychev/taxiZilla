@@ -3,7 +3,7 @@ import { JwtService } from '@nestjs/jwt';
 import { join } from 'path';
 import { RegisterFirmDTO } from './dto/registerFirm.dto';
 import { FirmRepository } from './firm.repository';
-import { JWTPayloadFirm } from './jwt2-payload';
+import { JWTPayloadFirm } from './jwt-payload';
 import * as Cryptr from 'cryptr';
 import { transport } from 'src/email.transport';
 
@@ -48,9 +48,9 @@ export class FirmService {
   {
     const encrypter = new Cryptr("mXb35Bw^FvCz9MLN");
     const link = encrypter.encrypt(registerFirmDto.eik);
-    const htmlcode = "<a href='http://localhost:3000/auth/verifyFirm/"+link+"'>ТУК</a>";
+    const htmlcode = "<a href='http://localhost:3000/firm/verifyFirm/"+link+"'>ТУК</a>";
     const info = await transport.sendMail({
-      from: "Taxi Zilla",
+      from: "taxiZilla",
       to:registerFirmDto.email,
       subject: 'Потвърждение на email',
       html: '<b>За да потвърдиш email адреса си натисни </b>'+htmlcode,

@@ -1,4 +1,4 @@
-
+let loginInfo;
 function refreshPage()
 {
     window.location.reload();
@@ -20,25 +20,24 @@ function collapse()
         document.getElementById("navbar").style.removeProperty("background-image");
     }
 }
-function designChangeOnStart(headers)
+function designChangeOnStart()
 {
     var nav = document.getElementById("navElements");
-    if(headers["isloggedin"] == "true")
+    loginInfo = JSON.parse(document.getElementById("res").innerText);
+    document.getElementById("res").remove();
+    if(loginInfo["isLoggedIn"] == "true")
     {
-        if(headers["type"] == "Firm")
+        if(loginInfo["Type"] == "Firm")
         {
-        var a = document.getElementById("loginNav");
-        var b = document.getElementById("registerNav");
-        nav.removeChild(a);
-        nav.removeChild(b);
+        document.getElementById("loginNav").remove();
+        document.getElementById("registerNav").remove();
+        nav.innerHTML += '<li class="nav-item" id="loginNav"><a class="nav-link text-secondary" onclick="profileFirmPage()">Моят профил</a></li><li class="nav-item" id="loginNav"><a class="nav-link text-secondary" onclick="document.location = \'./logout\'">Излизане</a></li>';
         }
         else
         {
-        var a = document.getElementById("loginNav");
-        var b = document.getElementById("registerNav");
-        nav.removeChild(a);
-        nav.removeChild(b);
-        nav.innerHTML += '<li class="nav-item" id="loginNav"><a class="nav-link text-secondary" onclick="document.location = \'./logout\'">Излизане</a></li> <li class="nav-item" id="loginNav"><a class="nav-link text-secondary" onclick="profilePage()">Моят профил</a></li>';
+        document.getElementById("loginNav").remove();
+        document.getElementById("registerNav").remove();
+        nav.innerHTML += '<li class="nav-item" id="loginNav"><a class="nav-link text-secondary" onclick="profilePage()">Моят профил</a></li><li class="nav-item" id="loginNav"><a class="nav-link text-secondary" onclick="document.location = \'./logout\'">Излизане</a></li>';
     }
    }
 }

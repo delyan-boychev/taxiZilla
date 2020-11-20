@@ -1,4 +1,4 @@
-var loggedIn = false;
+var logInForm = false;
 function loginSubmit()
 {
     $.post("/auth/loginUser",
@@ -11,7 +11,7 @@ function loginSubmit()
         else if(data=="notVerified") document.getElementById("messageText").innerText="Моля проверете имейла си и потвърдете профила!";
         else document.getElementById("messageText").innerText="Неправилна парола или имейл адрес!";
         $("#modal").modal();
-        loggedIn = true;
+        logInForm = true;
     }
     );
     return false;
@@ -23,7 +23,7 @@ function loginFirmSubmit()
     {
         
     }
-    $.post("/auth/loginFirm",
+    $.post("/firm/loginFirm",
     {
         eik: $("#eik").val(),
         password: $("#password").val(),
@@ -142,7 +142,7 @@ function registerFirmSubmit()
     else $('#phoneNumber').addClass("is-valid");
     if(isChecked == true)
     {
-        $.post("/auth/registerFirm",
+        $.post("/firm/registerFirm",
         {
             firmName: $("#firmName").val(),
             eik: $("#eik").val(),
@@ -285,18 +285,10 @@ function delProfile()
         $("#passDel").tooltip({'placement':'left','trigger': 'manual', 'title': 'Въведете парола!'}).tooltip('show');
     }
 }
-async function isLoggedIn()
-{ 
-    var a = {};
-    var response = await fetch(document.location);
-    response.headers.forEach((val, key) => {
-            a[key] = val;
-    });
-    return a;
-}
 $('#modal').on('hidden.bs.modal', function () {
-    if(loggedIn == true)
+    if(logInForm == true)
     {
-   window.location.reload();
+      window.location.reload();
+      logInForm = false;
     }
   });

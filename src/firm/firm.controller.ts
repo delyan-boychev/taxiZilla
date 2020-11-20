@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, Req, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Req, Session, ValidationPipe } from '@nestjs/common';
 import { UserRoles } from 'src/auth/enums/userRoles.enum';
 import { RegisterFirmDTO } from './dto/registerFirm.dto';
 import { FirmService } from './firm.service';
@@ -23,7 +23,7 @@ export class FirmController {
     return verified;
   }
   @Post("/loginFirm/")
-  async loginFirm(@Req() req,@Body("eik",ValidationPipe)eik:string, @Body("password",ValidationPipe) password:string,session:{token?:string, type?:string,role?:UserRoles})
+  async loginFirm(@Req() req,@Body("eik",ValidationPipe)eik:string, @Body("password",ValidationPipe) password:string,@Session() session:{token?:string, type?:string,role?:UserRoles})
   {
     let time = 1800000;
     req.session.cookie.expires = new Date(Date.now()+time);

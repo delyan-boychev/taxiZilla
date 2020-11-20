@@ -5,13 +5,10 @@ import { join, toNamespacedPath } from 'path';
 import { RegisterUserDTO } from './dto/registerUser.dto';
 import { transport } from '../email.transport';
 import { JWTPayload } from './jwt-payload';
-import { JwtStrategy } from './jwt-strategy';
 import { User } from './user.entity';
 import { UserRepository } from './user.repository';
 import * as Cryptr from 'cryptr';
-import { RegisterFirmDTO } from '../firm/dto/registerFirm.dto';
 import { FirmRepository } from '../firm/firm.repository';
-import { JWTPayloadFirm } from '../firm/jwt2-payload';
 import { UserRoles } from './enums/userRoles.enum';
 
 @Injectable()

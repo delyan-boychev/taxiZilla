@@ -5,7 +5,8 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta http-equiv="x-ua-compatible" content="ie=edge">
-  <title>Material Design Bootstrap</title>
+  <title>taxiZilla</title>
+  <link rel="icon" type="image/png" href="./assets/img/logo.png"/>
   <!-- Font Awesome -->
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css">
   <!-- Bootstrap core CSS -->
@@ -15,7 +16,7 @@
   <!-- Your custom styles (optional) -->
   <link href="./assets/css/style.css" rel="stylesheet">
 </head>
-<body>
+<body style="overflow-x:hidden;">
 
           <!--Navbar-->
           <nav id="navbar" class="navbar navbar-expand-lg navbar-light bg-primary fixed-top scrolling-navbar" style="background-image: url('http://localhost:3000/assets/img/navbar.png'); background-size: cover; background-position: top right;">
@@ -39,7 +40,7 @@
                         <li class="nav-item">
                             <a class="nav-link text-secondary" onclick="homePage()">Начална страница</a>
                         </li>
-                        <li class="nav-item dropdown" id="registerNav">
+                        <li class="nav-item dropdown" id="loginNav">
                           <a class="nav-link dropdown-toggle  text-secondary" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             Регистриране
                           </a>
@@ -75,60 +76,7 @@
               
           </nav>
       <main id="pageContent" style="margin-top: 93px;">
-        <section id="best-features" class="text-center w-90 p-3" style="background-image: url('http://78.83.206.189:3000/assets/img/showcase.jpeg'); background-size: cover;"> 
-
-            <!-- Heading -->
-            <h2 class="mb-5 font-weight-bold white-text">Извикай си такси бързо и лесно!</h2>
-
-            <!--Grid row-->
-            <div class="row d-flex justify-content-center mb-4">
-
-                <!--Grid column-->
-                <div class="col-md-8">
-
-                    <!-- Description -->
-                    <p class="white-text"></p>
-
-                </div>
-                <!--Grid column-->
-
-            </div>
-            <!--Grid row-->
-
-            <!--Grid row-->
-            <div class="row">
-
-                <!--Grid column-->
-                <div class="col-md-4 mb-5">
-                    <i class="fa fa-taxi fa-4x text-primary"></i>
-                    <h4 class="my-4 font-weight-bold text-primary">Бързо намиране на такси</h4>
-                    <p class="text-primary">Поръчай такси само като попълниш име и телефонен номер.</p>
-                </div>
-                <!--Grid column-->
-
-                <!--Grid column-->
-                <div class="col-md-4 mb-1">
-                    <i class="fa fa-tachometer-alt fa-4x white-text"></i>
-                    <h4 class="my-4 font-weight-bold white-text">Бързо пристигане на такси</h4>
-                    <p class="white-text">Нашата платформа изпраща вашата заявка за такси на най-близко намиращия се свободен шофьор.</p>
-                </div>
-                <!--Grid column-->
-
-                <!--Grid column-->
-                <div class="col-md-4 mb-1">
-                    <i class="fa fa-truck-loading fa-4x text-primary"></i>
-                    <h4 class="my-4 font-weight-bold text-primary">Напазарувай от вкъщи</h4>
-                    <p class="text-primary">Чрез нашата платформа Вие имате възможност да изпратите списък с продуктите и шофьорът да ги достави до Вашата врата.</p>
-                </div>
-                <!--Grid column-->
-
-            </div>
-            <!--Grid row-->
-
-        </section>
-        <div class="container">
-           
-        </div>
+      
     </main>
     <div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
       <div class="modal-dialog" role="document">
@@ -159,7 +107,12 @@
   <script src="./js/userOperations.js"></script>
   <script src="./js/design.js"></script>
   <script>
-    isLoggedIn().then(designChangeOnStart);
+    $(document).ready(function()
+    {
+      homePage();
+    designChangeOnStart();
+    }
+    );
   </script>
 </body>
 </html>

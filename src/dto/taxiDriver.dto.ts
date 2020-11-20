@@ -1,6 +1,7 @@
 export class taxiDriverDTO
 {
     email: string;
+    status:string;
     x: number;
     y: number;
 }
@@ -20,15 +21,13 @@ export class taxiDriversFindNearestDto
     }
     getTheNearestDriver(): string
     {
-        var min = this.taxiDriversDistance[0];
         var index = 0;
         let i:number;
-        for(i=0; i<this.taxiDriversDistance.length; i++)
+        for(i=1; i<this.taxiDriversDistance.length; i++)
         {
-            if(this.taxiDriversDistance[i]<min)
+            if(this.taxiDriversDistance[i]<this.taxiDriversDistance[index])
             {
                 index = i;
-                min =this.taxiDriversDistance[i];
             }
         }
         return this.taxiDrivers[index].email;

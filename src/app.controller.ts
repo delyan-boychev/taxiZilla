@@ -10,15 +10,16 @@ export class AppController {
 
   @Get()
   async getMainPage(@Session() session:{token?:string, type?:string, role?:UserRoles}, @Res() res:Response) {
+    var resp = {};
     var isLoggedIn;
-    if(session.token === undefined) isLoggedIn = "false";
+    if(session.token === undefined) resp["isLoggedIn"] = "false";
     else {
-      isLoggedIn = "true";
-      res.set("Type", session.type);
-      if(session.type === "User")res.set("Role", session.role);
+      resp["isLoggedIn"] = "true";
+      resp["Type"] = session.type;
+      if(session.type === "User")resp["Role"] = session.role;
     }
-    res.set("isLoggedIn", isLoggedIn);
-    res.send(this.appService.getMainPage());
+    let homePage:string = this.appService.getMainPage().replace("</body>", "<p id=\"res\"style=\"display:none;\">" + JSON.stringify(resp) +" </p>").replace("</html>", "");
+    res.send(homePage + "</body></html>");
   }
   @Get("/logout/")
   logout(@Session() session:{token?:string, type?:string, role?:UserRoles}, @Res() res:Response)
