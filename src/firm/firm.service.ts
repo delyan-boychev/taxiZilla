@@ -53,7 +53,7 @@ export class FirmService {
       from: "taxiZilla",
       to:registerFirmDto.email,
       subject: 'Потвърждение на email',
-      html: '<b>За да потвърдиш email адреса си натисни </b>'+htmlcode,
+      html: '<b>За да потвърдите email адреса си натиснете</b> '+htmlcode+'<b>!</b>',
     });
     return "Sended";
   }
