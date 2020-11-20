@@ -1,6 +1,6 @@
 import { BaseEntity, Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { UserRoles } from "./enums/userRoles.enum";
-import { Firm } from "./firm.entity";
+import { Firm } from "../firm/firm.entity";
 
 @Entity()
 export class User extends BaseEntity

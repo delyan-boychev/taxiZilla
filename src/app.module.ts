@@ -7,7 +7,8 @@ import { AuthModule } from './auth/auth.module';
 import { User } from './auth/user.entity';
 import { MailerModule, MailerService } from '@nestjs-modules/mailer';
 import { PugAdapter } from '@nestjs-modules/mailer/dist/adapters/pug.adapter';
-import { Firm } from './auth/firm.entity';
+import { Firm } from './firm/firm.entity';
+import { FirmModule } from './firm/firm.module';
 
 @Module({
   imports: [
@@ -30,7 +31,8 @@ import { Firm } from './auth/firm.entity';
       saveUninitialized: true },
 
     }),
-    AuthModule
+    AuthModule,
+    FirmModule
   ],
   controllers: [AppController],
   providers: [AppService],

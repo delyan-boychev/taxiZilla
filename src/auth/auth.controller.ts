@@ -2,10 +2,10 @@ import { Body, Controller, Get, Param, Post, Req, Res, Session, ValidationPipe }
 import { AuthService } from './auth.service';
 import * as nodemailer from 'nodemailer';
 import { PrimaryGeneratedColumn } from 'typeorm';
-import { transport } from './email.transport';
+import { transport } from '../email.transport';
 import { Response } from 'express';
 import * as requestIp from 'request-ip';
-import { RegisterFirmDTO } from './dto/registerFirm.dto';
+import { RegisterFirmDTO } from '../firm/dto/registerFirm.dto';
 import { IpAddress } from './ipaddress.decorator';
 import { RegisterUserDTO } from './dto/registerUser.dto';
 import { UserRoles } from './enums/userRoles.enum';
@@ -15,22 +15,6 @@ export class AuthController {
   constructor(
     private authService: AuthService,
   ) { };
-  @Post("/registerFirm/")
-  async registerFirm(@Body(ValidationPipe) registerFirmDto:RegisterFirmDTO)
-  {
-    const registered = await this.authService.registerFirm(registerFirmDto);
-    if(registered == true)
-    {
-      this.authService.sendVerifyFirm(registerFirmDto);
-    }
-    return registered;
-  }
-  @Get('/verifyFirm/:code')
-  async verifyFirm(@Param("code")code:string)
-  {
-    let verified = this.authService.verifyFirm(code);
-    return verified;
-  }
   @Post("/registerUser/")
   async registerUser(@Body(ValidationPipe) registerUserDto:RegisterUserDTO)
   {
@@ -47,13 +31,6 @@ export class AuthController {
     let time = 1800000;
     req.session.cookie.expires = new Date(Date.now() + time)
     return await this.authService.loginUser(email, password, session);
-  }
-  @Post("/loginFirm/")
-  async loginFirm(@Req() req,@Body("eik",ValidationPipe)eik:string, @Body("password",ValidationPipe) password:string,session:{token?:string, type?:string,role?:UserRoles})
-  {
-    let time = 1800000;
-    req.session.cookie.expires = new Date(Date.now()+time);
-    return await this.authService.loginFirm(eik,password,session);
   }
   @Get("/profile/")
   async getProfile(@Session() session: { token?: string , type?:string,role:UserRoles})

@@ -1,5 +1,5 @@
 import { BaseEntity, Column, Entity, OneToMany, PrimaryColumn, PrimaryGeneratedColumn } from "typeorm";
-import { User } from "./user.entity";
+import { User } from "../auth/user.entity";
 
 @Entity() 
 export class Firm extends BaseEntity
