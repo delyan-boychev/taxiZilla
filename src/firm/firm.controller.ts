@@ -22,7 +22,7 @@ export class FirmController {
     let verified = this.firmService.verifyFirm(code);
     return verified;
   }
-  @Post('/getProfile/')
+  @Get('/getProfile/')
   async getProfile(@Session() session:{token?:string, type?:string,role?:UserRoles})
   {
     return this.firmService.getProfile(session);

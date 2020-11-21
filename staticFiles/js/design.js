@@ -1,7 +1,7 @@
 let loginInfo;
 function refreshPage()
 {
-    window.location.reload();
+    window.location.href = "/";
 }
 function hideTooltips()
 {

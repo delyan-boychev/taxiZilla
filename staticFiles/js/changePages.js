@@ -50,4 +50,5 @@ function profileFirmPage()
         hideTooltips()
         $.get('http://'+ window.location.host +'/pages/profileFirmPage.html', function( data, textStatus, jqXHR ) {
         document.getElementById("pageContent").innerHTML = data;});
+        getProfileFirm();
 }

@@ -34,7 +34,7 @@ function loginFirmSubmit()
         else if(data=="notModerationVerified") document.getElementById("messageText").innerText="Фирмата все още не е преминала одобрение от модераторите! Обикновено това отнема няколко дни!";
         else document.getElementById("messageText").innerText="Неправилна парола или ЕИК!";
         $("#modal").modal();
-        loggedIn = true;
+        logInForm = true;
     }
     );
     return false;
@@ -233,6 +233,13 @@ function getProfile()
         document.getElementById("email").value = json["email"];
       });
 }
+function getProfileFirm()
+{
+    $.get("/firm/profile", function(data, status){
+        var json = data;
+        console.log(json);
+      });
+}
 function changePassword()
 {
     var hasNumber = /\d/;
@@ -288,7 +295,7 @@ function delProfile()
 $('#modal').on('hidden.bs.modal', function () {
     if(logInForm == true)
     {
-      window.location.reload();
+      refreshPage();
       logInForm = false;
     }
   });
