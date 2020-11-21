@@ -8,12 +8,15 @@ import * as Cryptr from 'cryptr';
 import { transport } from 'src/email.transport';
 import { decode } from 'punycode';
 import { UserRoles } from 'src/auth/enums/userRoles.enum';
+import { UserRepository } from 'src/auth/user.repository';
+import { User } from 'src/auth/user.entity';
 
 @Injectable()
 export class FirmService {
     constructor(
         private firmRepository:FirmRepository,
         private jwtService:JwtService,
+        private userRepository:UserRepository,
         ){};
     async loginFirm(eik:string,password:string, @Session() session:{token?: string, type?:string})
     {
@@ -78,5 +81,12 @@ export class FirmService {
     const eik = encrypter.decrypt(code);
     let result = await this.firmRepository.verifyFirm(eik);
     return this.getVerifyPage(result);
+  }
+  async addTaxiDriver(@Session() session:{token?: string, type?:string,role?:UserRoles},email:string)
+  {
+    const driver:User = await this.userRepository.findOne({email});
+    const decoded=await this.jwtService.decode(session.token);
+    const eik=decoded["eik"];
+    return this.firmRepository.addTaxiDriver(eik,driver);
   }
 }
