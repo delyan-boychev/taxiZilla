@@ -3,6 +3,8 @@ import { RegisterFirmDTO } from "./dto/registerFirm.dto";
 import { Firm } from "./firm.entity";
 import * as bcrypt from 'bcrypt';
 import e from "express";
+import { User } from "src/auth/user.entity";
+import { UserRoles } from "src/auth/enums/userRoles.enum";
 
 @EntityRepository(Firm)
 export class FirmRepository extends Repository<Firm>
@@ -45,6 +47,7 @@ export class FirmRepository extends Repository<Firm>
     delete firm.id;
     return firm;
   }
+
   async loginFirm(eik:string,password:string)
   {
     const firm:Firm = await this.findOne({eik});
@@ -74,6 +77,23 @@ export class FirmRepository extends Repository<Firm>
       {
         return undefined;
       }
+    }
+  }
+  async addTaxiDriver(eik:string, driver:User)
+  {
+    let firm:Firm = await this.findOne({eik});
+    if(!firm.verified)
+    {
+      return false;
+    }
+    else
+    {
+      firm.drivers.push(driver);
+      driver.firm=firm;
+      driver.role=UserRoles.DRIVER;
+      await firm.save();
+      await driver.save();
+      return true;
     }
   }
   async verifyFirm(eik:string)

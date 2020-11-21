@@ -35,4 +35,9 @@ export class FirmController {
     req.session.cookie.expires = new Date(Date.now()+time);
     return await this.firmService.loginFirm(eik,password,session);
   }
+  @Post("/addTaxiDriver/")
+  async addTaxiDriver(@Session() session:{token?:string, type?:string,role?:UserRoles},@Body("email") email:string)
+  {
+    return await this.firmService.addTaxiDriver(session,email); 
+  }
 }
