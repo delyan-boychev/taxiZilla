@@ -37,6 +37,14 @@ export class FirmRepository extends Repository<Firm>
       return false;
     }
   }
+  async getProfile(eik:string)
+  {
+    const firm:Firm = await this.findOne({eik});
+    delete firm.passHash;
+    delete firm.salt;
+    delete firm.id;
+    return firm;
+  }
   async loginFirm(eik:string,password:string)
   {
     const firm:Firm = await this.findOne({eik});

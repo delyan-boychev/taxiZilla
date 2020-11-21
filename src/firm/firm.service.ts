@@ -6,6 +6,8 @@ import { FirmRepository } from './firm.repository';
 import { JWTPayloadFirm } from './jwt-payload';
 import * as Cryptr from 'cryptr';
 import { transport } from 'src/email.transport';
+import { decode } from 'punycode';
+import { UserRoles } from 'src/auth/enums/userRoles.enum';
 
 @Injectable()
 export class FirmService {
@@ -62,6 +64,13 @@ export class FirmService {
     const fs = require("fs");
     if(verified === true) return fs.readFileSync(join(__dirname, "/../../staticFiles/pages/verifiedTrue.html")).toString();
     else return fs.readFileSync(join(__dirname, "/../../staticFiles/pages/verifiedFalse.html")).toString();
+  }
+  async getProfile(@Session() session:{token?: string, type?:string,role?:UserRoles})
+  {
+    const decoded=await this.jwtService.decode(session.token);
+    const eik=decoded["eik"];
+    const profile = this.firmRepository.getProfile(eik);
+    return profile;
   }
   async verifyFirm(code:string)
   {

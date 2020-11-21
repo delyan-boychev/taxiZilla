@@ -22,6 +22,12 @@ export class FirmController {
     let verified = this.firmService.verifyFirm(code);
     return verified;
   }
+  @Post('/getProfile/')
+  async getProfile(@Session() session:{token?:string, type?:string,role?:UserRoles})
+  {
+    return this.firmService.getProfile(session);
+  }
+
   @Post("/loginFirm/")
   async loginFirm(@Req() req,@Body("eik",ValidationPipe)eik:string, @Body("password",ValidationPipe) password:string,@Session() session:{token?:string, type?:string,role?:UserRoles})
   {
