@@ -43,7 +43,7 @@
           </div>
           <div class="card-body tab-content">
             <div class="tab-pane active" id="profile">
-              <h6>Информация за профила</h6>
+              <h5 class="font-weight-bold">Информация за профила</h5>
               <hr>
                 <div class="form-group">
                   <input type="text" class="form-control" id="fName" aria-describedby="fullNameHelp" placeholder="Име">
@@ -61,10 +61,11 @@
                 <button type="button" class="btn btn-primary text-secondary">Редактиране на профила</button>
             </div>
             <div class="tab-pane" id="account">
-              <h6>Настройки на профила</h6>
+              <h5 class="font-weight-bold">Настройки на профила</h5>
               <hr>
                 <div class="form-group">
-                  <input type="text" class="form-control" id="email" placeholder="Имейл">
+                  <input type="text" class="form-control" id="newEmail" placeholder="Имейл">
+                  <div class="invalid-feedback">Невалиден имейл адрес!</div>
                   <button class="btn btn-primary text-secondary" type="button" onclick="changeEmail()">Смяна на имейл</button>
                 </div>
                 <hr>
@@ -77,7 +78,7 @@
                 <button class="btn btn-danger" type="button" onclick="delProfile()">Изтриване на профил</button>
             </div>
             <div class="tab-pane" id="security">
-              <h6>Сигурност</h6>
+              <h5 class="font-weight-bold">Сигурност</h5>
               <hr>
                 <div class="form-group">
                   <label class="d-block">Смяна на парола</label>
@@ -91,7 +92,7 @@
               
             </div>
             <div class="tab-pane" id="orders">
-              <h6>NOTIFICATION SETTINGS</h6>
+              <h5 class="font-weight-bold">NOTIFICATION SETTINGS</h5>
               <hr>
               <form>
                 <div class="form-group">

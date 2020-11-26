@@ -10,6 +10,7 @@ import { decode } from 'punycode';
 import { UserRoles } from 'src/auth/enums/userRoles.enum';
 import { UserRepository } from 'src/auth/user.repository';
 import { User } from 'src/auth/user.entity';
+import { session } from 'passport';
 
 @Injectable()
 export class FirmService {
@@ -88,5 +89,19 @@ export class FirmService {
     const decoded=await this.jwtService.decode(session.token);
     const eik=decoded["eik"];
     return this.firmRepository.addTaxiDriver(eik,driver);
+  }
+  async removeTaxiDriver(@Session() session:{token?:string}, email:string)
+  {
+    const driver:User = await this.userRepository.findOne({email});
+    const decoded=await this.jwtService.decode(session.token);
+    const eik=decoded["eik"];
+    return this.firmRepository.removeTaxiDriver(eik,driver);
+
+  }
+  async getTaxiDrivers(@Session() session:{token?: string})
+  {
+    const decoded=await this.jwtService.decode(session.token);
+    const eik=decoded["eik"];
+    return await this.firmRepository.getTaxiDrivers(eik);
   }
 }

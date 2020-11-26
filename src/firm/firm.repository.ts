@@ -79,6 +79,22 @@ export class FirmRepository extends Repository<Firm>
       }
     }
   }
+  async getTaxiDrivers(eik:string)
+  {
+    let firm:Firm = await this.findOne({eik});
+    return firm.drivers;
+  }
+  async removeTaxiDriver(eik:string, driver:User)
+  {
+    let firm:Firm = await this.findOne({eik});
+      firm.drivers.splice(firm.drivers.indexOf(driver), 1);
+      driver.firm=undefined;
+      driver.role=UserRoles.USER;
+      await firm.save();
+      await driver.save();
+      return true;
+    
+  }
   async addTaxiDriver(eik:string, driver:User)
   {
     let firm:Firm = await this.findOne({eik});

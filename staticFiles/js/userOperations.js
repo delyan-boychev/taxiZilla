@@ -1,4 +1,4 @@
-var logInForm = false;
+var actionOnCloseModal = "";
 function loginSubmit()
 {
     $.post("/auth/loginUser",
@@ -7,14 +7,45 @@ function loginSubmit()
         password: $("#password").val(),
     },
     function(data,status){
-        if(data=="true") document.getElementById("messageText").innerText="Успешно  влязохте в профила си!";
+        if(data=="true") { 
+            document.getElementById("messageText").innerText="Успешно  влязохте в профила си!";
+            actionOnCloseModal = "refresh";
+        }
         else if(data=="notVerified") document.getElementById("messageText").innerText="Моля проверете имейла си и потвърдете профила!";
         else document.getElementById("messageText").innerText="Неправилна парола или имейл адрес!";
         $("#modal").modal();
-        logInForm = true;
     }
     );
     return false;
+}
+function changeEmail()
+{
+    var isEmail = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+    if(!isEmail.test($("#newEmail").val()))
+    {
+        $('#newEmail').addClass("is-invalid");
+    }
+    else
+    {
+        $('#newEmail').removeClass("is-invalid");
+    $.post("/auth/changeEmail",
+    {
+        newEmail: $("#newEmail").val(),
+    },
+    function(data,status){
+        if(data=="true") 
+        {
+            document.getElementById("messageText").innerText="Имейл адресът е сменен успешно! Сега автоматчно ще излезете от профила си! Моля проверете новия си имейл адрес и го потвърдете!";
+            actionOnCloseModal = "logout";
+        }
+        else if(data=="emailExists") {
+            document.getElementById("messageText").innerText="Вече съществува потребител с този имейл адрес!";
+        }
+        $("#modal").modal();
+        
+    }
+    );
+    }
 }
 function loginFirmSubmit()
 {
@@ -29,12 +60,16 @@ function loginFirmSubmit()
         password: $("#password").val(),
     },
     function(data,status){
-        if(data=="true") document.getElementById("messageText").innerText="Успешно  влязохте в профила си!";
+        if(data=="true")
+        { 
+            document.getElementById("messageText").innerText="Успешно  влязохте в профила си!";
+            actionOnCloseModal = "refresh";
+        }
         else if(data=="notVerified") document.getElementById("messageText").innerText="Моля проверете имейла си и потвърдете профила!";
         else if(data=="notModerationVerified") document.getElementById("messageText").innerText="Фирмата все още не е преминала одобрение от модераторите! Обикновено това отнема няколко дни!";
         else document.getElementById("messageText").innerText="Неправилна парола или ЕИК!";
         $("#modal").modal();
-        logInForm = true;
+        
     }
     );
     return false;
@@ -237,7 +272,9 @@ function getProfileFirm()
 {
     $.get("/firm/profile", function(data, status){
         var json = data;
-        console.log(json);
+        document.getElementById("firmName").innerText = json["firmName"];
+        document.getElementById("eik").innerText = json["eik"];
+        document.getElementById("address").innerText = json["city"] + ", " + json["address"];
       });
 }
 function changePassword()
@@ -292,10 +329,58 @@ function delProfile()
         $("#passDel").tooltip({'placement':'left','trigger': 'manual', 'title': 'Въведете парола!'}).tooltip('show');
     }
 }
+function addTaxiDriver()
+{
+    $.post("/firm/addTaxiDriver",
+        {
+            email: $("#emailDriver").val()
+        },
+        function(data,status){
+            if(data=="true") document.getElementById("messageText").innerText="Успешено е добавен таксиметровият шофьор!";
+            else document.getElementById("messageText").innerText="Не съществува профил с такъв имейл адрес!";
+            $("#modal").modal();
+        }
+        );
+}
+function removeTaxiDriver(email)
+{
+    $.post("/firm/removeTaxiDriver",
+        {
+            email: email
+        },
+        function(data,status){
+            if(data=="true") document.getElementById("messageText").innerText="Шофьорът е премахнат успешно!";
+            else document.getElementById("messageText").innerText="Не съществува профил с такъв имейл адрес!";
+            $("#modal").modal();
+        }
+        );
+}
+function getTaxiDrivers()
+{
+    $.get("/firm/getTaxiDrivers", function(data, status){
+        var json = data;
+        if(json.length	=== 0) document.getElementById("noDrivers").style = "display: block;";
+        else
+        {
+            json.forEach(a => {
+                document.getElementById("addedTaxiDrivers").innerHTML += "<tr><td>"+ a["fName"] +"</td><td>"+ a["lName"]  +"</td><td>"+ a["email"]  +"</td><td>"+ a["telephone"]  +"</td><td><i class='far fa-times-circle text-danger h5' style='cursor: pointer;' onclick='removeTaxiDriver(\""+ a["email"] +"\");'></i></td></tr>";
+            });
+        }
+      });
+}
+function logout()
+{
+    window.location = "./logout";
+}
 $('#modal').on('hidden.bs.modal', function () {
-    if(logInForm == true)
+    if(actionOnCloseModal == "refresh")
     {
       refreshPage();
-      logInForm = false;
+      actionOnCloseModal = "";
+    }
+    else if(actionOnCloseModal == "logout")
+    {
+        logout();
+        actionOnCloseModal = "";
     }
   });

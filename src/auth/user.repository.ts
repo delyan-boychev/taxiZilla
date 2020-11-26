@@ -111,6 +111,18 @@ export class UserRepository extends Repository<User>
       return false;
     }
   }
+  async changeEmail(newEmail: string, email: string)
+  {
+    let usercheck = await this.findOne({ email: newEmail });
+    if(usercheck != undefined) return "emailExists";
+    else{
+    let user = await this.findOne({ email });
+    user.email = newEmail;
+    user.verified = false;
+    user.save();
+    return "true";
+    }
+  }
   async deleteUser(email:string, pass:string)
   {
     let user = await this.findOne({ email });

@@ -109,6 +109,13 @@ export class AuthService {
     if(verified === true) return fs.readFileSync(join(__dirname, "/../../staticFiles/pages/verifiedTrue.html")).toString();
     else return fs.readFileSync(join(__dirname, "/../../staticFiles/pages/verifiedFalse.html")).toString();
   }
+  async changeEmail(@Session() session: {token?:string}, newEmail: string)
+  {
+    let userJSON = await this.jwtService.decode(session.token);
+    let stat = await this.userRepository.changeEmail(newEmail, userJSON["email"]);
+    this.sendVerify(newEmail);
+    return stat;
+  }
   
   async sendVerify(username:string)
   {

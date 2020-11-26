@@ -59,4 +59,9 @@ export class AuthController {
   {
     return await this.authService.changePassword(session, oldPass, newPass);
   }
+  @Post("/changeEmail/")
+  async changeEmail(@Session() session: { token?: string }, @Body("newEmail") newEmail: string)
+  {
+    return await this.authService.changeEmail(session, newEmail);
+  }
 }

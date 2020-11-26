@@ -1,4 +1,5 @@
 import { Body, Controller, Get, Param, Post, Req, Session, ValidationPipe } from '@nestjs/common';
+import { session } from 'passport';
 import { UserRoles } from 'src/auth/enums/userRoles.enum';
 import { RegisterFirmDTO } from './dto/registerFirm.dto';
 import { FirmService } from './firm.service';
@@ -22,7 +23,7 @@ export class FirmController {
     let verified = this.firmService.verifyFirm(code);
     return verified;
   }
-  @Get('/getProfile/')
+  @Get('/profile/')
   async getProfile(@Session() session:{token?:string, type?:string,role?:UserRoles})
   {
     return this.firmService.getProfile(session);
@@ -39,5 +40,15 @@ export class FirmController {
   async addTaxiDriver(@Session() session:{token?:string, type?:string,role?:UserRoles},@Body("email") email:string)
   {
     return await this.firmService.addTaxiDriver(session,email); 
+  }
+  @Get("/getTaxiDrivers/")
+  async getTaxiDrivers(@Session() session:{token?: string})
+  {
+    return await this.firmService.getTaxiDrivers(session);
+  }
+  @Post("/removeTaxiDriver/")
+  async removeTaxiDriver(@Session() session:{token?: string}, @Body("email") email:string)
+  {
+    return await this.firmService.removeTaxiDriver(session, email);
   }
 }
