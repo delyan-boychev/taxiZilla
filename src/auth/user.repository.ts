@@ -137,7 +137,7 @@ export class UserRepository extends Repository<User>
       return false;  
     }
   }
-  async getProfile(email: string)
+  async getProfile(email: string)//Вземане на информация за профила
   {
     const user: User = await this.findOne({ email });
     delete user.passHash;

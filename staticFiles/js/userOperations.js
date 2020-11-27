@@ -1,5 +1,5 @@
 var actionOnCloseModal = "";
-function loginSubmit()
+function loginSubmit()//Post zaqvka za login na klient
 {
     $.post("/auth/loginUser",
     {
@@ -18,7 +18,7 @@ function loginSubmit()
     );
     return false;
 }
-function changeEmail()
+function changeEmail()//Post zaqvka za smqna na email adresa na klient
 {
     var isEmail = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
     if(!isEmail.test($("#newEmail").val()))
@@ -47,7 +47,7 @@ function changeEmail()
     );
     }
 }
-function loginFirmSubmit()
+function loginFirmSubmit()//Post zaqvka za login na firma
 {
     var checked = true;
     if($("#eik").val().length < 13)
@@ -74,7 +74,8 @@ function loginFirmSubmit()
     );
     return false;
 }
-function check_eik(eik_str){
+function check_eik(eik_str)//Proverka dali EIK e validen
+{
     var isValid = false;
 	eik_str = eik_str.replace(/\s+/, '');
 	eik_len = eik_str.length;
@@ -120,7 +121,7 @@ function check_eik(eik_str){
     }
     return isValid;
 }
-function registerFirmSubmit()
+function registerFirmSubmit()//Post zaqvka za registrirane na firma
 {
     $("input").removeClass("is-invalid");
     var isChecked = true;
@@ -196,7 +197,7 @@ function registerFirmSubmit()
     }
         return false;
 }
-function registerSubmit()
+function registerSubmit()//Post zaqvka za registrirane na klient
 {
     $("input").removeClass("is-invalid");
     var isChecked = true;
@@ -258,7 +259,7 @@ function registerSubmit()
     }
         return false;
 }
-function getProfile()
+function getProfile()//Get zaqvka za vzemane na informaciqta ot profila na klient
 {
     $.get("/auth/profile", function(data, status){
         var json = data;
@@ -268,7 +269,7 @@ function getProfile()
         document.getElementById("email").value = json["email"];
       });
 }
-function getProfileFirm()
+function getProfileFirm()//Get zaqvka za vzemane na inforamciqta ot profila na firma
 {
     $.get("/firm/profile", function(data, status){
         var json = data;
@@ -277,7 +278,7 @@ function getProfileFirm()
         document.getElementById("address").innerText = json["city"] + ", " + json["address"];
       });
 }
-function changePassword()
+function changePassword()//Post zaqvka za smqna na parola na klient
 {
     var hasNumber = /\d/;
     var isChecked = true;
@@ -307,7 +308,7 @@ function changePassword()
         );
     }
 }
-function delProfile()
+function delProfile()//Post zaqvka za iztrivane na profil na klient
 {
     $("#passDel").tooltip('hide');
     if($("#passDel").val().length > 0)
@@ -329,20 +330,32 @@ function delProfile()
         $("#passDel").tooltip({'placement':'left','trigger': 'manual', 'title': 'Въведете парола!'}).tooltip('show');
     }
 }
-function addTaxiDriver()
+function addTaxiDriver()//Post zaqvka za dobavqne na taksimetrovi shofyori
 {
+    var isEmail = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+    if(!isEmail.test($("#emailDriver").val()))
+    {
+        $('#emailDriver').addClass("is-invalid");
+    }
+    else
+    {
     $.post("/firm/addTaxiDriver",
         {
             email: $("#emailDriver").val()
         },
         function(data,status){
-            if(data=="true") document.getElementById("messageText").innerText="Успешено е добавен таксиметровият шофьор!";
+            if(data=="true")
+            { 
+                document.getElementById("messageText").innerText="Успешено е добавен таксиметровият шофьор!";
+                actionOnCloseModal = "rewriteFirmDriversTab";
+            }
             else document.getElementById("messageText").innerText="Не съществува профил с такъв имейл адрес!";
             $("#modal").modal();
         }
         );
+    }
 }
-function removeTaxiDriver(email)
+function removeTaxiDriver(email)//Post zaqvka za premahvane na taksimetrov shofyor
 {
     $.post("/firm/removeTaxiDriver",
         {
@@ -350,25 +363,31 @@ function removeTaxiDriver(email)
         },
         function(data,status){
             if(data=="true") document.getElementById("messageText").innerText="Шофьорът е премахнат успешно!";
-            else document.getElementById("messageText").innerText="Не съществува профил с такъв имейл адрес!";
+            actionOnCloseModal = "rewriteFirmDriversTab";
             $("#modal").modal();
         }
         );
 }
-function getTaxiDrivers()
+function getTaxiDrivers()//Get zaqvka za vzimane na taksimetrovi shofyori
 {
     $.get("/firm/getTaxiDrivers", function(data, status){
         var json = data;
-        if(json.length	=== 0) document.getElementById("noDrivers").style = "display: block;";
+        if(json.length	=== 0)
+        { 
+            document.getElementById("noDrivers").style = "display: block;";
+            document.getElementById("addedTaxiDrivers").innerHTML = "";
+        }
         else
         {
+            document.getElementById("noDrivers").style = "display: none;";
+            document.getElementById("addedTaxiDrivers").innerHTML = "";
             json.forEach(a => {
                 document.getElementById("addedTaxiDrivers").innerHTML += "<tr><td>"+ a["fName"] +"</td><td>"+ a["lName"]  +"</td><td>"+ a["email"]  +"</td><td>"+ a["telephone"]  +"</td><td><i class='far fa-times-circle text-danger h5' style='cursor: pointer;' onclick='removeTaxiDriver(\""+ a["email"] +"\");'></i></td></tr>";
             });
         }
       });
 }
-function logout()
+function logout()//Funkciq za izlizane ot profila
 {
     window.location = "./logout";
 }
@@ -376,11 +395,14 @@ $('#modal').on('hidden.bs.modal', function () {
     if(actionOnCloseModal == "refresh")
     {
       refreshPage();
-      actionOnCloseModal = "";
     }
     else if(actionOnCloseModal == "logout")
     {
         logout();
-        actionOnCloseModal = "";
     }
+    else if(actionOnCloseModal == "rewriteFirmDriversTab")
+    {
+        getTaxiDrivers();
+    }
+    actionOnCloseModal = "";
   });

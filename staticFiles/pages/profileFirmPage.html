@@ -45,16 +45,16 @@
             <div class="tab-pane active" id="profile">
               <h5 class="font-weight-bold">Информация за фирмата</h5>
               <hr>
-                <div>Име на фирмата: <p id="firmName"></p></div>
-                <div>ЕИК: <p id="eik"></p></div>
-                <div>Град и адрес на седалище на фирмата: <p id="address"></p></div>
+                <div><span class="font-weight-bold">Име на фирмата:</span> <p id="firmName"></p></div>
+                <div><span class="font-weight-bold">ЕИК:</span> <p id="eik"></p></div>
+                <div><span class="font-weight-bold">Град и адрес на седалище на фирмата:</span> <p id="address"></p></div>
             </div>
             <div class="tab-pane" id="account">
               <h5 class="font-weight-bold">Настройки на профила</h5>
               <hr>
                 <div class="form-group">
                   <input type="text" class="form-control" id="email" placeholder="Имейл">
-                  <button class="btn btn-primary text-secondary" type="button" onclick="changeEmail()">Смяна на имейл</button>
+                  <button class="btn btn-primary text-secondary rounded" type="button" onclick="changeEmail()">Смяна на имейл</button>
                 </div>
                 <hr>
                 <div class="form-group">
@@ -63,7 +63,7 @@
                 </div>
                 <input type="password" class="form-control mb-4" id="passDel" placeholder="Парола">
                 <div class="invalid-feedback">Не сте въвели парола!</div>
-                <button class="btn btn-danger" type="button" onclick="delProfile()">Изтриване на профил</button>
+                <button class="btn btn-danger rounded" type="button" onclick="delProfile()">Изтриване на профил</button>
             </div>
             <div class="tab-pane" id="security">
               <h5 class="font-weight-bold">Сигурност</h5>
@@ -90,8 +90,8 @@
               <hr>
               <h6 class="font-weight-bold">Добавени таксиметрови шофьори</h6>
               <div class="table-responsive">
-              <table class="table">
-                <thead>
+              <table class="table table-striped">
+                <thead class="font-weight-bold">
                   <tr>
                     <th>Име</th>
                     <th>Фамилия</th>

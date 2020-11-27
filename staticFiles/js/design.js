@@ -1,18 +1,18 @@
 let loginInfo;
-function refreshPage()
+function refreshPage()//Refreshvane na stranicata
 {
     window.location.href = "/";
 }
-function hideTooltips()
+function hideTooltips()//Izchistvane na tooltipovete
 {
     $('.tooltip').tooltip('hide');
 }
-function collapse()
+function collapse()//Promqna na navbara pri otvarqne i zatvarqne
 {
     if($("#collapse").is(":visible"))
     {
         console.log(true);
-        document.getElementById("navbar").style.setProperty("background-image", "url('http://localhost:3000/assets/img/navbar.png')");
+        document.getElementById("navbar").style.setProperty("background-image", "url('/assets/img/navbar.png')");
     }
     else
     {
@@ -20,7 +20,7 @@ function collapse()
         document.getElementById("navbar").style.removeProperty("background-image");
     }
 }
-function designChangeOnStart()
+function designChangeOnStart()//Nastroivane na dizain pri startirane
 {
     var nav = document.getElementById("navElements");
     loginInfo = JSON.parse(document.getElementById("res").innerText);

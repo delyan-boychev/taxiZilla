@@ -86,9 +86,12 @@ export class FirmService {
   async addTaxiDriver(@Session() session:{token?: string, type?:string,role?:UserRoles},email:string)
   {
     const driver:User = await this.userRepository.findOne({email});
+    if(driver === undefined) return false;
+    else{
     const decoded=await this.jwtService.decode(session.token);
     const eik=decoded["eik"];
     return this.firmRepository.addTaxiDriver(eik,driver);
+    }
   }
   async removeTaxiDriver(@Session() session:{token?:string}, email:string)
   {
