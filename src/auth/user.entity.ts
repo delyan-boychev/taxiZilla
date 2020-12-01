@@ -1,6 +1,7 @@
-import { BaseEntity, Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { BaseEntity, Column, Entity, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { UserRoles } from "./enums/userRoles.enum";
 import { Firm } from "../firm/firm.entity";
+import { Order } from "src/order/order.entity";
 
 @Entity()
 export class User extends BaseEntity
@@ -34,6 +35,9 @@ export class User extends BaseEntity
 
   @Column()
   verified: boolean;
+
+  @OneToMany(type => Order, order => order.userOrdered)
+  orders:Order[];
 
   @ManyToOne(type => Firm, firm => firm.drivers)
   firm: Firm;

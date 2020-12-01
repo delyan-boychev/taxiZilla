@@ -9,6 +9,8 @@ import { MailerModule, MailerService } from '@nestjs-modules/mailer';
 import { PugAdapter } from '@nestjs-modules/mailer/dist/adapters/pug.adapter';
 import { Firm } from './firm/firm.entity';
 import { FirmModule } from './firm/firm.module';
+import { OrderModule } from './order/order.module';
+import { Order } from './order/order.entity';
 
 @Module({
   imports: [
@@ -18,7 +20,7 @@ import { FirmModule } from './firm/firm.module';
       username: 'taxiZilla',
       password: 'VhCNrHnMEB3sE?9_',
       database: 'taxiZilla',
-      entities:[User,Firm],
+      entities:[User,Firm,Order],
       synchronize:true,
     })
     
@@ -32,7 +34,8 @@ import { FirmModule } from './firm/firm.module';
 
     }),
     AuthModule,
-    FirmModule
+    FirmModule,
+    OrderModule
   ],
   controllers: [AppController],
   providers: [AppService],
