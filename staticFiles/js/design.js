@@ -1,20 +1,20 @@
-
-
-let loginInfo;
 function refreshPage()//Refreshvane na stranicata
 {
+    if(arguments.callee.caller === null) return;
     window.location.href = "/";
 }
 function hideTooltips()//Izchistvane na tooltipovete
 {
+    if(arguments.callee.caller === null) return;
     $('.tooltip').tooltip('hide');
 }
 function changeTabOrder(radio)
 {
+    if(arguments.callee.caller === null) return;
     var contentTab = document.getElementById("contentTab");
     if(radio.value=="address")
     {
-        contentTab.innerHTML = '<input type="text" id="addressTaxi" class="form-control" placeholder="Адрес"><br><button id="currentLocationReload" class="btn btn-primary ml-0 black-text btn-block rounded" type="submit" onclick="updateMapAddress()">Обнови картата</button><br><button class="btn btn-primary ml-0 black-text mt-2 btn-block rounded" type="submit" onclick="makeOrderAddress()">Направи поръчка</button>';
+        contentTab.innerHTML = '<input type="text" id="addressTaxi" class="form-control" placeholder="Адрес"><div class="invalid-feedback">Адресът трябва да е по-дълъг от 5 символа!</div><br><textarea placeholder="Бележки(по избор)" class="form-control mt-3" id="notes" style="resize: none; height: 200px" rows="3"></textarea><br><button id="currentLocationReload" class="btn btn-primary ml-0 black-text btn-block rounded" type="submit" onclick="updateMapAddress()">Обнови картата</button><br><button class="btn btn-primary ml-0 black-text mt-2 btn-block rounded" type="submit" onclick="makeOrderTaxiAddress()">Направи поръчка</button>';
     }
     else 
     {
@@ -24,6 +24,7 @@ function changeTabOrder(radio)
 }
 function collapse()//Promqna na navbara pri otvarqne i zatvarqne
 {
+    if(arguments.callee.caller === null) return;
     if($("#collapse").is(":visible"))
     {
         console.log(true);
@@ -37,6 +38,7 @@ function collapse()//Promqna na navbara pri otvarqne i zatvarqne
 }
 async function showCurrentPosition() 
 {
+    if(arguments.callee.caller === null) return;
     var x, y;
     if(navigator.geolocation) {
         await navigator.geolocation.getCurrentPosition(async function(position) {
@@ -48,6 +50,7 @@ async function showCurrentPosition()
 }
 function updateMapAddress()
 {
+    if(arguments.callee.caller === null) return;
     $.ajax(
         {
             async: true,
@@ -64,9 +67,8 @@ function updateMapAddress()
 }
 function designChangeOnStart()//Nastroivane na dizain pri startirane
 {
+    if(arguments.callee.caller === null) return;
     var nav = document.getElementById("navElements");
-    loginInfo = JSON.parse(document.getElementById("res").innerText);
-    document.getElementById("res").remove();
     if(loginInfo["isLoggedIn"] == "true")
     {
         if(loginInfo["Type"] == "Firm")

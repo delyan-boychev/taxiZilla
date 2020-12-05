@@ -8,9 +8,9 @@ export class OrderController {
 
     ){};
     @Post('createOrder')
-    createOrder(@Body('x') x:number,@Body('y') y:number, @Session() session:{token?:string})
+    createOrder(@Body('x') x:number,@Body('y') y:number, @Body('notes') notes:string, @Session() session:{token?:string})
     {
-        this.orderService.createOrder(x,y,session);
+        this.orderService.createOrder(x,y,notes, session);
         
     }
 

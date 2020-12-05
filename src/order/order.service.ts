@@ -41,7 +41,7 @@ export class OrderService {
         }
         
     }
-    async createOrder(x:number,y:number, @Session() session:{token?:string})
+    async createOrder(x:number,y:number, notes:string, @Session() session:{token?:string})
     {
         this.renewArray();
         let a:taxiDriversFindNearest = new taxiDriversFindNearest;
@@ -49,7 +49,7 @@ export class OrderService {
         if(nearest===undefined)return false;
         let uemail = await this.jwtService.decode(session.token);
         let sended = await this.userRepository.findOne({email:uemail["email"]});
-        this.orderRepository.createOrder(sended,nearest,x,y); 
+        this.orderRepository.createOrder(sended,nearest,x,y, notes); 
     }
 
 }

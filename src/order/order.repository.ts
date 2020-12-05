@@ -6,11 +6,12 @@ import { Order } from "./order.entity";
 @EntityRepository(Order)
 export class OrderRepository extends Repository<Order>
 {
-    async createOrder(sender:User,driver:User,x:number,y:number)
+    async createOrder(sender:User,driver:User,x:number,y:number, notes:string)
     {
         let newOrder = new Order();
         newOrder.x=x;
         newOrder.y=y;
+        newOrder.notes = notes;
         newOrder.orderStatus=OrderStatus.Open;
         newOrder.userOrdered=sender;
         newOrder.driverId=driver.id;

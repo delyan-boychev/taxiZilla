@@ -22,6 +22,9 @@ export class Order extends BaseEntity
 
     @Column()
     driverId:number;
+    
+    @Column()
+    notes:string;
 
     @Column()
     orderStatus:OrderStatus;
