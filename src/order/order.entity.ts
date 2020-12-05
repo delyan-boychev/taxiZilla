@@ -18,6 +18,9 @@ export class Order extends BaseEntity
     userOrdered:User;
 
     @Column()
+    items:string;
+
+    @Column()
     driverId:number;
 
     @Column()

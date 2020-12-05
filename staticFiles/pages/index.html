@@ -17,12 +17,24 @@
   <link href="./assets/css/style.css" rel="stylesheet">
   <style>
     body, html { overflow-x:hidden; }
+    .map-container{
+      display: block;
+overflow:hidden;
+position:relative;
+}
+.map-container iframe{
+left:0;
+top:0;
+height:100%;
+width:100%;
+position:absolute;
+}
   </style>
 </head>
 <body >
-
+  <div id="wrapper">
           <!--Navbar-->
-          <nav id="navbar" class="navbar navbar-expand-lg navbar-light bg-primary fixed-top scrolling-navbar" style="background-image: url('/assets/img/navbar.png'); background-size: cover; background-position: top right;">
+          <nav id="navbar" class="navbar navbar-expand-lg navbar-light bg-primary sticky-top scrolling-navbar" style="background-image: url('/assets/img/navbar.png'); background-size: cover; background-position: top right;">
               <div class="container"> 
   
                   <!-- Navbar brand -->
@@ -78,7 +90,7 @@
                 </div>
               
           </nav>
-      <main id="pageContent" style="margin-top: 93px;">
+      <main id="pageContent">
       
     </main>
     <div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
@@ -99,6 +111,27 @@
         </div>
       </div>
     </div>
+    <footer id="footer" class="page-footer font-small bg-primary">
+
+      <!-- Footer Elements -->
+      <div class="container">
+        <ul class="list-unstyled list-inline text-center py-2" id="makeOrderButton">
+          <li class="list-inline-item">
+            <a onclick="makeOrderPage()" class="btn btn-outline-secondary rounded">Направи поръчка</a>
+          </li>
+        </ul>
+    
+      </div>
+      <!-- Footer Elements -->
+    
+      <!-- Copyright -->
+      <div class="footer-copyright text-center text-secondary py-3">© 2020 Всички права запазени:
+        <a class="text-secondary" href="https://mdbootstrap.com/"> taxiZilla</a>
+      </div>
+      <!-- Copyright -->
+    
+    </footer>
+  </div>
     <script type="text/javascript" src="./assets/js/jquery.min.js"></script>
   <!-- Bootstrap tooltips -->
   <script type="text/javascript" src="./assets/js/popper.min.js"></script>
@@ -112,8 +145,9 @@
   <script>
     $(document).ready(function()
     {
+      var a = document.getElementById("footer");
       homePage();
-    designChangeOnStart();
+      designChangeOnStart();
     }
     );
   </script>

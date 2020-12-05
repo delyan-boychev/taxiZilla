@@ -5,9 +5,11 @@ import { join } from 'path';
 import { AppModule } from './app.module';
 
 async function bootstrap() {
+  const fs = require('fs');
+  const keyFile  = fs.readFileSync(__dirname + '/../ssl/privatekey.pem',  'utf8');
+  const certFile = fs.readFileSync(__dirname + '/../ssl/cert.pem',  'utf8');
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
   app.useStaticAssets(join(__dirname, "/../staticFiles/"))
-  app.enableCors();
-  await app.listen(3000);
+  await app.listen(80);
 }
 bootstrap();
