@@ -10,6 +10,9 @@ import { UserRepository } from './user.repository';
 import * as Cryptr from 'cryptr';
 import { FirmRepository } from '../firm/firm.repository';
 import { UserRoles } from './enums/userRoles.enum';
+import { UserStatus } from './enums/userStatus.enum';
+import { Drivers, Statuses } from 'src/coordsAndStatus.array';
+import { taxiDriver } from './taxiDriver.class';
 
 @Injectable()
 export class AuthService {
@@ -23,6 +26,15 @@ export class AuthService {
   {
     return await this.userRepository.registerUser(registerUserDto);
 
+  }
+  async changeStatusAndLocation(@Session() session:{token?:string},newStatus:UserStatus,x:number, y:number)
+  {
+    let umail = await this.jwtService.decode(session.token);
+    let user = await this.userRepository.findOne({email:umail["email"]});
+    Statuses[user.id]=newStatus;
+    Drivers[user.id].x=x;
+    Drivers[user.id].y=y;
+    Drivers[user.id].driver = user;
   }
   async loginUser(email: string, password: string, @Session() session: { token?: string, type?:string, role?:UserRoles})
   {

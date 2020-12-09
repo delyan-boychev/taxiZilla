@@ -20,4 +20,11 @@ export class OrderRepository extends Repository<Order>
         await sender.save();
         return newOrder;
     }
+    async getOrderByUser(user:User)
+    {
+        let qb = this.createQueryBuilder("order");
+        qb.andWhere("order.driverId = :userid",{userid:user.id});
+        qb.andWhere("order.orderStatus = :orderStatus",{orderStatus:OrderStatus.Open});
+        return await qb.getMany();
+    }
 }

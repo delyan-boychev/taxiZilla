@@ -51,5 +51,18 @@ export class OrderService {
         let sended = await this.userRepository.findOne({email:uemail["email"]});
         this.orderRepository.createOrder(sended,nearest,x,y, notes); 
     }
+    async getMyOrders(@Session() session:{token?:string})
+    {
+        let uemail = await this.jwtService.decode(session.token);
+        let user = await this.userRepository.findOne({email:uemail["email"]});
+        if(user.role==UserRoles.DRIVER)
+        {
+            return this.orderRepository.getOrderByUser(user); 
+        }
+        else
+        {
+            return false;
+        }
+    }
 
 }

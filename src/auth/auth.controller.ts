@@ -9,6 +9,7 @@ import { RegisterFirmDTO } from '../firm/dto/registerFirm.dto';
 import { IpAddress } from './ipaddress.decorator';
 import { RegisterUserDTO } from './dto/registerUser.dto';
 import { UserRoles } from './enums/userRoles.enum';
+import { UserStatus } from './enums/userStatus.enum';
 
 @Controller('auth')
 export class AuthController {
@@ -70,5 +71,10 @@ export class AuthController {
   async changeEmail(@Session() session: { token?: string }, @Body("newEmail") newEmail: string)
   {
     return await this.authService.changeEmail(session, newEmail);
+  }
+  @Post("/changeStatus/")
+  async changeStatusAndLocation(@Session() session:{token?:string}, @Body("newStatus")newStatus:UserStatus, @Body("x") x:number, @Body("y") y:number)
+  {
+    return this.authService.changeStatusAndLocation(session,newStatus,x,y);
   }
 }
