@@ -48,6 +48,34 @@ export class AuthService {
       }
     }
   }
+  async loginTaxiDriver(email: string, password: string, @Session() session: { token?: string, type?:string, role?:UserRoles})
+  {
+    const ver = await this.userRepository.loginUser(email, password,session);
+    if (!ver)
+    {
+      return false;
+    }
+    else
+    {
+      if (ver === "notVerified")
+      {
+        return ver;
+      }
+      else
+      {
+        if(ver.role !== UserRoles.DRIVER) return false;
+        else
+        {
+        const payload: JWTPayload = { email };
+        const JWTToken = this.jwtService.sign(payload);
+        session.token = JWTToken;
+        session.type="User";
+        session.role=ver.role;
+        return true;
+        }
+      }
+    }
+  }
   async checkUser(@Session() session: { token?: string, type?:string, role:UserRoles }, password: string)
   {
     let userJSON = await this.jwtService.decode(session.token);

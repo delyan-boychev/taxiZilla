@@ -32,6 +32,13 @@ export class AuthController {
     req.session.cookie.expires = new Date(Date.now() + time)
     return await this.authService.loginUser(email, password, session);
   }
+  @Post("/loginTaxiDriver/")
+  async loginTaxiDriver( @Req() req,@Body("email", ValidationPipe) email: string, @Body("password", ValidationPipe) password: string, @Session() session: { token?: string, type?:string, role?:UserRoles})
+  {
+    let time = 1800000;
+    req.session.cookie.expires = new Date(Date.now() + time)
+    return await this.authService.loginTaxiDriver(email, password, session);
+  }
   @Get("/profile/")
   async getProfile(@Session() session: { token?: string , type?:string,role:UserRoles})
   {
