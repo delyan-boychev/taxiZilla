@@ -14,6 +14,11 @@ export class Pair
 }
 export class taxiDriversFindNearest
 {
+    constructor(x:number, y:number)
+    {
+        this.x=x;
+        this.y=y;
+    }
     x: number;
     y: number;
     private taxiDriversDistance: Array<Pair> = new Array<Pair>();
@@ -23,8 +28,11 @@ export class taxiDriversFindNearest
         this.taxiDriversDistance = []
         for(i=0; Drivers.length; i++)
         {
-            this.taxiDriversDistance[i].distance = Math.sqrt(Math.pow(this.x - Drivers[i].x, 2) + Math.pow(this.y - Drivers[i].y, 2))
-            this.taxiDriversDistance[i].index=i;
+            if(Drivers[i])
+            {
+                this.taxiDriversDistance[i].distance = Math.sqrt(Math.pow(this.x - Drivers[i].x, 2) + Math.pow(this.y - Drivers[i].y, 2))
+                this.taxiDriversDistance[i].index=i;
+            }
         }
     }
     async getTheNearestDriver(): Promise<User>
@@ -39,9 +47,13 @@ export class taxiDriversFindNearest
         let i:number;
         for(i=0; i<this.taxiDriversDistance.length; i++)
         {
-            Requests[this.taxiDriversDistance[i].index]=1;
+            Requests[Drivers[this.taxiDriversDistance[i].index].driver.id]={
+                x:this.x,
+                y:this.y,
+                status:0,
+            };
             await new Promise(r => setTimeout(r, 13000)); 
-            if(Requests[this.taxiDriversDistance[i].index]==2)
+            if(Requests[Drivers[this.taxiDriversDistance[i].index].driver.id].status==1)
             {
                 index=i;
                 break;

@@ -6,7 +6,7 @@ import { UserRoles } from 'src/auth/enums/userRoles.enum';
 import { UserStatus } from 'src/auth/enums/userStatus.enum';
 import { taxiDriver, taxiDriversFindNearest } from 'src/auth/taxiDriver.class';
 import { UserRepository } from 'src/auth/user.repository';
-import { Statuses, Drivers,x,y } from 'src/coordsAndStatus.array';
+import { Statuses, Drivers,x,y, Requests } from 'src/coordsAndStatus.array';
 import { OrderRepository } from './order.repository';
 
 @Injectable()
@@ -44,7 +44,7 @@ export class OrderService {
     async createOrder(x:number,y:number, notes:string, @Session() session:{token?:string})
     {
         this.renewArray();
-        let a:taxiDriversFindNearest = new taxiDriversFindNearest;
+        let a:taxiDriversFindNearest = new taxiDriversFindNearest(x,y);
         let nearest = await a.getTheNearestDriver();
         if(nearest===undefined)return false;
         let uemail = await this.jwtService.decode(session.token);
@@ -57,11 +57,20 @@ export class OrderService {
         let user = await this.userRepository.findOne({email:uemail["email"]});
         if(user.role==UserRoles.DRIVER)
         {
-            return this.orderRepository.getOrderByUser(user); 
+            return Requests[user.id]; 
         }
         else
         {
             return false;
+        }
+    }
+    async acceptRequest(@Session() session:{token?:string})
+    {
+        let uemail = await this.jwtService.decode(session.token);
+        let user = await this.userRepository.findOne({email:uemail["email"]});
+        if(Requests[user.id])
+        {
+            Requests[user.id]["status"]=1;
         }
     }
 

@@ -18,6 +18,11 @@ export class OrderController {
     {
         this.orderService.getMyOrders(session);
     }
+    @Post("/acceptOrder/")
+    async acceptOrder(@Session() session:{token?:string})
+    {
+        return this.orderService.acceptRequest(session);
+    }
 
 }
 
