@@ -30,6 +30,12 @@ export class taxiDriversFindNearest
         {
             if(Drivers[i])
             {
+                if(!this.taxiDriversDistance[i])
+                {
+                    this.taxiDriversDistance[i] = {
+                        distance:0,
+                        index:i,};
+                }
                 this.taxiDriversDistance[i].distance = Math.sqrt(Math.pow(this.x - Drivers[i].x, 2) + Math.pow(this.y - Drivers[i].y, 2))
                 this.taxiDriversDistance[i].index=i;
             }

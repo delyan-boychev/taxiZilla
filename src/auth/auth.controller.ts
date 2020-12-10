@@ -73,8 +73,10 @@ export class AuthController {
     return await this.authService.changeEmail(session, newEmail);
   }
   @Post("/changeStatus/")
-  async changeStatusAndLocation(@Session() session:{token?:string}, @Body("newStatus")newStatus:UserStatus, @Body("x") x:number, @Body("y") y:number)
+  async changeStatusAndLocation(@Session() session:{token?:string}, @Body("newStatus")newStatus:UserStatus, @Body("x") x:string, @Body("y") y:string)
   {
-    return this.authService.changeStatusAndLocation(session,newStatus,x,y);
+    console.log(parseFloat(x));
+    console.log(parseFloat(y));
+    return this.authService.changeStatusAndLocation(session,newStatus,parseFloat(x),parseFloat(y));
   }
 }

@@ -10,13 +10,13 @@ export class OrderController {
     @Post('/createOrder')
     createOrder(@Body('x') x:number,@Body('y') y:number, @Body('notes') notes:string, @Session() session:{token?:string})
     {
-        this.orderService.createOrder(x,y,notes, session);
+        return this.orderService.createOrder(x,y,notes, session);
         
     }
     @Get('/getMyOrders')
     getMyOrders(@Session() session:{token?:string})
     {
-        this.orderService.getMyOrders(session);
+        return this.orderService.getMyOrders(session);
     }
     @Post("/acceptOrder/")
     async acceptOrder(@Session() session:{token?:string})
