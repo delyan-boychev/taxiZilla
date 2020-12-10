@@ -51,20 +51,22 @@ export class taxiDriversFindNearest
         });
         var index = -1;
         let i:number;
-        for(i=0; i<this.taxiDriversDistance.length; i++)
-        {
-            Requests[Drivers[this.taxiDriversDistance[i].index].driver.id]={
-                x:this.x,
-                y:this.y,
-                status:0,
-            };
-            await new Promise(r => setTimeout(r, 13000)); 
-            if(Requests[Drivers[this.taxiDriversDistance[i].index].driver.id].status==1)
+        setTimeout(async function(){
+            for(i=0; i<this.taxiDriversDistance.length; i++)
             {
-                index=i;
-                break;
-            }   
-        }
+                Requests[Drivers[this.taxiDriversDistance[i].index].driver.id]={
+                    x:this.x,
+                    y:this.y,
+                    status:0,
+                };
+                await new Promise(r =>setTimeout(r, 13000)); 
+                if(Requests[Drivers[this.taxiDriversDistance[i].index].driver.id].status==1)
+                {
+                    index=i;
+                    break;
+                }
+            }
+        },40);   
         if(index!=-1)return Drivers[index].driver;
         else return undefined;
     }
