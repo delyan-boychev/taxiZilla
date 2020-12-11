@@ -47,8 +47,13 @@ export class OrderService {
         let user = await this.userRepository.findOne({email:uemail["email"]});
         if(Requests[user.id])
         {
-            Requests[user.id]["status"]=0;
-             
+            if(Requests[user.id]["curdriveridx"]<Requests[user.id]["distances"].length-1)
+            {
+                Requests[user.id]["status"]=0;
+                Requests[Requests[user.id]["distances"][Requests[user.id]["curdriveridx"]+1]["index"]]=Requests[user.id];
+                Requests[user.id]=undefined;
+            }
+            
 
         }
     }
