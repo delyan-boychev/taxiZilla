@@ -62,6 +62,7 @@ export class OrderService {
         this.renewArray();
         let uemail = await this.jwtService.decode(session.token);
         let sended = await this.userRepository.findOne({email:uemail["email"]});
+        console.log(sended);
         let a:taxiDriversFindNearest = new taxiDriversFindNearest(x,y,sended,notes);;
         a.getTheNearestDriver();
     }
@@ -85,7 +86,7 @@ export class OrderService {
         if(Requests[user.id])
         {
             Requests[user.id]["status"]=1;
-            this.orderRepository.createOrder(Requests["sender"],user,Requests[user.id]["x"],Requests[user.id]["y"], Requests[user.id]["notes"]); 
+            this.orderRepository.createOrder(Requests[user.id]["sender"],user,Requests[user.id]["x"],Requests[user.id]["y"], Requests[user.id]["notes"]); 
 
         }
     }

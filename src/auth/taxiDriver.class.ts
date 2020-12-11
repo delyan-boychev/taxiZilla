@@ -56,6 +56,7 @@ export class taxiDriversFindNearest
         });
         var index = -1;
         let i:number = 0;
+        console.log(this.taxiDriversDistance);
         Requests[Drivers[this.taxiDriversDistance[i].index].driver.id]={
                 x:this.x,
                 y:this.y,

@@ -11,10 +11,16 @@ export class OrderRepository extends Repository<Order>
         let newOrder = new Order();
         newOrder.x=x;
         newOrder.y=y;
-        newOrder.notes = notes;
+        newOrder.notes = "";
         newOrder.orderStatus=OrderStatus.Open;
         newOrder.userOrdered=sender;
         newOrder.driverId=driver.id;
+        newOrder.items = "";
+        console.log(sender);
+        if(!sender.orders)
+        {
+            sender.orders=[];
+        }
         sender.orders.push(newOrder);
         await newOrder.save();
         await sender.save();
