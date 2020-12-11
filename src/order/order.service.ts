@@ -44,12 +44,10 @@ export class OrderService {
     async createOrder(x:number,y:number, notes:string, @Session() session:{token?:string})
     {
         this.renewArray();
-        let a:taxiDriversFindNearest = new taxiDriversFindNearest(x,y);
-        let nearest = await a.getTheNearestDriver();
-        if(nearest===undefined)return false;
         let uemail = await this.jwtService.decode(session.token);
         let sended = await this.userRepository.findOne({email:uemail["email"]});
-        this.orderRepository.createOrder(sended,nearest,x,y, notes); 
+        let a:taxiDriversFindNearest = new taxiDriversFindNearest(x,y,sended,notes);
+        a.getTheNearestDriver();
     }
     async getMyOrders(@Session() session:{token?:string})
     {
@@ -71,6 +69,8 @@ export class OrderService {
         if(Requests[user.id])
         {
             Requests[user.id]["status"]=1;
+            this.orderRepository.createOrder(Requests["sender"],user,Requests[user.id]["x"],Requests[user.id]["y"], Requests[user.id]["notes"]); 
+
         }
     }
 

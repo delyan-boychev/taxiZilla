@@ -14,13 +14,17 @@ export class Pair
 }
 export class taxiDriversFindNearest
 {
-    constructor(x:number, y:number)
+    constructor(x:number, y:number,sender:User,notes:string)
     {
         this.x=x;
         this.y=y;
+        this.notes=notes;
+        this.sender=sender;
     }
     x: number;
     y: number;
+    notes:string;
+    sender:User;
     private taxiDriversDistance: Array<Pair> = new Array<Pair>();
     calculateDistance()
     {
@@ -41,7 +45,7 @@ export class taxiDriversFindNearest
             }
         }
     }
-    async getTheNearestDriver(): Promise<User>
+    getTheNearestDriver(): void
     {
         this.calculateDistance();
         this.taxiDriversDistance.sort(function(item1,item2){
@@ -51,23 +55,13 @@ export class taxiDriversFindNearest
         });
         var index = -1;
         let i:number;
-        setTimeout(async function(){
-            for(i=0; i<this.taxiDriversDistance.length; i++)
-            {
-                Requests[Drivers[this.taxiDriversDistance[i].index].driver.id]={
-                    x:this.x,
-                    y:this.y,
-                    status:0,
-                };
-                await new Promise(r =>setTimeout(r, 13000)); 
-                if(Requests[Drivers[this.taxiDriversDistance[i].index].driver.id].status==1)
-                {
-                    index=i;
-                    break;
-                }
-            }
-        },40);   
-        if(index!=-1)return Drivers[index].driver;
-        else return undefined;
+        Requests[Drivers[this.taxiDriversDistance[i].index].driver.id]={
+                x:this.x,
+                y:this.y,
+                sender:this.sender,
+                status:0,
+                distances:this.taxiDriversDistance,
+                curdriveridx:0,
+        };
     }
 }
