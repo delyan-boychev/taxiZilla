@@ -41,12 +41,23 @@ export class OrderService {
         }
         
     }
+    async rejectRequest(@Session() session:{token?:string})
+    {
+        let uemail = await this.jwtService.decode(session.token);
+        let user = await this.userRepository.findOne({email:uemail["email"]});
+        if(Requests[user.id])
+        {
+            Requests[user.id]["status"]=0;
+             
+
+        }
+    }
     async createOrder(x:number,y:number, notes:string, @Session() session:{token?:string})
     {
         this.renewArray();
         let uemail = await this.jwtService.decode(session.token);
         let sended = await this.userRepository.findOne({email:uemail["email"]});
-        let a:taxiDriversFindNearest = new taxiDriversFindNearest(x,y,sended,notes);
+        let a:taxiDriversFindNearest = new taxiDriversFindNearest(x,y,sended,notes);;
         a.getTheNearestDriver();
     }
     async getMyOrders(@Session() session:{token?:string})

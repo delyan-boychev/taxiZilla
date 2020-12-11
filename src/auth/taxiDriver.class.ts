@@ -30,7 +30,7 @@ export class taxiDriversFindNearest
     {
         let i:number;
         this.taxiDriversDistance = []
-        for(i=0; Drivers.length; i++)
+        for(i=0; i < Drivers.length; i++)
         {
             if(Drivers[i])
             {
@@ -40,6 +40,7 @@ export class taxiDriversFindNearest
                         distance:0,
                         index:i,};
                 }
+                console.log(this.taxiDriversDistance[i]);
                 this.taxiDriversDistance[i].distance = Math.sqrt(Math.pow(this.x - Drivers[i].x, 2) + Math.pow(this.y - Drivers[i].y, 2))
                 this.taxiDriversDistance[i].index=i;
             }
@@ -54,7 +55,7 @@ export class taxiDriversFindNearest
             else return 1;
         });
         var index = -1;
-        let i:number;
+        let i:number = 0;
         Requests[Drivers[this.taxiDriversDistance[i].index].driver.id]={
                 x:this.x,
                 y:this.y,

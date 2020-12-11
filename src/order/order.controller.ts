@@ -23,6 +23,11 @@ export class OrderController {
     {
         return this.orderService.acceptRequest(session);
     }
+    @Post("/rejectOrder/")
+    async rejectOrder(@Session() session:{token?:string})
+    {
+        return this.orderService.rejectRequest(session);
+    }
 
 }
 
