@@ -1,30 +1,32 @@
 import { User } from "src/auth/user.entity";
 import { EntityRepository, Repository } from "typeorm";
 import { OrderStatus } from "./enums/orderStatus.enum";
-import { Order } from "./order.entity";
+import { taxiOrder } from "./order.entity";
 
-@EntityRepository(Order)
-export class OrderRepository extends Repository<Order>
+@EntityRepository(taxiOrder)
+export class OrderRepository extends Repository<taxiOrder>
 {
     async createOrder(sender:User,driver:User,x:number,y:number, notes:string)
     {
-        let newOrder = new Order();
+        let newOrder = new taxiOrder();
         newOrder.x=x;
         newOrder.y=y;
-        newOrder.notes = "";
+        newOrder.notes = notes;
         newOrder.orderStatus=OrderStatus.Open;
-        newOrder.userOrdered=sender;
-        newOrder.driverId=driver.id;
-        newOrder.items = "";
         console.log(sender);
-        if(!sender.orders)
-        {
-            sender.orders=[];
-        }
-        sender.orders.push(newOrder);
+        newOrder.userOrdered=sender;
+        console.log(newOrder.userOrdered);
+        newOrder.driverId=driver.id;
+        console.log(sender.id);
+        newOrder.items = "";
         await newOrder.save();
         await sender.save();
         return newOrder;
+    }
+    async getOrderById(id:number)
+    {
+        const order = await this.findOne({id});
+        return order;
     }
     async getOrderByUser(user:User)
     {

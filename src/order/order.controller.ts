@@ -7,6 +7,12 @@ export class OrderController {
         private orderService:OrderService,
 
     ){};
+    @Get("/getOrderOneSender")
+    async getOrderOneSender()
+    {
+        console.log(await this.orderService.getOrderOneSender());
+        return await this.orderService.getOrderOneSender();
+    }
     @Post('/createOrder')
     createOrder(@Body('x') x:number,@Body('y') y:number, @Body('notes') notes:string, @Session() session:{token?:string})
     {

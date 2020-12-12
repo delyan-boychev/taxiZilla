@@ -10,7 +10,7 @@ import { PugAdapter } from '@nestjs-modules/mailer/dist/adapters/pug.adapter';
 import { Firm } from './firm/firm.entity';
 import { FirmModule } from './firm/firm.module';
 import { OrderModule } from './order/order.module';
-import { Order } from './order/order.entity';
+import { taxiOrder } from './order/order.entity';
 
 @Module({
   imports: [
@@ -20,7 +20,7 @@ import { Order } from './order/order.entity';
       username: 'taxiZilla',
       password: 'VhCNrHnMEB3sE?9_',
       database: 'taxiZilla',
-      entities:[User,Firm,Order],
+      entities:[User,Firm,taxiOrder],
       synchronize:true,
     })
     

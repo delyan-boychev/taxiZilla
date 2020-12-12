@@ -1,7 +1,7 @@
 import { BaseEntity, Column, Entity, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { UserRoles } from "./enums/userRoles.enum";
 import { Firm } from "../firm/firm.entity";
-import { Order } from "src/order/order.entity";
+import { taxiOrder } from "src/order/order.entity";
 
 @Entity()
 export class User extends BaseEntity
@@ -36,8 +36,8 @@ export class User extends BaseEntity
   @Column()
   verified: boolean;
 
-  @OneToMany(type => Order, order => order.userOrdered)
-  orders:Order[];
+  @OneToMany(type => taxiOrder, order => order.userOrdered, { cascade: true, onDelete:'CASCADE'})
+  orders:taxiOrder[];
 
   @ManyToOne(type => Firm, firm => firm.drivers)
   firm: Firm;

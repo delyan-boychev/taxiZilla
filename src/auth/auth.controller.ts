@@ -75,8 +75,6 @@ export class AuthController {
   @Post("/changeStatus/")
   async changeStatusAndLocation(@Session() session:{token?:string}, @Body("newStatus")newStatus:UserStatus, @Body("x") x:string, @Body("y") y:string)
   {
-    console.log(parseFloat(x));
-    console.log(parseFloat(y));
     return this.authService.changeStatusAndLocation(session,newStatus,parseFloat(x),parseFloat(y));
   }
 }

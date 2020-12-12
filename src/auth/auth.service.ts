@@ -32,6 +32,12 @@ export class AuthService {
     let umail = await this.jwtService.decode(session.token);
     let user = await this.userRepository.findOne({email:umail["email"]});
     Statuses[user.id]=newStatus;
+    if(Drivers[user.id])
+    {
+      console.log(user.id);
+      console.log(Drivers[user.id].x);
+    console.log(Drivers[user.id].y);
+    }
     if(!Drivers[user.id])
     {
       Drivers[user.id]=new taxiDriver();
@@ -165,7 +171,7 @@ export class AuthService {
   {
     const encrypter = new Cryptr("mXb35Bw^FvCz9MLN");
     const link = encrypter.encrypt(username);
-    const htmlcode = "<a href='http://localhost:3000/auth/verify/" + link + "'>ТУК</a>"
+    const htmlcode = "<a href='https://taxizilla.cheapsoftbg.com/auth/verify/" + link + "'>ТУК</a>"
     const info = await transport.sendMail({
       from: 'Taxi Zilla',
       to: username,

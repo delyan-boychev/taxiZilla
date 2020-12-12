@@ -40,8 +40,7 @@ export class taxiDriversFindNearest
                         distance:0,
                         index:i,};
                 }
-                console.log(this.taxiDriversDistance[i]);
-                this.taxiDriversDistance[i].distance = Math.sqrt(Math.pow(this.x - Drivers[i].x, 2) + Math.pow(this.y - Drivers[i].y, 2))
+                this.taxiDriversDistance[i].distance = Math.sqrt(Math.pow(this.x - Drivers[i].x, 2) + Math.pow(this.y - Drivers[i].y, 2));
                 this.taxiDriversDistance[i].index=i;
             }
         }
@@ -56,7 +55,7 @@ export class taxiDriversFindNearest
         });
         var index = -1;
         let i:number = 0;
-        console.log(this.taxiDriversDistance);
+        console.log(this.taxiDriversDistance[i].distance);
         Requests[Drivers[this.taxiDriversDistance[i].index].driver.id]={
                 x:this.x,
                 y:this.y,

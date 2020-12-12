@@ -19,7 +19,7 @@ export class OrderService {
         private jwtService:JwtService,
             
     ){};
-    async renewArray():Promise<void>
+    /*async renewArray():Promise<void>
     {
         let qb = this.userRepository.createQueryBuilder("user");
         qb.andWhere("user.role = :role", {role: UserRoles.DRIVER});
@@ -40,7 +40,7 @@ export class OrderService {
             }   
         }
         
-    }
+    }*/
     async rejectRequest(@Session() session:{token?:string})
     {
         let uemail = await this.jwtService.decode(session.token);
@@ -59,10 +59,8 @@ export class OrderService {
     }
     async createOrder(x:number,y:number, notes:string, @Session() session:{token?:string})
     {
-        this.renewArray();
         let uemail = await this.jwtService.decode(session.token);
         let sended = await this.userRepository.findOne({email:uemail["email"]});
-        console.log(sended);
         let a:taxiDriversFindNearest = new taxiDriversFindNearest(x,y,sended,notes);;
         a.getTheNearestDriver();
     }
@@ -78,6 +76,11 @@ export class OrderService {
         {
             return false;
         }
+    }
+    async getOrderOneSender()
+    {
+        const order = await this.orderRepository.getOrderById(1);
+        return order.userOrdered;
     }
     async acceptRequest(@Session() session:{token?:string})
     {

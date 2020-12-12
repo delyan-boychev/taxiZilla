@@ -3,7 +3,7 @@ import {User} from "../auth/user.entity"
 import { OrderStatus } from "./enums/orderStatus.enum";
 
 @Entity()
-export class Order extends BaseEntity
+export class taxiOrder extends BaseEntity
 {
     @PrimaryGeneratedColumn()
     id:Number;
@@ -23,7 +23,7 @@ export class Order extends BaseEntity
     @Column()
     driverId:number;
     
-    @Column()
+    @Column({default:""})
     notes:string;
 
     @Column()
