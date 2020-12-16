@@ -48,13 +48,35 @@ function makeOrderTaxiAddress()
                 notes: $('#notes').val(),
                 },
                 function(data,status){
-                if(data=="true") document.getElementById("messageText").innerText="Успешно е направено поръчка!";
-                else document.getElementById("messageText").innerText="Вече съществува профил с този имейл адрес!";
+                document.getElementById("messageText").innerText="Успешно е направено поръчка!";
                 $("#modal").modal();
                 }
                 );
             });
 
+    }
+}
+async function makeOrderCurrentLocation() 
+{
+    if(arguments.callee.caller === null) return;
+    var x, y;
+    if(navigator.geolocation) {
+        await navigator.geolocation.getCurrentPosition(async function(position) {
+            x = position.coords.longitude;
+            y= position.coords.latitude;
+            $.post("/order/createOrder",
+                    {
+                    x: x,
+                    y: y,
+                    notes: $('#notes').val(),
+                    },
+                    function(data,status){
+                    document.getElementById("messageText").innerText="Успешно е направено поръчка!";
+                    $("#modal").modal();
+                    }
+                    );
+            
+        });
     }
 }
 function setLoginInfo()

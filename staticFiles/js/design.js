@@ -19,7 +19,7 @@ function changeTabOrder(radio)
     else 
     {
         showCurrentPosition();
-        contentTab.innerHTML = '<button class="btn btn-primary ml-0 black-text btn-block rounded" type="submit" onclick="showCurrentPosition()">Обнови картата</button><br><button class="btn btn-primary ml-0 mt-2 black-text btn-block rounded" type="submit" onclick="">Направи поръчка</button>';
+        contentTab.innerHTML = '<textarea placeholder="Бележки(по избор)" class="form-control mt-3" id="notes" style="resize: none; height: 200px" rows="3"></textarea><br><button class="btn btn-primary ml-0 black-text btn-block rounded" type="submit" onclick="showCurrentPosition()">Обнови картата</button><br><button class="btn btn-primary ml-0 mt-2 black-text btn-block rounded" type="submit" onclick="makeOrderCurrentLocation()">Направи поръчка</button>';
     }
 }
 function collapse()//Promqna na navbara pri otvarqne i zatvarqne

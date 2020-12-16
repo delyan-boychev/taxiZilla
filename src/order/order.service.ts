@@ -19,28 +19,6 @@ export class OrderService {
         private jwtService:JwtService,
             
     ){};
-    /*async renewArray():Promise<void>
-    {
-        let qb = this.userRepository.createQueryBuilder("user");
-        qb.andWhere("user.role = :role", {role: UserRoles.DRIVER});
-        let drivers1 = await qb.getMany();
-        while(Drivers.length!==0)
-        {
-            Drivers.pop();
-        }
-        for(let i = 0; i < drivers1.length; i++)
-        {
-            if(Statuses[drivers1[i].id]===UserStatus.Online)
-            {
-                let tmp:taxiDriver = new taxiDriver();
-                tmp.driver=drivers1[i];
-                tmp.x = x[drivers1[i].id];
-                tmp.y = y[drivers1[i].id];
-                Drivers.push(tmp);
-            }   
-        }
-        
-    }*/
     async rejectRequest(@Session() session:{token?:string})
     {
         let uemail = await this.jwtService.decode(session.token);
@@ -90,7 +68,7 @@ export class OrderService {
         {
             Requests[user.id]["status"]=1;
             this.orderRepository.createOrder(Requests[user.id]["sender"],user,Requests[user.id]["x"],Requests[user.id]["y"], Requests[user.id]["notes"]); 
-
+            Requests[user.id] = undefined;
         }
     }
 
