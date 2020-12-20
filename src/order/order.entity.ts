@@ -8,11 +8,11 @@ export class taxiOrder extends BaseEntity
     @PrimaryGeneratedColumn()
     id:Number;
 
-    @Column()
-    x:Number;
+    @Column({ type: "float", precision: 10, scale: 6 })
+    x:number;
 
-    @Column()
-    y:Number;
+    @Column({ type: "float", precision: 10, scale: 6 } )
+    y:number;
 
     @ManyToOne(type => User, user => user.orders)
     userOrdered:User;
@@ -22,6 +22,9 @@ export class taxiOrder extends BaseEntity
 
     @Column()
     driverId:number;
+    
+    @Column()
+    address: string;
     
     @Column({default:""})
     notes:string;

@@ -25,21 +25,28 @@ export class OrderService {
         let user = await this.userRepository.findOne({email:uemail["email"]});
         if(Requests[user.id])
         {
-            if(Requests[user.id]["curdriveridx"]<Requests[user.id]["distances"].length-1)
+            if(Requests[user.id]["curdriveridx"]<Requests[user.id]["distances"].length)
             {
                 Requests[user.id]["status"]=0;
+                if(Requests[user.id]["distances"][Requests[user.id]["curdriveridx"]+1])
+                {
                 Requests[Requests[user.id]["distances"][Requests[user.id]["curdriveridx"]+1]["index"]]=Requests[user.id];
+                }
+                else
+                {
+
+                }
                 Requests[user.id]=undefined;
             }
             
 
         }
     }
-    async createOrder(x:number,y:number, notes:string, @Session() session:{token?:string})
+    async createOrder(x:number,y:number, notes:string, @Session() session:{token?:string}, address: string)
     {
         let uemail = await this.jwtService.decode(session.token);
         let sended = await this.userRepository.findOne({email:uemail["email"]});
-        let a:taxiDriversFindNearest = new taxiDriversFindNearest(x,y,sended,notes);;
+        let a:taxiDriversFindNearest = new taxiDriversFindNearest(x,y,sended,notes, address);
         a.getTheNearestDriver();
     }
     async getMyOrders(@Session() session:{token?:string})

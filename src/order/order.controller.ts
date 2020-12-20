@@ -14,9 +14,9 @@ export class OrderController {
         return await this.orderService.getOrderOneSender();
     }
     @Post('/createOrder')
-    createOrder(@Body('x') x:number,@Body('y') y:number, @Body('notes') notes:string, @Session() session:{token?:string})
+    createOrder(@Body('x') x:number,@Body('y') y:number, @Body('notes') notes:string, @Body('address') address:string, @Session() session:{token?:string}, )
     {
-        return this.orderService.createOrder(x,y,notes, session);
+        return this.orderService.createOrder(x,y,notes, session, address);
         
     }
     @Get('/getMyOrders')

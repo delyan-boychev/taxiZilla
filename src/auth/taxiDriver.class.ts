@@ -1,4 +1,5 @@
-import { Drivers, Requests } from "src/coordsAndStatus.array";
+import { Drivers, Requests, Statuses } from "src/coordsAndStatus.array";
+import { UserStatus } from "./enums/userStatus.enum";
 import { User } from "./user.entity";
 
 export class taxiDriver
@@ -14,13 +15,15 @@ export class Pair
 }
 export class taxiDriversFindNearest
 {
-    constructor(x:number, y:number,sender:User,notes:string)
+    constructor(x:number, y:number,sender:User,notes:string, address:string)
     {
         this.x=x;
         this.y=y;
+        this.address = address;
         this.notes=notes;
         this.sender=sender;
     }
+    address: string;
     x: number;
     y: number;
     notes:string;
@@ -34,6 +37,7 @@ export class taxiDriversFindNearest
         {
             if(Drivers[i])
             {
+ 
                 if(!this.taxiDriversDistance[i])
                 {
                     this.taxiDriversDistance[i] = {
@@ -59,6 +63,7 @@ export class taxiDriversFindNearest
         Requests[Drivers[this.taxiDriversDistance[i].index].driver.id]={
                 x:this.x,
                 y:this.y,
+                address: this.address,
                 sender:this.sender,
                 status:0,
                 distances:this.taxiDriversDistance,

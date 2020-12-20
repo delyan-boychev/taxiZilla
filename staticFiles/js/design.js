@@ -1,16 +1,16 @@
 function refreshPage()//Refreshvane na stranicata
 {
-    if(arguments.callee.caller === null) return;
+    if(arguments.callee.caller === null) {console.log("%c You are not permitted to use this method!!!",  'color: red'); return;}
     window.location.href = "/";
 }
 function hideTooltips()//Izchistvane na tooltipovete
 {
-    if(arguments.callee.caller === null) return;
+    if(arguments.callee.caller === null) {console.log("%c You are not permitted to use this method!!!",  'color: red'); return;}
     $('.tooltip').tooltip('hide');
 }
 function changeTabOrder(radio)
 {
-    if(arguments.callee.caller === null) return;
+    if(arguments.callee.caller === null) {console.log("%c You are not permitted to use this method!!!",  'color: red'); return;}
     var contentTab = document.getElementById("contentTab");
     if(radio.value=="address")
     {
@@ -24,7 +24,7 @@ function changeTabOrder(radio)
 }
 function collapse()//Promqna na navbara pri otvarqne i zatvarqne
 {
-    if(arguments.callee.caller === null) return;
+    if(arguments.callee.caller === null) {console.log("%c You are not permitted to use this method!!!",  'color: red'); return;}
     if($("#collapse").is(":visible"))
     {
         console.log(true);
@@ -36,38 +36,23 @@ function collapse()//Promqna na navbara pri otvarqne i zatvarqne
         document.getElementById("navbar").style.removeProperty("background-image");
     }
 }
-async function showCurrentPosition() 
+function showCurrentPosition() 
 {
-    if(arguments.callee.caller === null) return;
-    var x, y;
-    if(navigator.geolocation) {
-        await navigator.geolocation.getCurrentPosition(async function(position) {
-            x = position.coords.longitude;
-            y= position.coords.latitude;
-            document.getElementById("map").src = "https://maps.google.com/maps?q="+ y + ", " + x +"&t=&z=17&ie=UTF8&iwloc=&output=embed";
+    if(arguments.callee.caller === null) {console.log("%c You are not permitted to use this method!!!",  'color: red'); return;}
+    getLocation().then(coord => {
+            document.getElementById("map").src = "https://maps.google.com/maps?q="+ coord["y"] + ", " + coord["x"] +"&t=&z=17&ie=UTF8&iwloc=&output=embed";
         });
-    }
 }
 function updateMapAddress()
 {
-    if(arguments.callee.caller === null) return;
-    $.ajax(
-        {
-            async: true,
-            url: "https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/findAddressCandidates",
-            type: "GET",
-            data:
-            {
-            SingleLine: $("#addressTaxi").val(),
-            f: "json"
-            }
-        }).done(function(json) {document.getElementById("map").src = "https://maps.google.com/maps?q="+ json.candidates[0].location.y + ", " + json.candidates[0].location.x +"&t=&z=17&ie=UTF8&iwloc=&output=embed"; $([document.documentElement, document.body]).animate({
+    if(arguments.callee.caller === null) {console.log("%c You are not permitted to use this method!!!",  'color: red'); return;}
+document.getElementById("map").src = "https://maps.google.com/maps?q="+ $("#addressTaxi").val() +"&t=&z=17&ie=UTF8&iwloc=&output=embed"; $([document.documentElement, document.body]).animate({
             scrollTop: $("#map").offset().top
-        }, 1000);});
+        }, 1000);
 }
 function designChangeOnStart()//Nastroivane na dizain pri startirane
 {
-    if(arguments.callee.caller === null) return;
+    if(arguments.callee.caller === null) {console.log("%c You are not permitted to use this method!!!",  'color: red'); return;}
     var nav = document.getElementById("navElements");
     if(loginInfo["isLoggedIn"] == "true")
     {
