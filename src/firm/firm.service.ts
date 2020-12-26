@@ -11,6 +11,8 @@ import { UserRoles } from 'src/auth/enums/userRoles.enum';
 import { UserRepository } from 'src/auth/user.repository';
 import { User } from 'src/auth/user.entity';
 import { session } from 'passport';
+import { Firm } from './firm.entity';
+import { SupportedCityRepository } from './cityRepository';
 
 @Injectable()
 export class FirmService {
@@ -18,6 +20,7 @@ export class FirmService {
         private firmRepository:FirmRepository,
         private jwtService:JwtService,
         private userRepository:UserRepository,
+        private cityRepository:SupportedCityRepository,
         ){};
     async loginFirm(eik:string,password:string, @Session() session:{token?: string, type?:string})
     {
@@ -106,5 +109,19 @@ export class FirmService {
     const decoded=await this.jwtService.decode(session.token);
     const eik=decoded["eik"];
     return await this.firmRepository.getTaxiDrivers(eik);
+  }
+  async addCity(city:string,region:string, @Session() session:{token?: string})
+  {
+      const decoded=await this.jwtService.decode(session.token);
+      const eik=decoded["eik"];
+      const firm = await this.firmRepository.findOne({eik});
+      return await this.cityRepository.addCity(city,region,firm);
+  }
+  async removeCity(city:string,region:string, @Session() session:{token?: string})
+  {
+      const decoded=await this.jwtService.decode(session.token);
+      const eik=decoded["eik"];
+      const firm = await this.firmRepository.findOne({eik});
+      return await this.cityRepository.removeCity(city,region,firm);
   }
 }

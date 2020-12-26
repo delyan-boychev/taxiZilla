@@ -51,4 +51,14 @@ export class FirmController {
   {
     return await this.firmService.removeTaxiDriver(session, email);
   }
+  @Post("/addSupportedCity/")
+  async addCity(@Session() session:{token?:string},@Body("city")city:string,@Body("region")region:string)
+  {
+    return await this.firmService.addCity(city,region,session); 
+  }
+  @Post("/removeSupportedCity")
+  async removeCity(@Session() session:{token?:string},@Body("city")city:string,@Body("region")region:string)
+  {
+    return await this.firmService.removeCity(city,region,session);
+  }
 }
