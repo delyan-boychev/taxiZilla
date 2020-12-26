@@ -74,7 +74,7 @@ export class OrderService {
         if(Requests[user.id])
         {
             Requests[user.id]["status"]=1;
-            this.orderRepository.createOrder(Requests[user.id]["sender"],user,Requests[user.id]["x"],Requests[user.id]["y"], Requests[user.id]["notes"]); 
+            this.orderRepository.createOrder(Requests[user.id]["sender"],user,Requests[user.id]["x"],Requests[user.id]["y"], Requests[user.id]["notes"], Requests[user.id]["address"]); 
             Requests[user.id] = undefined;
         }
     }

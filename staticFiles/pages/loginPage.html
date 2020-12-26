@@ -3,6 +3,7 @@
 <div class="text-center border border-light p-5" id="loginForm">
 
     <p class="h4 mb-4">Влизане като потребител</p>
+    <form method="POST" action="" onsubmit="return false;">
     <!-- E-mail -->
     <input type="email" id="email" class="form-control" placeholder="Имейл">
 
@@ -11,10 +12,9 @@
     
 
     <!-- Sign up button -->
-    <button class="btn btn-primary black-text my-4 btn-block" type="submit" onclick="loginSubmit()">Влизане</button>
-
+    <button id="sumbit" class="btn btn-primary black-text my-4 btn-block" type="submit" onclick="loginSubmit()">Влизане</button>
+    </form>
 
     <hr>
-
 
 </div>

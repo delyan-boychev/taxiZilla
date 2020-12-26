@@ -43,6 +43,8 @@ export class SupportedCityRepository extends Repository<SupportedCity>
             {
                 record.firms = record.firms.splice(record.firms.indexOf(firm),1);
                 firm.supportedCities = firm.supportedCities.splice(firm.supportedCities.indexOf(record),1);
+                await record.save();
+                await firm.save();
                 return true;
             }
             else

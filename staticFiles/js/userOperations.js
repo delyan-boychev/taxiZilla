@@ -23,13 +23,13 @@ function loginSubmit()//Post zaqvka za login na klient
 }
 function makeOrderTaxiAddress()
 {
-    if($("#addressTaxi").val() < 6)
+    if($("#addressTaxi").val().length < 6)
     {
-        $('#addressTaxi').removeClass("is-invalid");
+        $('#addressTaxi').addClass("is-invalid");
     }
     else
     {
-        $('#addressTaxi').removeClass("is-valid");
+        $('#addressTaxi').addClass("is-valid");
         $.ajax(
             {
                 async: true,
@@ -53,7 +53,9 @@ function makeOrderTaxiAddress()
                 document.getElementById("messageText").innerText="Успешно е направено поръчка!";
                 $("#modal").modal();
                 }
-                );
+                ).fail(function(){
+                    refreshPage();
+                });;
             });
 
     }
@@ -84,7 +86,9 @@ function makeOrderCurrentLocation()
                     document.getElementById("messageText").innerText="Успешно е направенa поръчка!";
                     $("#modal").modal();
                     }
-                    );
+                    ).fail(function(){
+                        refreshPage();
+                    });;
                 });
 
 }
@@ -127,7 +131,9 @@ function changeEmail()//Post zaqvka za smqna na email adresa na klient
         $("#modal").modal();
         
     }
-    );
+    ).fail(function(){
+        refreshPage();
+    });
     }
 }
 window.mobileCheck = function() {
@@ -400,6 +406,9 @@ function changePassword()//Post zaqvka za smqna na parola na klient
             if(data=="true") document.getElementById("messageText").innerText="Паролата е сменена успешно!";
             else document.getElementById("messageText").innerText="Въвели сте грешна стара парола!";
             $("#modal").modal();
+        },
+        function(){
+            refreshPage();
         }
         );
     }
@@ -422,6 +431,9 @@ function delProfile()//Post zaqvka za iztrivane na profil na klient
             }
             else document.getElementById("messageText").innerText="Въвели сте грешна парола!";
             $("#modal").modal();
+        },
+        function(){
+            refreshPage();
         }
         );
     }
@@ -453,7 +465,9 @@ function addTaxiDriver()//Post zaqvka za dobavqne na taksimetrovi shofyori
             else document.getElementById("messageText").innerText="Не съществува профил с такъв имейл адрес!";
             $("#modal").modal();
         }
-        );
+        ).fail(function(){
+            refreshPage();
+        });
     }
 }
 function removeTaxiDriver(email)//Post zaqvka za premahvane na taksimetrov shofyor
@@ -468,7 +482,9 @@ function removeTaxiDriver(email)//Post zaqvka za premahvane na taksimetrov shofy
             actionOnCloseModal = getTaxiDrivers;
             $("#modal").modal();
         }
-        );
+        ).fail(function(){
+            refreshPage();
+        });
 }
 function getTaxiDrivers()//Get zaqvka za vzimane na taksimetrovi shofyori
 {

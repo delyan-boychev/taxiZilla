@@ -8,6 +8,7 @@ import { User } from './auth/user.entity';
 import { MailerModule, MailerService } from '@nestjs-modules/mailer';
 import { PugAdapter } from '@nestjs-modules/mailer/dist/adapters/pug.adapter';
 import { Firm } from './firm/firm.entity';
+import { SupportedCity } from './firm/supportedCity.entity';
 import { FirmModule } from './firm/firm.module';
 import { OrderModule } from './order/order.module';
 import { taxiOrder } from './order/order.entity';
@@ -20,7 +21,7 @@ import { taxiOrder } from './order/order.entity';
       username: 'taxiZilla',
       password: 'VhCNrHnMEB3sE?9_',
       database: 'taxiZilla',
-      entities:[User,Firm,taxiOrder],
+      entities:[User,Firm,taxiOrder, SupportedCity],
       synchronize:true,
     })
     
