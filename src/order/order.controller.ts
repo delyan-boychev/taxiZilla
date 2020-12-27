@@ -1,4 +1,5 @@
-import { Body, Controller, Get, Post, Session } from '@nestjs/common';
+import { Body, Controller, Get, Post, Session, UseGuards } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
 import { taxiOrder } from './order.entity';
 import { OrderService } from './order.service';
 
@@ -8,6 +9,7 @@ export class OrderController {
         private orderService:OrderService,
 
     ){};
+    @UseGuards(AuthGuard())
     @Get("/getOrderOneSender")
     async getOrderOneSender()
     {

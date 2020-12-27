@@ -8,6 +8,7 @@ import { Resp } from './response.decorator';
 export class AppController {
   constructor(private readonly appService: AppService) {}
 
+  @UseGuards(AuthGuard())
   @Get()
   async getMainPage(@Session() session:{token?:string, type?:string, role?:UserRoles}, @Res() res:Response) {
     var resp = {};

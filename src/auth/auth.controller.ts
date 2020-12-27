@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, Req, Res, Session, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Req, Res, Session, UseGuards, ValidationPipe } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import * as nodemailer from 'nodemailer';
 import { PrimaryGeneratedColumn } from 'typeorm';
@@ -10,12 +10,14 @@ import { IpAddress } from './ipaddress.decorator';
 import { RegisterUserDTO } from './dto/registerUser.dto';
 import { UserRoles } from './enums/userRoles.enum';
 import { UserStatus } from './enums/userStatus.enum';
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller('auth')
 export class AuthController {
   constructor(
     private authService: AuthService,
   ) { };
+  @UseGuards(AuthGuard())
   @Post("/registerUser/")
   async registerUser(@Body(ValidationPipe) registerUserDto:RegisterUserDTO)
   {
