@@ -7,6 +7,7 @@ import { UserStatus } from 'src/auth/enums/userStatus.enum';
 import { taxiDriver, taxiDriversFindNearest } from 'src/auth/taxiDriver.class';
 import { UserRepository } from 'src/auth/user.repository';
 import { Statuses, Drivers,x,y, Requests } from 'src/coordsAndStatus.array';
+import { OrderStatus } from './enums/orderStatus.enum';
 import { OrderRepository } from './order.repository';
 
 @Injectable()
@@ -34,7 +35,7 @@ export class OrderService {
                 }
                 else
                 {
-
+                    this.orderRepository.createOrder(Requests[user.id]["sender"],user,Requests[user.id]["x"],Requests[user.id]["y"], Requests[user.id]["notes"], Requests[user.id]["address"], OrderStatus.Canceled); 
                 }
                 Requests[user.id]=undefined;
             }
@@ -49,23 +50,14 @@ export class OrderService {
         let a:taxiDriversFindNearest = new taxiDriversFindNearest(x,y,sended,notes, address);
         a.getTheNearestDriver();
     }
-    async getMyOrders(@Session() session:{token?:string})
-    {
-        let uemail = await this.jwtService.decode(session.token);
-        let user = await this.userRepository.findOne({email:uemail["email"]});
-        if(user.role==UserRoles.DRIVER)
-        {
-            return Requests[user.id]; 
-        }
-        else
-        {
-            return false;
-        }
-    }
     async getOrderOneSender()
     {
         const order = await this.orderRepository.getOrderById(1);
         return order.userOrdered;
+    }
+    async finishOrder(id:number)
+    {
+        await this.orderRepository.finishOrder(id);
     }
     async acceptRequest(@Session() session:{token?:string})
     {
@@ -74,8 +66,9 @@ export class OrderService {
         if(Requests[user.id])
         {
             Requests[user.id]["status"]=1;
-            this.orderRepository.createOrder(Requests[user.id]["sender"],user,Requests[user.id]["x"],Requests[user.id]["y"], Requests[user.id]["notes"], Requests[user.id]["address"]); 
+            let idOrder = await this.orderRepository.createOrder(Requests[user.id]["sender"],user,Requests[user.id]["x"],Requests[user.id]["y"], Requests[user.id]["notes"], Requests[user.id]["address"], OrderStatus.Open); 
             Requests[user.id] = undefined;
+            return idOrder;
         }
     }
 

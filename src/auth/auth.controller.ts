@@ -72,7 +72,7 @@ export class AuthController {
   {
     return await this.authService.changeEmail(session, newEmail);
   }
-  @Post("/changeStatus/")
+  @Post("/changeStatusAndCheckForOrders/")
   async changeStatusAndLocation(@Session() session:{token?:string}, @Body("newStatus")newStatus:UserStatus, @Body("x") x:string, @Body("y") y:string)
   {
     return this.authService.changeStatusAndLocation(session,newStatus,parseFloat(x),parseFloat(y));

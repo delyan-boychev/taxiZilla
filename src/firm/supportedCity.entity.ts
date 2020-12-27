@@ -1,11 +1,11 @@
 import { Firm } from "src/firm/firm.entity";
-import { BaseEntity, Column, Entity, ManyToMany, PrimaryColumn } from "typeorm";
+import { BaseEntity, Column, Entity, ManyToMany, PrimaryColumn, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
 
 export class SupportedCity extends BaseEntity
 {
-    @PrimaryColumn()
+    @PrimaryGeneratedColumn()
     id: number;
     
     @Column()

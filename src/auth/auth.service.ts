@@ -1,5 +1,6 @@
 import { Injectable, Session, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
+import { OrderRepository } from "../order/order.repository";
 import { InjectRepository } from '@nestjs/typeorm';
 import { join, toNamespacedPath } from 'path';
 import { RegisterUserDTO } from './dto/registerUser.dto';
@@ -11,7 +12,7 @@ import * as Cryptr from 'cryptr';
 import { FirmRepository } from '../firm/firm.repository';
 import { UserRoles } from './enums/userRoles.enum';
 import { UserStatus } from './enums/userStatus.enum';
-import { Drivers, Statuses } from 'src/coordsAndStatus.array';
+import { Drivers, Statuses, x, y, Requests } from 'src/coordsAndStatus.array';
 import { taxiDriver } from './taxiDriver.class';
 
 @Injectable()
@@ -32,12 +33,6 @@ export class AuthService {
     let umail = await this.jwtService.decode(session.token);
     let user = await this.userRepository.findOne({email:umail["email"]});
     Statuses[user.id]=newStatus;
-    if(Drivers[user.id])
-    {
-      console.log(user.id);
-      console.log(Drivers[user.id].x);
-    console.log(Drivers[user.id].y);
-    }
     if(!Drivers[user.id])
     {
       Drivers[user.id]=new taxiDriver();
@@ -45,7 +40,19 @@ export class AuthService {
     Drivers[user.id].x=x;
     Drivers[user.id].y=y;
     Drivers[user.id].driver = user;
+    return await this.getMyOrders(user);
   }
+  async getMyOrders(user:User)
+    {;
+        if(user.role==UserRoles.DRIVER)
+        {
+            return Requests[user.id]; 
+        }
+        else
+        {
+            return false;
+        }
+    }
   async loginUser(email: string, password: string, @Session() session: { token?: string, type?:string, role?:UserRoles})
   {
     const ver = await this.userRepository.loginUser(email, password,session);
