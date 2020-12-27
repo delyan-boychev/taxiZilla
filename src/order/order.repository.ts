@@ -23,7 +23,7 @@ export class OrderRepository extends Repository<taxiOrder>
     }
     async finishOrder(id:number)
     {
-        const order = await this.findOne({id});
+        const order = await this.findOne({id:id});
         order.orderStatus = OrderStatus.Closed;
         order.save();
     }

@@ -35,6 +35,7 @@ export class AuthService {
     Statuses[user.id]=newStatus;
     if(!Drivers[user.id])
     {
+
       Drivers[user.id]=new taxiDriver();
     }
     Drivers[user.id].x=x;
