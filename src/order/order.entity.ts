@@ -20,7 +20,7 @@ export class taxiOrder extends BaseEntity
     @Column()
     items:string;
 
-    @Column()
+    @Column({nullable: true})
     driverId:number;
     
     @Column()
