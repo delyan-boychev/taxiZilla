@@ -89,14 +89,25 @@
               <h5 class="font-weight-bold">Поддържани населени места</h5>
               <hr>
               <h6 class="font-weight-bold">Добавяне на поддържано населено място</h6>
+              <input type="text" class="form-control mt-3" id="nameRegion" placeholder="Област">
+              <div class="invalid-feedback">Областта трябва да е по-дълго 3 символа</div>
+              <label class="text-center mt-3">Тип населено място: </label><br>
+            <div class="custom-control custom-radio custom-control-inline">
+                <input class="custom-control-input"  type="radio" name="type" id="city" value="град" checked>
+                <label class="custom-control-label" for="city">
+                  Град
+                </label>
+              </div><br>
+              <div class="custom-control custom-radio custom-control-inline">
+                <input class="custom-control-input" type="radio" name="type" id="town" value="село">
+                <label class="custom-control-label" for="town">
+                  Село
+                </label>
+              </div>
               <div class="d-flex justify-content-between ">
-                <select class="form-control mt-4 w-10 mr-3" id="type" >
-                  <option value="град">Град</option>
-                  <option value="село">Село</option>
-                </select>
-                <input type="text" class="form-control mt-4" id="nameCity" placeholder="Име на населено място">
-                <input type="text" class="form-control ml-3 mt-4" id="nameRegion" placeholder="Област">
-                <i class="fas fa-plus mt-4 pt-2 ml-3" style="cursor: pointer;" onclick=""></i>
+                <input type="text" class="form-control mt-3" id="nameCity" placeholder="Име на населено място">
+                <div class="invalid-feedback">Името на населеното място трябва да е по-дълго 2 символа</div>
+                <i class="fas fa-plus mt-3 pt-2 ml-3" style="cursor: pointer;" onclick=""></i>
               </div>
               <hr>
               <h6 class="font-weight-bold">Добавени поддържани населени места</h6>
