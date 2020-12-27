@@ -1,4 +1,5 @@
-import { Body, Controller, Get, Param, Post, Req, Session, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Req, Session, UnauthorizedException, UseGuards, ValidationPipe } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
 import { session } from 'passport';
 import { UserRoles } from 'src/auth/enums/userRoles.enum';
 import { RegisterFirmDTO } from './dto/registerFirm.dto';
@@ -26,6 +27,7 @@ export class FirmController {
   @Get('/profile/')
   async getProfile(@Session() session:{token?:string, type?:string,role?:UserRoles})
   {
+    if(!session.token)throw new UnauthorizedException();
     return this.firmService.getProfile(session);
   }
 
@@ -39,26 +41,31 @@ export class FirmController {
   @Post("/addTaxiDriver/")
   async addTaxiDriver(@Session() session:{token?:string, type?:string,role?:UserRoles},@Body("email") email:string)
   {
+    if(!session.token)throw new UnauthorizedException();
     return await this.firmService.addTaxiDriver(session,email); 
   }
   @Get("/getTaxiDrivers/")
   async getTaxiDrivers(@Session() session:{token?: string})
   {
+    if(!session.token)throw new UnauthorizedException();
     return await this.firmService.getTaxiDrivers(session);
   }
   @Post("/removeTaxiDriver/")
   async removeTaxiDriver(@Session() session:{token?: string}, @Body("email") email:string)
   {
+    if(!session.token)throw new UnauthorizedException();
     return await this.firmService.removeTaxiDriver(session, email);
   }
   @Post("/addSupportedCity/")
   async addCity(@Session() session:{token?:string},@Body("city")city:string,@Body("region")region:string)
   {
+    if(!session.token)throw new UnauthorizedException();
     return await this.firmService.addCity(city,region,session); 
   }
   @Post("/removeSupportedCity")
   async removeCity(@Session() session:{token?:string},@Body("city")city:string,@Body("region")region:string)
   {
+    if(!session.token)throw new UnauthorizedException();
     return await this.firmService.removeCity(city,region,session);
   }
 }

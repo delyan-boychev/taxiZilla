@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, Req, Res, Session, UseGuards, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Req, Res, Session, UnauthorizedException, UseGuards, ValidationPipe } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import * as nodemailer from 'nodemailer';
 import { PrimaryGeneratedColumn } from 'typeorm';
@@ -17,7 +17,6 @@ export class AuthController {
   constructor(
     private authService: AuthService,
   ) { };
-  @UseGuards(AuthGuard())
   @Post("/registerUser/")
   async registerUser(@Body(ValidationPipe) registerUserDto:RegisterUserDTO)
   {
@@ -45,6 +44,7 @@ export class AuthController {
   @Get("/profile/")
   async getProfile(@Session() session: { token?: string , type?:string,role:UserRoles})
   {
+    if(!session.token)throw new UnauthorizedException();
     return await this.authService.getProfile(session);
   }
   @Get("/verify/:code")
@@ -57,26 +57,31 @@ export class AuthController {
   @Post("/checkUser/")
   async checkUser(@Session() session: { token?: string , type?:string,role:UserRoles}, @Body("password") password: string)
   {
+    if(!session.token)throw new UnauthorizedException();
     return this.authService.checkUser(session, password);
   }
   @Post("/deleteUser/")
   async deleteUser(@Session() session: {token?: string, type?:string,role:UserRoles}, @Body("password") pass:string)
   {
+    if(!session.token)throw new UnauthorizedException();
     return await this.authService.deleteUser(session,pass);
   }
   @Post("/changePassword/")
   async changePassword(@Session() session: { token?: string , type?:string,role:UserRoles}, @Body("oldPass") oldPass: string, @Body("newPass") newPass: string)
   {
+    if(!session.token)throw new UnauthorizedException();
     return await this.authService.changePassword(session, oldPass, newPass);
   }
   @Post("/changeEmail/")
   async changeEmail(@Session() session: { token?: string }, @Body("newEmail") newEmail: string)
   {
+    if(!session.token)throw new UnauthorizedException();
     return await this.authService.changeEmail(session, newEmail);
   }
   @Post("/changeStatusAndCheckForOrders/")
   async changeStatusAndLocation(@Session() session:{token?:string}, @Body("newStatus")newStatus:UserStatus, @Body("x") x:string, @Body("y") y:string)
   {
+    if(!session.token)throw new UnauthorizedException();
     return this.authService.changeStatusAndLocation(session,newStatus,parseFloat(x),parseFloat(y));
   }
 }
