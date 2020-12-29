@@ -124,4 +124,15 @@ export class FirmService {
       const firm = await this.firmRepository.findOne({eik});
       return await this.cityRepository.removeCity(city,region,firm);
   }
+  async getCitiesByFirm(@Session() session:{token?: string})
+  {
+    const decoded = await this.jwtService.decode(session.token);
+    const eik=decoded["eik"];
+    const firm = await this.firmRepository.findOne({eik});
+    return await this.cityRepository.getCitiesByFirm(firm);
+  }
+  async getAllCities()
+  {
+    return await this.cityRepository.getAllCities();
+  }
 }

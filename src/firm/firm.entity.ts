@@ -1,5 +1,5 @@
 import { SupportedCity } from "src/firm/supportedCity.entity";
-import { BaseEntity, Column, Entity, ManyToMany, OneToMany, PrimaryColumn, PrimaryGeneratedColumn } from "typeorm";
+import { BaseEntity, Column, Entity, ManyToMany, OneToMany, PrimaryColumn, PrimaryGeneratedColumn, JoinTable } from "typeorm";
 import { User } from "../auth/user.entity";
 
 @Entity() 
@@ -41,6 +41,7 @@ export class Firm extends BaseEntity
   @OneToMany(type => User, user => user.firm, { eager: true })
   drivers: User[];
 
-  @ManyToMany(type => SupportedCity, supportedcity=>supportedcity.firms)
+  @ManyToMany(type => SupportedCity, supportedcity=>supportedcity.firms, {eager: true})
   supportedCities:SupportedCity[];
+  
 }

@@ -1,6 +1,7 @@
 eval = function () {console.log("%c You are not permitted to use this method!!!",  'color: red');}
 var actionOnCloseModal = undefined;
 const loginInfo = {};
+const profileInfo = {};
 function loginSubmit()//Post zaqvka za login na klient
 {
     if(arguments.callee.caller === null) {console.log("%c You are not permitted to use this method!!!",  'color: red'); return;}
@@ -21,8 +22,55 @@ function loginSubmit()//Post zaqvka za login na klient
     );
     return false;
 }
+function getSupportedCitiesByFirm()
+{
+    $.get("/firm/getCitiesByFirm", function (data, status)
+    {
+            var json = data;
+            if(json.length	=== 0)
+            { 
+                document.getElementById("noCities").style = "display: block;";
+                document.getElementById("addedSupportedCities").innerHTML = "";
+            }
+            else
+            {
+                document.getElementById("noCities").style = "display: none;";
+                document.getElementById("addedSupportedCities").innerHTML = "";
+                json.forEach(el => {
+                    document.getElementById("addedSupportedCities").innerHTML += "<tr><td>"+ el["city"] +"</td><td>"+ el["region"]  +"</td><td><i class='far fa-times-circle text-danger h5' style='cursor: pointer;' onclick='removeSupportedCity(\""+ el["city"] +"\", \"" + el["region"] +"\");'></i></td></tr>";
+                });
+            }
+    });
+
+}
+function addSupporttedCity()
+{
+    if(arguments.callee.caller === null) {console.log("%c You are not permitted to use this method!!!",  'color: red'); return;}
+    var checked = true;
+    $('#nameCity').addClass("is-valid");
+    $('#nameRegion').addClass("is-valid");
+    if($("#nameRegion").val().length < 4)
+    {
+        $('#nameRegion').addClass("is-invalid");
+        checked = false;
+    }
+    if($("#nameCity").val().length < 4)
+    {
+        $('#nameCity').addClass("is-invalid");
+        checked = false;
+    }
+    if(checked)
+    {
+    $.post("/firm/addSupportedCity", 
+    {
+        city: document.querySelector('input[name="type"]:checked').value + " " + $("#nameCity").val(),
+        region: $("#nameRegion").val()
+    });
+    }
+}
 function makeOrderTaxiAddress()
 {
+    if(arguments.callee.caller === null) {console.log("%c You are not permitted to use this method!!!",  'color: red'); return;}
     if($("#addressTaxi").val().length < 6)
     {
         $('#addressTaxi').addClass("is-invalid");
@@ -90,6 +138,38 @@ function makeOrderCurrentLocation()
                         refreshPage();
                     });;
                 });
+
+}
+function setProfileInfoUser()
+{
+    if(arguments.callee.caller === null) {console.log("%c You are not permitted to use this method!!!",  'color: red'); return;}
+    $.get("/auth/profile", function(data, status){
+            var json = data;
+            var nav = document.getElementById("navElements");
+            Object.keys(json).forEach(key => 
+                {
+                    Object.defineProperty(profileInfo, key, {
+                        value: json[key]
+                    });
+                });
+            nav.innerHTML += '<li class="nav-item" id="loginNav"><a class="nav-link text-secondary" onclick="profilePage()">Моят профил(<i class="fas fa-user"></i>'+ profileInfo["fName"] + " " + profileInfo["lName"] +')</a></li><li class="nav-item" id="loginNav"><a class="nav-link text-secondary" onclick="document.location = \'./logout\'">Излизане</a></li>';
+          });
+
+}
+function setProfileInfoFirm()
+{
+    if(arguments.callee.caller === null) {console.log("%c You are not permitted to use this method!!!",  'color: red'); return;}
+    $.get("/firm/profile", function(data, status){
+        var json = data;
+            var nav = document.getElementById("navElements");
+            Object.keys(json).forEach(key => 
+                {
+                    Object.defineProperty(profileInfo, key, {
+                        value: json[key]
+                    });
+                });
+            nav.innerHTML += '<li class="nav-item" id="loginNav"><a class="nav-link text-secondary" onclick="profileFirmPage()">Моят профил(<i class="fas fa-building"></i>'+ profileInfo["firmName"] +')</a></li><li class="nav-item" id="loginNav"><a class="nav-link text-secondary" onclick="document.location = \'./logout\'">Излизане</a></li>';
+      });
 
 }
 function setLoginInfo()
@@ -469,6 +549,23 @@ function addTaxiDriver()//Post zaqvka za dobavqne na taksimetrovi shofyori
             refreshPage();
         });
     }
+}
+function removeSupportedCity(name, region)//Post zaqvka za premahvane na poddurjan grad
+{
+    if(arguments.callee.caller === null) {console.log("%c You are not permitted to use this method!!!",  'color: red'); return;}
+    $.post("/firm/removeSupportedCity",
+        {
+            city: name,
+            region: region
+        },
+        function(data,status){
+            if(data=="true") document.getElementById("messageText").innerText="Населеното място е премахнто успешно е премахнат успешно!";
+            actionOnCloseModal = getSupportedCitiesByFirm;
+            $("#modal").modal();
+        }
+        ).fail(function(){
+            refreshPage();
+        });
 }
 function removeTaxiDriver(email)//Post zaqvka za premahvane na taksimetrov shofyor
 {
