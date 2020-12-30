@@ -57,4 +57,8 @@ export class SupportedCityRepository extends Repository<SupportedCity>
             return false;
         }
     }
+    async getSupportedCities(firm:Firm)
+    {  
+        return firm.supportedCities;
+    }
 }
