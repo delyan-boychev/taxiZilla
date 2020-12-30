@@ -17,11 +17,16 @@ export class SupportedCityRepository extends Repository<SupportedCity>
         {
             if(record.firms.includes(firm))
             {
+                console.log("Putka");
                 return false;
             }
             else
             {
+                console.log("Kurec");
                 record.firms.push(firm);
+                firm.supportedCities.push(record);
+                await record.save();
+                await firm.save();
                 return true;
             }
         }
@@ -41,37 +46,17 @@ export class SupportedCityRepository extends Repository<SupportedCity>
     async removeCity(city:string, region:string, firm:Firm)
     {
         let qb = this.createQueryBuilder("supportedCity");
-        qb.andWhere("supportedCity.city = :cit",{cit:city});
-        qb.andWhere("supportedCity.region = :reg",{reg:region});
         qb.leftJoinAndSelect("supportedCity.firms","firm");
+        qb.andWhere("supportedCity.city = :cit", {cit:city});
+        qb.andWhere("supportedCity.region = :reg",{reg:region});
         let record = await qb.getOne();
-        console.log(record);
-        if(record)
+        await this.query("DELETE FROM supported_city_firms_firm WHERE supportedCityId="+record.id+" AND firmId="+firm.id+";");
+        record = await qb.getOne();
+        if(record.firms.length==0)
         {
-            console.log(record.city);
-            console.log(record.firms);
-            console.log(record.region);
-            console.log(firm);
-            record.firms.forEach(async function(item,index,object){
-                if(item.id === firm.id)
-                {
-                    console.log(true);
-                    record.firms = record.firms.splice(index,1);
-                    firm.supportedCities = firm.supportedCities.splice(firm.supportedCities.indexOf(record),1);
-                    await record.save();
-                    await firm.save();
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
-            });
+            await record.remove();
         }
-        else
-        {
-            return false;
-        }
+
     }
     async getCitiesByFirm(firm:Firm)
     {

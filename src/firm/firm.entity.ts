@@ -41,7 +41,7 @@ export class Firm extends BaseEntity
   @OneToMany(type => User, user => user.firm, { eager: true })
   drivers: User[];
 
-  @ManyToMany(type => SupportedCity, supportedcity=>supportedcity.firms, {eager: true})
+  @ManyToMany(type => SupportedCity, supportedcity=>supportedcity.firms, {cascade:true, eager: true})
   supportedCities:SupportedCity[];
   
 }
