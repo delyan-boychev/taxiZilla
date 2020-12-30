@@ -8,7 +8,11 @@ export class SupportedCityRepository extends Repository<SupportedCity>
 {
     async addCity(city:string,region:string, firm:Firm)
     {
-        let record = await this.findOne({city});
+        let qb = this.createQueryBuilder("supportedCity");
+        qb.andWhere("supportedCity.city = :cit",{cit:city});
+        qb.andWhere("supportedCity.region = :reg",{reg:region});
+        qb.leftJoinAndSelect("supportedCity.firms","firm")
+        let record = await qb.getOne();
         if(record)
         {
             if(record.firms.includes(firm))
@@ -26,8 +30,11 @@ export class SupportedCityRepository extends Repository<SupportedCity>
             let newRec = new SupportedCity();
             newRec.city=city;
             newRec.region=region;
-            newRec.firms.push(firm);
+            newRec.firms=[firm];
             await newRec.save();
+            console.log(newRec.firms);
+            firm.supportedCities.push(newRec);
+            await firm.save();
             return true;
         }
     }
@@ -36,29 +43,42 @@ export class SupportedCityRepository extends Repository<SupportedCity>
         let qb = this.createQueryBuilder("supportedCity");
         qb.andWhere("supportedCity.city = :cit",{cit:city});
         qb.andWhere("supportedCity.region = :reg",{reg:region});
+        qb.leftJoinAndSelect("supportedCity.firms","firm");
         let record = await qb.getOne();
+        console.log(record);
         if(record)
         {
-            if(record.firms.includes(firm))
-            {
-                record.firms = record.firms.splice(record.firms.indexOf(firm),1);
-                firm.supportedCities = firm.supportedCities.splice(firm.supportedCities.indexOf(record),1);
-                await record.save();
-                await firm.save();
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+            console.log(record.city);
+            console.log(record.firms);
+            console.log(record.region);
+            console.log(firm);
+            record.firms.forEach(async function(item,index,object){
+                if(item.id === firm.id)
+                {
+                    console.log(true);
+                    record.firms = record.firms.splice(index,1);
+                    firm.supportedCities = firm.supportedCities.splice(firm.supportedCities.indexOf(record),1);
+                    await record.save();
+                    await firm.save();
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            });
         }
         else
         {
             return false;
         }
     }
-    async getSupportedCities(firm:Firm)
-    {  
+    async getCitiesByFirm(firm:Firm)
+    {
         return firm.supportedCities;
+    }
+    async getAllCities()
+    {
+        return await this.find();
     }
 }

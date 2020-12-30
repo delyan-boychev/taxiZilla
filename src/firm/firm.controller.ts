@@ -68,4 +68,16 @@ export class FirmController {
     if(!session.token)throw new UnauthorizedException();
     return await this.firmService.removeCity(city,region,session);
   }
+  @Get("/getCitiesByFirm/")
+  async getCitiesByFirm(@Session() session:{token?:string})
+  {
+    if(!session.token) throw new UnauthorizedException();
+    return await this.firmService.getCitiesByFirm(session);
+  }
+  @Get("/getAllCities")
+  async getAllCities(@Session() session:{token?:string})
+  {
+    if(!session.token) throw new UnauthorizedException();
+    return await this.firmService.getAllCities();
+  }
 }

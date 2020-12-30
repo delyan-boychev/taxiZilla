@@ -61,14 +61,19 @@ function designChangeOnStart()//Nastroivane na dizain pri startirane
         document.getElementById("loginNav").remove();
         document.getElementById("registerNav").remove();
         document.getElementById("makeOrderButton").remove();
-        nav.innerHTML += '<li class="nav-item" id="loginNav"><a class="nav-link text-secondary" onclick="profileFirmPage()">Моят профил</a></li><li class="nav-item" id="loginNav"><a class="nav-link text-secondary" onclick="document.location = \'./logout\'">Излизане</a></li>';
-        }
-        else
+        document.getElementById("makeOrderNav").remove();
+        setProfileInfoFirm();
+    }
+    else
+    {
+        if(loginInfo["Role"] != "User") 
         {
-        if(loginInfo["Role"] != "User") document.getElementById("makeOrderButton").remove();
+        document.getElementById("makeOrderNav").remove()
+        document.getElementById("makeOrderButton").remove();
+        }
         document.getElementById("loginNav").remove();
         document.getElementById("registerNav").remove();
-        nav.innerHTML += '<li class="nav-item" id="loginNav"><a class="nav-link text-secondary" onclick="profilePage()">Моят профил</a></li><li class="nav-item" id="loginNav"><a class="nav-link text-secondary" onclick="document.location = \'./logout\'">Излизане</a></li>';
+        setProfileInfoUser();
     }
    }
 }

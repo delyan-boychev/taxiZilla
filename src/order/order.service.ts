@@ -35,7 +35,7 @@ export class OrderService {
                 }
                 else
                 {
-                    this.orderRepository.createOrder(Requests[user.id]["sender"],user,Requests[user.id]["x"],Requests[user.id]["y"], Requests[user.id]["notes"], Requests[user.id]["address"], OrderStatus.Canceled); 
+                    this.orderRepository.createOrder(Requests[user.id]["sender"],user.id,Requests[user.id]["x"],Requests[user.id]["y"], Requests[user.id]["notes"], Requests[user.id]["address"], OrderStatus.Canceled); 
                 }
                 Requests[user.id]=undefined;
             }
@@ -48,7 +48,22 @@ export class OrderService {
         let uemail = await this.jwtService.decode(session.token);
         let sended = await this.userRepository.findOne({email:uemail["email"]});
         let a:taxiDriversFindNearest = new taxiDriversFindNearest(x,y,sended,notes, address);
+        let k = 0;
+        for(let i=0; i<Drivers.length; i++)
+        {
+            if(Drivers[i])
+            {
+                k++;
+            }
+        }
+        if(k > 0)
+        {
         a.getTheNearestDriver();
+        }
+        else
+        {
+            this.orderRepository.createOrder(sended, null,x,y, "", address, OrderStatus.Canceled); 
+        }
     }
     async getOrderOneSender()
     {
@@ -66,7 +81,7 @@ export class OrderService {
         if(Requests[user.id])
         {
             Requests[user.id]["status"]=1;
-            let idOrder = await this.orderRepository.createOrder(Requests[user.id]["sender"],user,Requests[user.id]["x"],Requests[user.id]["y"], Requests[user.id]["notes"], Requests[user.id]["address"], OrderStatus.Open); 
+            let idOrder = await this.orderRepository.createOrder(Requests[user.id]["sender"],user.id,Requests[user.id]["x"],Requests[user.id]["y"], Requests[user.id]["notes"], Requests[user.id]["address"], OrderStatus.Open); 
             Requests[user.id] = undefined;
             return idOrder;
         }

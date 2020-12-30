@@ -6,7 +6,7 @@ import { taxiOrder } from "./order.entity";
 @EntityRepository(taxiOrder)
 export class OrderRepository extends Repository<taxiOrder>
 {
-    async createOrder(sender:User,driver:User,x:number,y:number, notes:string, address:string, statusOrder:OrderStatus)
+    async createOrder(sender:User,driverId:number,x:number,y:number, notes:string, address:string, statusOrder:OrderStatus)
     {
         let newOrder = new taxiOrder();
         newOrder.x=x;
@@ -15,7 +15,7 @@ export class OrderRepository extends Repository<taxiOrder>
         newOrder.notes = notes;
         newOrder.orderStatus=statusOrder;
         newOrder.userOrdered=sender;
-        newOrder.driverId=driver.id;
+        newOrder.driverId=driverId;
         newOrder.items = "";
         await newOrder.save();
         await sender.save();

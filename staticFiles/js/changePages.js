@@ -68,5 +68,7 @@ function profileFirmPage()//Smqna na stranica za profila na firmata
         hideTooltips();
         $.get(window.location.protocol+'//'+ window.location.host +'/pages/profileFirmPage.html', function( data, textStatus, jqXHR ) {
         document.getElementById("pageContent").innerHTML = data; getProfileFirm();
-        getTaxiDrivers();});
+        getTaxiDrivers();
+        getSupportedCitiesByFirm();
+});
 }
