@@ -1,4 +1,4 @@
-import { Controller, Get, Header, HttpStatus, Next, Param, Req, Res, Session, UseGuards } from '@nestjs/common';
+import { Controller, Get, Header, HttpException, HttpStatus, Next, Param, Req, Res, Session, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import {Response} from 'express-serve-static-core';
 import { AppService } from './app.service';
@@ -8,6 +8,7 @@ import { Resp } from './response.decorator';
 @Controller()
 export class AppController {
   constructor(private readonly appService: AppService) {}
+
   @Get()
   async getMainPage(@Session() session:{token?:string, type?:string, role?:UserRoles}, @Res() res:Response) {
     var resp = {};

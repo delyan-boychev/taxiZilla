@@ -8,6 +8,15 @@ function pageRegisterUser()//Smqna na stranica za registraciq na klient
 
           
 }
+function adminPanelPage()
+{
+        if(arguments.callee.caller === null) {console.log("%c You are not permitted to use this method!!!",  'color: red'); return;}
+        $.get(window.location.protocol+'//'+ window.location.host +'/pages/adminPanel.html', function( data, textStatus, jqXHR ) {
+        document.getElementById("pageContent").innerHTML = data;
+        userRemoveTab();
+});
+
+}
 function makeOrderPage()//Smqna na stranica za poruchka
 {
         if(arguments.callee.caller === null) {console.log("%c You are not permitted to use this method!!!",  'color: red'); return;}
@@ -15,8 +24,8 @@ function makeOrderPage()//Smqna na stranica za poruchka
         hideTooltips();
         $.get(window.location.protocol+'//'+ window.location.host +'/pages/makeOrderPage.html', function( data, textStatus, jqXHR ) {
         document.getElementById("pageContent").innerHTML = data;
-        if(!window.mobileCheck()) document.getElementById("formOrderTaxi").innerHTML =  '<input type="text" id="addressTaxi" class="form-control" placeholder="Адрес"><div class="invalid-feedback">Адресът трябва да е по-дълъг от 5 символа!</div><br><textarea placeholder="Бележки(по избор)" class="form-control mt-3" id="notes" style="resize: none; height: 200px" rows="3"></textarea><br><button id="currentLocationReload" class="btn btn-primary ml-0 mt-3 black-text btn-block rounded" type="submit" onclick="updateMapAddress()">Обнови картата</button><br><button class="btn btn-primary ml-0 black-text mt-3 btn-block rounded" type="submit" onclick="makeOrderTaxiAddress()">Направи поръчка</button>';
-       
+        if(!window.mobileCheck()) document.getElementById("formOrderTaxi").innerHTML =  '<input type="text" id="addressTaxi" class="form-control" placeholder="Адрес"><div class="invalid-feedback">Адресът трябва да е по-дълъг от 5 символа!</div><br><label class="text-left mt-3">Населено място: </label><select class="form-control" id="city"></select><br><textarea placeholder="Бележки(по избор)" class="form-control mt-3" id="notes" style="resize: none; height: 200px" rows="3"></textarea><br><button id="currentLocationReload" class="btn btn-primary ml-0 mt-3 black-text btn-block rounded" type="submit" onclick="updateMapAddress()">Обнови картата</button><br><button class="btn btn-primary ml-0 black-text mt-3 btn-block rounded" type="submit" onclick="makeOrderTaxiAddress()">Направи поръчка</button>';
+        getAllCities();
 });
 }
 function pageRegisterFirm()//Smqna na stranica za registraciq na firma

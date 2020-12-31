@@ -14,7 +14,7 @@ function changeTabOrder(radio)
     var contentTab = document.getElementById("contentTab");
     if(radio.value=="address")
     {
-        contentTab.innerHTML = '<input type="text" id="addressTaxi" class="form-control" placeholder="Адрес"><div class="invalid-feedback">Адресът трябва да е по-дълъг от 5 символа!</div><br><textarea placeholder="Бележки(по избор)" class="form-control mt-3" id="notes" style="resize: none; height: 200px" rows="3"></textarea><br><button id="currentLocationReload" class="btn btn-primary ml-0 black-text btn-block rounded" type="submit" onclick="updateMapAddress()">Обнови картата</button><br><button class="btn btn-primary ml-0 black-text mt-2 btn-block rounded" type="submit" onclick="makeOrderTaxiAddress()">Направи поръчка</button>';
+        contentTab.innerHTML = '<input type="text" id="addressTaxi" class="form-control" placeholder="Адрес"><div class="invalid-feedback">Адресът трябва да е по-дълъг от 5 символа!</div><br><label class="text-left mt-3">Населено място: </label><select class="form-control" id="city"></select><br><textarea placeholder="Бележки(по избор)" class="form-control mt-3" id="notes" style="resize: none; height: 200px" rows="3"></textarea><br><button id="currentLocationReload" class="btn btn-primary ml-0 black-text btn-block rounded" type="submit" onclick="updateMapAddress()">Обнови картата</button><br><button class="btn btn-primary ml-0 black-text mt-2 btn-block rounded" type="submit" onclick="makeOrderTaxiAddress()">Направи поръчка</button>';
     }
     else 
     {
@@ -46,7 +46,7 @@ function showCurrentPosition()
 function updateMapAddress()
 {
     if(arguments.callee.caller === null) {console.log("%c You are not permitted to use this method!!!",  'color: red'); return;}
-document.getElementById("map").src = "https://maps.google.com/maps?q="+ $("#addressTaxi").val() +"&t=&z=17&ie=UTF8&iwloc=&output=embed"; $([document.documentElement, document.body]).animate({
+document.getElementById("map").src = "https://maps.google.com/maps?q="+ $("#addressTaxi").val() +", " + $("#city").val() + "&t=&z=17&ie=UTF8&iwloc=&output=embed"; $([document.documentElement, document.body]).animate({
             scrollTop: $("#map").offset().top
         }, 1000);
 }
@@ -66,11 +66,12 @@ function designChangeOnStart()//Nastroivane na dizain pri startirane
     }
     else
     {
-        if(loginInfo["Role"] != "User") 
+        if(loginInfo["Role"] == "Driver") 
         {
         document.getElementById("makeOrderNav").remove()
         document.getElementById("makeOrderButton").remove();
         }
+        
         document.getElementById("loginNav").remove();
         document.getElementById("registerNav").remove();
         setProfileInfoUser();

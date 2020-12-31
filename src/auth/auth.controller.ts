@@ -79,9 +79,23 @@ export class AuthController {
     return await this.authService.changeEmail(session, newEmail);
   }
   @Post("/changeStatusAndCheckForOrders/")
-  async changeStatusAndLocation(@Session() session:{token?:string}, @Body("newStatus")newStatus:UserStatus, @Body("x") x:string, @Body("y") y:string)
+  async changeStatusAndLocation(@Session() session:{token?:string, role?:UserRoles}, @Body("newStatus")newStatus:UserStatus, @Body("x") x:string, @Body("y") y:string)
   {
-    if(!session.token)throw new UnauthorizedException();
+    if(!session.token && session.role != UserRoles.DRIVER)throw new UnauthorizedException();
     return this.authService.changeStatusAndLocation(session,newStatus,parseFloat(x),parseFloat(y));
   }
+  @Get("/getAllUsers")
+  async getAllUsers(@Session() session:{token?:string, role?:UserRoles, type?:string})
+  {
+    if(!session.token && session.role != UserRoles.ADMIN)throw new UnauthorizedException();
+    return await this.authService.getAllUsers();
+  }
+  @Post("/removeUser")
+  async removeUser(@Session() session:{token?:string, role?:UserRoles, type?:string}, @Body("email") email:string)
+  {
+    if(!session.token && session.role != UserRoles.ADMIN) throw new UnauthorizedException();
+    return await this.authService.removeUser(email);
+
+  }
+
 }

@@ -180,6 +180,14 @@ export class AuthService {
     this.sendVerify(newEmail);
     return stat;
   }
+  async getAllUsers()
+  {
+    return await this.userRepository.getAllUsers();
+  }
+  async removeUser(email:string)
+  {
+    return this.userRepository.removeUser(email);
+  }
   
   async sendVerify(username:string)
   {

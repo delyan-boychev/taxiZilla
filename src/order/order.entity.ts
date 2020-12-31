@@ -23,7 +23,7 @@ export class taxiOrder extends BaseEntity
     @Column({nullable: true})
     driverId:number;
     
-    @Column()
+    @Column({default: ""})
     address: string;
     
     @Column({default:""})

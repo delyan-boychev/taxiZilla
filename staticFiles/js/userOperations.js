@@ -46,27 +46,44 @@ function getSupportedCitiesByFirm()
 function addSupporttedCity()
 {
     if(arguments.callee.caller === null) {console.log("%c You are not permitted to use this method!!!",  'color: red'); return;}
-    var checked = true;
     $('#nameCity').addClass("is-valid");
-    $('#nameRegion').addClass("is-valid");
-    if($("#nameRegion").val().length < 4)
-    {
-        $('#nameRegion').addClass("is-invalid");
-        checked = false;
-    }
     if($("#nameCity").val().length < 4)
     {
         $('#nameCity').addClass("is-invalid");
-        checked = false;
     }
-    if(checked)
+    else
     {
     $.post("/firm/addSupportedCity", 
     {
         city: document.querySelector('input[name="type"]:checked').value + " " + $("#nameCity").val(),
         region: $("#nameRegion").val()
-    });
+    },
+    function(data, status)
+    {
+        if(data=="true") 
+        {
+            document.getElementById("messageText").innerText="Населеното място е добавено успешно!";
+            actionOnCloseModal = getSupportedCitiesByFirm;
+        }
+        else document.getElementById("messageText").innerText="Вече сте добавили населено място с това име!";
+
+    $("#modal").modal();
+        }
+        ).fail(function(){
+            refreshPage();
+        });
     }
+}
+function getAllCities()
+{
+    if(arguments.callee.caller === null) {console.log("%c You are not permitted to use this method!!!",  'color: red'); return;}
+    $.get("/firm/getAllCities", function (data, status)
+    {
+        var json = data;
+        json.forEach(el => {
+            document.getElementById("city").innerHTML += "<option>"+ el["city"]+", "+ el["region"] +"</option>"
+        });
+    });
 }
 function makeOrderTaxiAddress()
 {
@@ -85,7 +102,7 @@ function makeOrderTaxiAddress()
                 type: "GET",
                 data:
                 {
-                SingleLine: $("#addressTaxi").val(),
+                SingleLine: $("#addressTaxi").val() + ", " + $("#city").val(),
                 f: "json"
                 }
             }).done(function(json)
@@ -94,11 +111,11 @@ function makeOrderTaxiAddress()
                 {
                 x: json.candidates[0].location.x,
                 y: json.candidates[0].location.y,
-                address: $("#addressTaxi").val(),
+                address: $("#addressTaxi").val() + ", " + $("#city").val(),
                 notes: $('#notes').val(),
                 },
                 function(data,status){
-                document.getElementById("messageText").innerText="Успешно е направено поръчка!";
+                document.getElementById("messageText").innerText="Успешно е направенa поръчка!";
                 $("#modal").modal();
                 }
                 ).fail(function(){
@@ -124,10 +141,23 @@ function makeOrderCurrentLocation()
 {
     if(arguments.callee.caller === null) {console.log("%c You are not permitted to use this method!!!",  'color: red'); return;}
     getLocation().then(coord => {
-            $.post("/order/createOrder",
+            $.get("https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/reverseGeocode?location="+ coord["x"]+", " + coord["y"] + "&f=pjson",
+            function(data, status)
+            {
+                data = JSON.parse(data);
+                $.get("/firm/getAllCities", function (data2, status)
+                {
+                    var exists = false;
+                    data2.forEach(el => {
+                        if(el["city"].includes(data["address"]["City"]) && el["region"] == data["address"]["Region"]) exists = true;
+                    });
+                    if(exists)
+                    {
+                    $.post("/order/createOrder",
                     {
                     x: coord["x"],
                     y: coord["y"],
+                    address: "",
                     notes: $('#notes').val(),
                     },
                     function(data,status){
@@ -137,7 +167,15 @@ function makeOrderCurrentLocation()
                     ).fail(function(){
                         refreshPage();
                     });;
+                    }
+                    else
+                    {
+                        document.getElementById("messageText").innerText="Не се намирате в поддържано населено място!";
+                        $("#modal").modal();
+                    }
                 });
+            });
+        });
 
 }
 function setProfileInfoUser()
@@ -152,8 +190,19 @@ function setProfileInfoUser()
                         value: json[key]
                     });
                 });
-            nav.innerHTML += '<li class="nav-item" id="loginNav"><a class="nav-link text-secondary" onclick="profilePage()">Моят профил(<i class="fas fa-user"></i>'+ profileInfo["fName"] + " " + profileInfo["lName"] +')</a></li><li class="nav-item" id="loginNav"><a class="nav-link text-secondary" onclick="document.location = \'./logout\'">Излизане</a></li>';
-          });
+                if(loginInfo["Role"] == "Admin")
+                {
+                    nav.innerHTML += '<li class="nav-item" id="adminPanelNav"><a class="nav-link text-secondary" onclick="adminPanelPage()">Администраторски панел</a></li><li class="nav-item" id="loginNav"><a class="nav-link text-secondary" onclick="profilePage()">Моят профил(<i class="fas fa-user-cog"></i>'+ profileInfo["fName"] + " " + profileInfo["lName"] +')</a></li><li class="nav-item" id="loginNav"><a class="nav-link text-secondary" onclick="document.location = \'./logout\'">Излизане</a></li>';
+                }
+                else if(loginInfo["Role"] == "Moderator")
+                {
+                    nav.innerHTML += '<li class="nav-item" id="loginNav"><a class="nav-link text-secondary" onclick="profilePage()">Моят профил(<i class="fas fa-user-shield"></i>'+ profileInfo["fName"] + " " + profileInfo["lName"] +')</a></li><li class="nav-item" id="loginNav"><a class="nav-link text-secondary" onclick="document.location = \'./logout\'">Излизане</a></li>';
+                }
+                else if(loginInfo["Role"] == "User")
+                {
+                nav.innerHTML += '<li class="nav-item" id="loginNav"><a class="nav-link text-secondary" onclick="profilePage()">Моят профил(<i class="fas fa-user"></i>'+ profileInfo["fName"] + " " + profileInfo["lName"] +')</a></li><li class="nav-item" id="loginNav"><a class="nav-link text-secondary" onclick="document.location = \'./logout\'">Излизане</a></li>';
+                }         
+            });
 
 }
 function setProfileInfoFirm()
@@ -559,7 +608,7 @@ function removeSupportedCity(name, region)//Post zaqvka za premahvane na poddurj
             region: region
         },
         function(data,status){
-            if(data=="true") document.getElementById("messageText").innerText="Населеното място е премахнто успешно е премахнат успешно!";
+            if(data=="true") document.getElementById("messageText").innerText="Населеното място е премахнто успешно!";
             actionOnCloseModal = getSupportedCitiesByFirm;
             $("#modal").modal();
         }

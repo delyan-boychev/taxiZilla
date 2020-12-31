@@ -56,6 +56,7 @@ export class SupportedCityRepository extends Repository<SupportedCity>
         {
             await record.remove();
         }
+        return true;
 
     }
     async getCitiesByFirm(firm:Firm)

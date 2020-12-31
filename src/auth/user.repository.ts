@@ -74,6 +74,28 @@ export class UserRepository extends Repository<User>
     return undefined;
     
   }
+  async getAllUsers()
+  {
+    let users = await this.find();
+    users.forEach(el => {
+      delete el.passHash;
+      delete el.salt;
+    });
+    return users;
+  }
+  async removeUser(email:string)
+  {
+    const user = await this.findOne({email});
+    if(user)
+    {
+      user.remove();
+      return true;
+    }
+    else
+    {
+      return false;
+    }
+  }
   async checkPassword(email: string, password: string)
   {
     const user = await this.findOne({ email });

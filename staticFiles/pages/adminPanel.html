@@ -1,0 +1,74 @@
+<div class="row">
+    <div class="col-auto">
+<div class="card text-center mt-3 ml-3 mr-2">
+    <div id="accordion">
+    <div class="card bg-primary">
+        <div class="card-header" style="height: 50px;"  id="headingOne">
+            <button class="btn btn-link" style="margin-top: -10px;"  style="font-size: 15px;" data-toggle="collapse" data-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+                <i class="fas fa-users"></i> Операции с потребител
+            </button>
+        </div>
+</div>
+<div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
+    <div class="card-body text-left">
+        <a class="nav-item nav-link has-icon nav-link-faded text-secondary" id="userRemoveTab"  onclick="userRemoveTab()">
+            <i class="fas fa-user-times"></i> Премахване на потребител
+          </a>
+          <a class="nav-item nav-link has-icon nav-link-faded text-secondary" id="userEditTab"   onclick="userEditTab()">
+            <i class="fas fa-user-edit"></i> Редактиране на потребител
+          </a>
+          <a class="nav-item nav-link has-icon nav-link-faded text-secondary"   onclick="hideTooltips()">
+            <i class="fas fa-check-circle"></i> Активация на потребител
+          </a>
+          <a class="nav-item nav-link has-icon nav-link-faded text-secondary"  onclick="hideTooltips()">
+            <i class="fas fa-user-tag"></i> Смяна роля на потребител
+          </a>
+    </div>
+  </div>
+  <div class="card bg-primary">
+    <div class="card-header" style="height: 50px;"  id="headingTwo">
+        <button class="btn btn-link text-left" style="margin-top: -10px;"  style="font-size: 15px;" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+            <i class="fas fa-industry"></i> Операции с фирма
+        </button>
+    </div>
+</div>
+<div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
+<div class="card-body text-left">
+    <a class="nav-item nav-link has-icon nav-link-faded text-secondary"  onclick="hideTooltips()">
+        <i class="fas fa-trash"></i> Премахване на фирма
+      </a>
+      <a class="nav-item nav-link has-icon nav-link-faded text-secondary"  onclick="hideTooltips()">
+        <i class="fas fa-pencil-alt"></i> Редактиране на фирма
+      </a>
+      <a class="nav-item nav-link has-icon nav-link-faded text-secondary"  onclick="hideTooltips()">
+        <i class="fas fa-plus"></i> Нови фирми
+      </a>
+      <a class="nav-item nav-link has-icon nav-link-faded text-secondary"  onclick="hideTooltips()">
+        <i class="fas fa-taxi"></i> Шофьори
+      </a>
+</div>
+</div>
+<div class="card bg-primary">
+    <div class="card-header" style="height: 50px;"  id="headingThree">
+        <button class="btn btn-link text-left" style="margin-top: -10px;"  style="font-size: 15px;" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+            <i class="far fa-newspaper"></i> Логове
+        </button>
+    </div>
+</div>
+<div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordion">
+<div class="card-body text-left">
+    <a class="nav-item nav-link has-icon nav-link-faded text-secondary"  onclick="hideTooltips()">
+        <i class="far fa-money-bill-alt"></i> Списък с поръчки
+      </a>
+      <a class="nav-item nav-link has-icon nav-link-faded text-secondary"  onclick="hideTooltips()">
+        <i class="fas fa-clipboard-list"></i> Операции на модератори
+      </a>
+</div>
+</div>
+</div>
+</div>
+  </div>
+  <div class="col-md-8 mt-3 card" style="margin-left:30px; margin-right:30px" id="tabContent">
+      
+</div>
+  </div>
