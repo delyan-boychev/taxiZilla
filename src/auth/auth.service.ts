@@ -28,6 +28,12 @@ export class AuthService {
     return await this.userRepository.registerUser(registerUserDto);
 
   }
+  async removeUserByAdmin(@Session() session:{token?:string},userid:number)
+  {
+    let umail = await this.jwtService.decode(session.token);
+    let user = await this.userRepository.findOne({email:umail["email"]});
+    return await this.userRepository.removeUserByAdmin(user,userid);
+  }
   async changeStatusAndLocation(@Session() session:{token?:string},newStatus:UserStatus,x:number, y:number)
   {
     let umail = await this.jwtService.decode(session.token);

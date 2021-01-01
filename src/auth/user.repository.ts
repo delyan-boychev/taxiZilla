@@ -3,7 +3,7 @@ import { RegisterUserDTO } from "./dto/registerUser.dto";
 import { UserRoles } from "./enums/userRoles.enum";
 import { User } from "./user.entity";
 import * as bcrypt from 'bcrypt';
-import { Session, UseGuards } from "@nestjs/common";
+import { Session, UnauthorizedException, UseGuards } from "@nestjs/common";
 import e from "express";
 
 
@@ -34,6 +34,19 @@ export class UserRepository extends Repository<User>
       await user.save();
     }
     return exists;
+  }
+  async removeUserByAdmin(sender:User,userid)
+  {
+    if(sender.role===UserRoles.ADMIN)
+    {
+        const user = await this.findOne(userid);
+        await user.remove();
+        return true;
+    }
+    else
+    {
+        throw new UnauthorizedException();
+    }
   }
   async verifyUser(email: string)
   {

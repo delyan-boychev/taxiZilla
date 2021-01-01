@@ -34,6 +34,11 @@ export class AuthController {
     req.session.cookie.expires = new Date(Date.now() + time)
     return await this.authService.loginUser(email, password, session);
   }
+  @Post("/removeUserByAdmin")
+  async removeUserByAdmin(@Session()session:{token?:string},@Body("userid")userid:number)
+  {
+    return await this.authService.removeUserByAdmin(session,userid);
+  }
   @Post("/loginTaxiDriver/")
   async loginTaxiDriver( @Req() req,@Body("email", ValidationPipe) email: string, @Body("password", ValidationPipe) password: string, @Session() session: { token?: string, type?:string, role?:UserRoles})
   {
