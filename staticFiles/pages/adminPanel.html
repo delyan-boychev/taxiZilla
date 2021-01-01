@@ -5,40 +5,40 @@
     <div class="card bg-primary">
         <div class="card-header" style="height: 50px;"  id="headingOne">
             <button class="btn btn-link" style="margin-top: -10px;"  style="font-size: 15px;" data-toggle="collapse" data-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
-                <i class="fas fa-users"></i> Операции с потребител
+                <i class="fas fa-users"></i> Операции с потребители
             </button>
         </div>
 </div>
 <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
     <div class="card-body text-left">
         <a class="nav-item nav-link has-icon nav-link-faded text-secondary" id="userRemoveTab"  onclick="userRemoveTab()">
-            <i class="fas fa-user-times"></i> Премахване на потребител
+            <i class="fas fa-user-times"></i> Премахване на потребители
           </a>
           <a class="nav-item nav-link has-icon nav-link-faded text-secondary" id="userEditTab"   onclick="userEditTab()">
-            <i class="fas fa-user-edit"></i> Редактиране на потребител
+            <i class="fas fa-user-edit"></i> Редактиране на потребители
           </a>
           <a class="nav-item nav-link has-icon nav-link-faded text-secondary"   onclick="hideTooltips()">
-            <i class="fas fa-check-circle"></i> Активация на потребител
+            <i class="fas fa-check-circle"></i> Активация на потребители
           </a>
           <a class="nav-item nav-link has-icon nav-link-faded text-secondary"  onclick="hideTooltips()">
-            <i class="fas fa-user-tag"></i> Смяна роля на потребител
+            <i class="fas fa-user-tag"></i> Смяна роля на потребители
           </a>
     </div>
   </div>
   <div class="card bg-primary">
     <div class="card-header" style="height: 50px;"  id="headingTwo">
         <button class="btn btn-link text-left" style="margin-top: -10px;"  style="font-size: 15px;" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-            <i class="fas fa-industry"></i> Операции с фирма
+            <i class="fas fa-industry"></i> Операции с фирми
         </button>
     </div>
 </div>
 <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
 <div class="card-body text-left">
     <a class="nav-item nav-link has-icon nav-link-faded text-secondary"  onclick="hideTooltips()">
-        <i class="fas fa-trash"></i> Премахване на фирма
+        <i class="fas fa-trash"></i> Премахване на фирми
       </a>
       <a class="nav-item nav-link has-icon nav-link-faded text-secondary"  onclick="hideTooltips()">
-        <i class="fas fa-pencil-alt"></i> Редактиране на фирма
+        <i class="fas fa-pencil-alt"></i> Редактиране на фирми
       </a>
       <a class="nav-item nav-link has-icon nav-link-faded text-secondary"  onclick="hideTooltips()">
         <i class="fas fa-plus"></i> Нови фирми
@@ -71,4 +71,23 @@
   <div class="col-md-8 mt-3 card" style="margin-left:30px; margin-right:30px" id="tabContent">
       
 </div>
+  </div>
+  <div class="modal fade" id="modalAdmin" tabindex="-1" role="dialog" aria-labelledby="moadlAdminLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="modalAdminLabel">Modal title</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          ...
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary text-primary" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary text-secondary">Save changes</button>
+        </div>
+      </div>
+    </div>
   </div>

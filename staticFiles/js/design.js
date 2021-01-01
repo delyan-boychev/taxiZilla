@@ -27,12 +27,10 @@ function collapse()//Promqna na navbara pri otvarqne i zatvarqne
     if(arguments.callee.caller === null) {console.log("%c You are not permitted to use this method!!!",  'color: red'); return;}
     if($("#collapse").is(":visible"))
     {
-        console.log(true);
         document.getElementById("navbar").style.setProperty("background-image", "url('/assets/img/navbar.png')");
     }
     else
     {
-        console.log(false);
         document.getElementById("navbar").style.removeProperty("background-image");
     }
 }
