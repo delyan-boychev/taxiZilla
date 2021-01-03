@@ -34,10 +34,11 @@ export class AuthController {
     req.session.cookie.expires = new Date(Date.now() + time)
     return await this.authService.loginUser(email, password, session);
   }
-  @Post("/removeUserByAdmin")
-  async removeUserByAdmin(@Session()session:{token?:string},@Body("userid")userid:number)
+  @Post("/removeUser")
+  async removeUser(@Session()session:{token?:string, role?:string, type?:string},@Body("userid")userid:string)
   {
-    return await this.authService.removeUserByAdmin(session,userid);
+    if(!session.token && session.role != UserRoles.ADMIN) throw new UnauthorizedException();
+    return await this.authService.removeUserByAdmin(session,Number(userid));
   }
   @Post("/loginTaxiDriver/")
   async loginTaxiDriver( @Req() req,@Body("email", ValidationPipe) email: string, @Body("password", ValidationPipe) password: string, @Session() session: { token?: string, type?:string, role?:UserRoles})
@@ -94,13 +95,6 @@ export class AuthController {
   {
     if(!session.token && session.role != UserRoles.ADMIN)throw new UnauthorizedException();
     return await this.authService.getAllUsers();
-  }
-  @Post("/removeUser")
-  async removeUser(@Session() session:{token?:string, role?:UserRoles, type?:string}, @Body("email") email:string)
-  {
-    if(!session.token && session.role != UserRoles.ADMIN) throw new UnauthorizedException();
-    return await this.authService.removeUser(email);
-
   }
 
 }

@@ -12,11 +12,11 @@ function loginSubmit()//Post zaqvka za login na klient
     },
     function(data,status){
         if(data=="true") { 
-            document.getElementById("messageText").innerText="Успешно  влязохте в профила си!";
+            document.getElementById("modalBody").innerText="Успешно  влязохте в профила си!";
             actionOnCloseModal = refreshPage;
         }
-        else if(data=="notVerified") document.getElementById("messageText").innerText="Моля проверете имейла си и потвърдете профила!";
-        else document.getElementById("messageText").innerText="Неправилна парола или имейл адрес!";
+        else if(data=="notVerified") document.getElementById("modalBody").innerText="Моля проверете имейла си и потвърдете профила!";
+        else document.getElementById("modalBody").innerText="Неправилна парола или имейл адрес!";
         $("#modal").modal();
     }
     );
@@ -62,10 +62,10 @@ function addSupporttedCity()
     {
         if(data=="true") 
         {
-            document.getElementById("messageText").innerText="Населеното място е добавено успешно!";
+            document.getElementById("modalBody").innerText="Населеното място е добавено успешно!";
             actionOnCloseModal = getSupportedCitiesByFirm;
         }
-        else document.getElementById("messageText").innerText="Вече сте добавили населено място с това име!";
+        else document.getElementById("modalBody").innerText="Вече сте добавили населено място с това име!";
 
     $("#modal").modal();
         }
@@ -115,7 +115,7 @@ function makeOrderTaxiAddress()
                 notes: $('#notes').val(),
                 },
                 function(data,status){
-                document.getElementById("messageText").innerText="Успешно е направенa поръчка!";
+                document.getElementById("modalBody").innerText="Успешно е направенa поръчка!";
                 $("#modal").modal();
                 }
                 ).fail(function(){
@@ -161,7 +161,7 @@ function makeOrderCurrentLocation()
                     notes: $('#notes').val(),
                     },
                     function(data,status){
-                    document.getElementById("messageText").innerText="Успешно е направенa поръчка!";
+                    document.getElementById("modalBody").innerText="Успешно е направенa поръчка!";
                     $("#modal").modal();
                     }
                     ).fail(function(){
@@ -170,7 +170,7 @@ function makeOrderCurrentLocation()
                     }
                     else
                     {
-                        document.getElementById("messageText").innerText="Не се намирате в поддържано населено място!";
+                        document.getElementById("modalBody").innerText="Не се намирате в поддържано населено място!";
                         $("#modal").modal();
                     }
                 });
@@ -251,11 +251,11 @@ function changeEmail()//Post zaqvka za smqna na email adresa na klient
     function(data,status){
         if(data=="true") 
         {
-            document.getElementById("messageText").innerText="Имейл адресът е сменен успешно! Сега автоматчно ще излезете от профила си! Моля проверете новия си имейл адрес и го потвърдете!";
+            document.getElementById("modalBody").innerText="Имейл адресът е сменен успешно! Сега автоматчно ще излезете от профила си! Моля проверете новия си имейл адрес и го потвърдете!";
             actionOnCloseModal = logout;
         }
         else if(data=="emailExists") {
-            document.getElementById("messageText").innerText="Вече съществува потребител с този имейл адрес!";
+            document.getElementById("modalBody").innerText="Вече съществува потребител с този имейл адрес!";
         }
         $("#modal").modal();
         
@@ -288,12 +288,12 @@ function loginFirmSubmit()//Post zaqvka za login na firma
     function(data,status){
         if(data=="true")
         { 
-            document.getElementById("messageText").innerText="Успешно  влязохте в профила си!";
+            document.getElementById("modalBody").innerText="Успешно  влязохте в профила си!";
             actionOnCloseModal = refreshPage;
         }
-        else if(data=="notVerified") document.getElementById("messageText").innerText="Моля проверете имейла си и потвърдете профила!";
-        else if(data=="notModerationVerified") document.getElementById("messageText").innerText="Фирмата все още не е преминала одобрение от модераторите! Обикновено това отнема няколко дни!";
-        else document.getElementById("messageText").innerText="Неправилна парола или ЕИК!";
+        else if(data=="notVerified") document.getElementById("modalBody").innerText="Моля проверете имейла си и потвърдете профила!";
+        else if(data=="notModerationVerified") document.getElementById("modalBody").innerText="Фирмата все още не е преминала одобрение от модераторите! Обикновено това отнема няколко дни!";
+        else document.getElementById("modalBody").innerText="Неправилна парола или ЕИК!";
         $("#modal").modal();
         
     }
@@ -417,8 +417,8 @@ function registerFirmSubmit()//Post zaqvka za registrirane na firma
             phoneNumber: $("#phoneNumber").val()
         },
         function(data,status){
-            if(data=="true") document.getElementById("messageText").innerText="Вие се регистрирахте успешно!";
-            else document.getElementById("messageText").innerText="Вече съществува профил с този имейл адрес!";
+            if(data=="true") document.getElementById("modalBody").innerText="Вие се регистрирахте успешно!";
+            else document.getElementById("modalBody").innerText="Вече съществува профил с този имейл адрес!";
             $("#modal").modal();
         }
         );
@@ -480,8 +480,8 @@ function registerSubmit()//Post zaqvka za registrirane na klient
             phoneNumber: $("#phoneNumber").val()
         },
         function(data,status){
-            if(data=="true") document.getElementById("messageText").innerText="Вие се регистрирахте успешно!";
-            else document.getElementById("messageText").innerText="Вече съществува профил с този имейл адрес!";
+            if(data=="true") document.getElementById("modalBody").innerText="Вие се регистрирахте успешно!";
+            else document.getElementById("modalBody").innerText="Вече съществува профил с този имейл адрес!";
             $("#modal").modal();
         }
         );
@@ -532,8 +532,8 @@ function changePassword()//Post zaqvka za smqna na parola na klient
             newPass: $("#newPass").val()
         },
         function(data,status){
-            if(data=="true") document.getElementById("messageText").innerText="Паролата е сменена успешно!";
-            else document.getElementById("messageText").innerText="Въвели сте грешна стара парола!";
+            if(data=="true") document.getElementById("modalBody").innerText="Паролата е сменена успешно!";
+            else document.getElementById("modalBody").innerText="Въвели сте грешна стара парола!";
             $("#modal").modal();
         },
         function(){
@@ -555,10 +555,10 @@ function delProfile()//Post zaqvka za iztrivane na profil na klient
         },
         function(data,status){
             if(data=="true"){
-                document.getElementById("messageText").innerText="Профилът е изтрит успешно!";
+                document.getElementById("modalBody").innerText="Профилът е изтрит успешно!";
                 actionOnCloseModal = logout;
             }
-            else document.getElementById("messageText").innerText="Въвели сте грешна парола!";
+            else document.getElementById("modalBody").innerText="Въвели сте грешна парола!";
             $("#modal").modal();
         },
         function(){
@@ -588,10 +588,10 @@ function addTaxiDriver()//Post zaqvka za dobavqne na taksimetrovi shofyori
         function(data,status){
             if(data=="true")
             { 
-                document.getElementById("messageText").innerText="Успешено е добавен таксиметровият шофьор!";
+                document.getElementById("modalBody").innerText="Успешено е добавен таксиметровият шофьор!";
                 actionOnCloseModal = getTaxiDrivers;
             }
-            else document.getElementById("messageText").innerText="Не съществува профил с такъв имейл адрес!";
+            else document.getElementById("modalBody").innerText="Не съществува профил с такъв имейл адрес!";
             $("#modal").modal();
         }
         ).fail(function(){
@@ -608,7 +608,7 @@ function removeSupportedCity(name, region)//Post zaqvka za premahvane na poddurj
             region: region
         },
         function(data,status){
-            if(data=="true") document.getElementById("messageText").innerText="Населеното място е премахнто успешно!";
+            if(data=="true") document.getElementById("modalBody").innerText="Населеното място е премахнто успешно!";
             actionOnCloseModal = getSupportedCitiesByFirm;
             $("#modal").modal();
         }
@@ -624,7 +624,7 @@ function removeTaxiDriver(email)//Post zaqvka za premahvane na taksimetrov shofy
             email: email
         },
         function(data,status){
-            if(data=="true") document.getElementById("messageText").innerText="Шофьорът е премахнат успешно!";
+            if(data=="true") document.getElementById("modalBody").innerText="Шофьорът е премахнат успешно!";
             actionOnCloseModal = getTaxiDrivers;
             $("#modal").modal();
         }

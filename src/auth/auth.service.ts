@@ -190,10 +190,6 @@ export class AuthService {
   {
     return await this.userRepository.getAllUsers();
   }
-  async removeUser(email:string)
-  {
-    return this.userRepository.removeUser(email);
-  }
   
   async sendVerify(username:string)
   {

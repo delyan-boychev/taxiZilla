@@ -96,19 +96,6 @@ export class UserRepository extends Repository<User>
     });
     return users;
   }
-  async removeUser(email:string)
-  {
-    const user = await this.findOne({email});
-    if(user)
-    {
-      user.remove();
-      return true;
-    }
-    else
-    {
-      return false;
-    }
-  }
   async checkPassword(email: string, password: string)
   {
     const user = await this.findOne({ email });
