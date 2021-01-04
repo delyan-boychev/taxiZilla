@@ -48,7 +48,7 @@ export class AuthController {
   @Post("/removeUserByAdmin")
   async removeUserByAdmin(@Session()session:{token?:string},@Body("userid")userid:number)
   {
-    return await this.authService.removeUserByAdmin(session,userid);
+    return await this.authService.removeUserByAdmin(session,Number(userid));
   }
   @Post("/editUserByAdmin")
   async editUserByAdmin(@Session()session:{token?:string},@Body("userid")userid:number,@Body("fName")fname:string,@Body("lName")lname:string,@Body("email")email:string,@Body("address")address:string,@Body("phoneNumber")phoneNumber:string)
@@ -110,13 +110,6 @@ export class AuthController {
   {
     if(!session.token && session.role != UserRoles.ADMIN)throw new UnauthorizedException();
     return await this.authService.getAllUsers();
-  }
-  @Post("/removeUser")
-  async removeUser(@Session() session:{token?:string, role?:UserRoles, type?:string}, @Body("email") email:string)
-  {
-    if(!session.token && session.role != UserRoles.ADMIN) throw new UnauthorizedException();
-    return await this.authService.removeUser(email);
-
   }
 
 }
