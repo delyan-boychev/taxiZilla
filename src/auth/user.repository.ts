@@ -35,6 +35,51 @@ export class UserRepository extends Repository<User>
     }
     return exists;
   }
+  async editUserByAdmin(sender:User,userid:number,fname:string,lname:string,email:string,phoneNumber:string,address:string)
+  {
+    if(sender.role===UserRoles.ADMIN)
+    {
+      const user = await this.findOne(userid);
+      user.fName=fname;
+      user.lName=lname;
+      user.email=email;
+      user.telephone=phoneNumber;
+      user.address=address;
+      await user.save();
+      return true;
+    }
+    else
+    {
+      throw new UnauthorizedException();
+    }
+  }
+  async activateUserByAdmin(sender:User,userid:number)
+  {
+    if(sender.role===UserRoles.ADMIN)
+    {
+      const user = await this.findOne(userid);
+      user.verified=true;
+      await user.save();
+      return true;
+    }
+    else
+    {
+      throw new UnauthorizedException();
+    }
+  }
+  async changeUserRoleAdmin(sender:User,userid:number,role:UserRoles)
+  {
+    if(sender.role===UserRoles.ADMIN)
+    {
+      const user = await this.findOne(userid);
+      user.role = role;
+      await user.save();
+    }
+    else
+    {
+      throw new UnauthorizedException();
+    }
+  }
   async removeUserByAdmin(sender:User,userid)
   {
     if(sender.role===UserRoles.ADMIN)

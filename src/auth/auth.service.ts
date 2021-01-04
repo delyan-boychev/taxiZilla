@@ -28,6 +28,24 @@ export class AuthService {
     return await this.userRepository.registerUser(registerUserDto);
 
   }
+  async activaterUserByAdmin(@Session()session:{token?:string},userid:number)
+  {
+    let umail = await this.jwtService.decode(session.token);
+    let user = await this.userRepository.findOne({email:umail["email"]});
+    return this.userRepository.activateUserByAdmin(user,userid);
+  }
+  async changeUserRoleAdmin(@Session() session:{token?:string},userid:number,role:UserRoles)
+  {
+    let umail = await this.jwtService.decode(session.token);
+    let user = await this.userRepository.findOne({email:umail["email"]});
+    return await this.userRepository.changeUserRoleAdmin(user,userid,role);
+  }
+  async editUserByAdmin(@Session()session:{token?:string},userid:number,fname:string,lname:string,phoneNumber:string,address:string,email:string)
+  {
+    let umail = await this.jwtService.decode(session.token);
+    let user = await this.userRepository.findOne({email:umail["email"]});
+    return await this.userRepository.editUserByAdmin(user,userid,fname,lname,email,phoneNumber,address);
+  }
   async removeUserByAdmin(@Session() session:{token?:string},userid:number)
   {
     let umail = await this.jwtService.decode(session.token);

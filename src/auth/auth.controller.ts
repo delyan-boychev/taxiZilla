@@ -11,6 +11,7 @@ import { RegisterUserDTO } from './dto/registerUser.dto';
 import { UserRoles } from './enums/userRoles.enum';
 import { UserStatus } from './enums/userStatus.enum';
 import { AuthGuard } from '@nestjs/passport';
+import { User } from './user.entity';
 
 @Controller('auth')
 export class AuthController {
@@ -27,6 +28,11 @@ export class AuthController {
     }
     return registered;
   }
+  @Post("activateUserByAdmin")
+  async activateUserByAdmin(@Session()session:{token?:string},@Body("userid")userid:number)
+  {
+    return this.authService.activaterUserByAdmin(session,userid);
+  }
   @Post("/loginUser/")
   async loginUser( @Req() req,@Body("email", ValidationPipe) email: string, @Body("password", ValidationPipe) password: string, @Session() session: { token?: string, type?:string, role?:UserRoles})
   {
@@ -34,10 +40,20 @@ export class AuthController {
     req.session.cookie.expires = new Date(Date.now() + time)
     return await this.authService.loginUser(email, password, session);
   }
+  @Post("/changeUserRoleByAdmin")
+  async changeUserRoleByAdmin(@Session()session:{token?:string},@Body("userid")userid:number,@Body("role")role:UserRoles)
+  {
+    return await this.authService.changeUserRoleAdmin(session,userid,role);
+  }
   @Post("/removeUserByAdmin")
   async removeUserByAdmin(@Session()session:{token?:string},@Body("userid")userid:number)
   {
     return await this.authService.removeUserByAdmin(session,userid);
+  }
+  @Post("/editUserByAdmin")
+  async editUserByAdmin(@Session()session:{token?:string},@Body("userid")userid:number,@Body("fName")fname:string,@Body("lName")lname:string,@Body("email")email:string,@Body("address")address:string,@Body("phoneNumber")phoneNumber:string)
+  {
+    return await this.authService.editUserByAdmin(session,userid,fname,lname,phoneNumber,address,email);
   }
   @Post("/loginTaxiDriver/")
   async loginTaxiDriver( @Req() req,@Body("email", ValidationPipe) email: string, @Body("password", ValidationPipe) password: string, @Session() session: { token?: string, type?:string, role?:UserRoles})
