@@ -1,10 +1,10 @@
 <div class="row">
-    <div class="col-auto">
+    <div class="col-lg-3">
 <div class="card text-center mt-3 ml-3 mr-2">
     <div id="accordion">
     <div class="card bg-primary">
-        <div class="card-header" style="height: 50px;"  id="headingOne">
-            <button class="btn btn-link" style="margin-top: -10px;"  style="font-size: 15px;" data-toggle="collapse" data-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+        <div class="card-header"  id="headingOne">
+            <button class="btn btn-link navbar-toggle"  style="font-size: 15px;" data-toggle="collapse" data-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
                 <i class="fas fa-users"></i> Операции с потребители
             </button>
         </div>
@@ -17,17 +17,17 @@
           <a class="nav-item nav-link has-icon nav-link-faded text-secondary" id="userEditTab"   onclick="userEditTab()">
             <i class="fas fa-user-edit"></i> Редактиране на потребители
           </a>
-          <a class="nav-item nav-link has-icon nav-link-faded text-secondary"   onclick="hideTooltips()">
-            <i class="fas fa-check-circle"></i> Активация на потребители
+          <a class="nav-item nav-link has-icon nav-link-faded text-secondary" id="userActivateTab"  onclick="userActivateTab()">
+            <i class="fas fa-check-circle"></i> Активация профили на потребители
           </a>
           <a class="nav-item nav-link has-icon nav-link-faded text-secondary" id="userChangeRoleTab" onclick="userChangeRoleTab()">
             <i class="fas fa-user-tag"></i> Смяна роля на потребители
           </a>
     </div>
   </div>
-  <div class="card bg-primary">
-    <div class="card-header" style="height: 50px;"  id="headingTwo">
-        <button class="btn btn-link text-left" style="margin-top: -10px;"  style="font-size: 15px;" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+  <div class="card text-center bg-primary">
+    <div class="card-header"  id="headingTwo">
+        <button class="btn btn-link navbar-toggle" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
             <i class="fas fa-industry"></i> Операции с фирми
         </button>
     </div>
@@ -48,9 +48,9 @@
       </a>
 </div>
 </div>
-<div class="card bg-primary">
-    <div class="card-header" style="height: 50px;"  id="headingThree">
-        <button class="btn btn-link text-left" style="margin-top: -10px;"  style="font-size: 15px;" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+<div class="card  text-center bg-primary">
+    <div class="card-header" id="headingThree">
+        <button class="btn btn-link navbar-toggle"  style="font-size: 15px;" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
             <i class="far fa-newspaper"></i> Логове
         </button>
     </div>

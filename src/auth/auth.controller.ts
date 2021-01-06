@@ -28,10 +28,10 @@ export class AuthController {
     }
     return registered;
   }
-  @Post("activateUserByAdmin")
-  async activateUserByAdmin(@Session()session:{token?:string},@Body("userid")userid:number)
+  @Post("/activateUserByAdmin")
+  async activateUserByAdmin(@Session()session:{token?:string}, @Body("userid") userid:number)
   {
-    return this.authService.activaterUserByAdmin(session,userid);
+    return this.authService.activaterUserByAdmin(session,userid); 
   }
   @Post("/loginUser/")
   async loginUser( @Req() req,@Body("email", ValidationPipe) email: string, @Body("password", ValidationPipe) password: string, @Session() session: { token?: string, type?:string, role?:UserRoles})

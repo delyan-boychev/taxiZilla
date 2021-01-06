@@ -43,6 +43,25 @@ function getAllUsersForRemoveTable()
     
 
 }
+function getAllUsersForActivateUserTable()
+{
+    $.get("/auth/getAllUsers", function(json, status)
+    {
+        json.forEach(el => {
+            if(el["email"] != profileInfo["email"])
+            {
+            var verified = "";
+            if(el["verified"] == 1) verified = "Да";
+            else verified = "Не";
+            document.getElementById("bodyTable").innerHTML += `<tr><td>${el["id"]}</td><td>${el["fName"]}</td><td>${el["lName"]}</td><td>${el["email"]}</td><td>${el["telephone"]}</td><td>${userRole[el["role"]]}</td><td>${el["address"]}</td><td>${verified}</td><td class="text-danger h5"><i class='far fa-check-square text-success' style='cursor: pointer;' onclick='activateUserShowModal("${el["id"]}");'></i></td></tr>`
+            }
+        });
+        $('#userActivateDt').DataTable(tableText);
+        $('.dataTables_length').addClass('bs-select');
+    });
+    
+
+}
 function getAllUsersForEditTable()
 {
     $.get("/auth/getAllUsers", function(json, status)
@@ -97,6 +116,21 @@ function changeRoleUser(id)
     }
     );
 }
+function activateUser(id)
+{
+    $("#modalAdmin").modal('hide');
+    $.post("/auth/activateUserByAdmin", 
+        {
+            userid: id,
+        },
+        function(data, status)
+        {
+            document.getElementById("modalBody").innerText = "Профилът е активиран успешно!";
+            actionOnCloseModal = userActivateTab;
+            $("#modal").modal();
+        }
+        );
+}
 function editUser(id)
 {
     $("input").removeClass("is-invalid");
@@ -147,6 +181,13 @@ function editUser(id)
         }
         );
     }
+}
+function activateUserShowModal(id)
+{
+    document.getElementById("modalAdminLabel").innerText = `Активация профил на потребител`;
+    document.getElementById("modalAdminBody").innerHTML =  `Сигурни ли сте, че искате да активирате профила на потребител с ID-${id}?`;
+    document.getElementById("modalAdminButton").onclick = function() {activateUser(id);};
+    $("#modalAdmin").modal();
 }
 function changeUserRoleShowModal(id)
 {
@@ -210,6 +251,19 @@ function userEditTab()
     $.get(window.location.protocol+'//'+ window.location.host +'/adminPanelTabs/userEditTab.html', function( data, textStatus, jqXHR ) {
         document.getElementById("tabContent").innerHTML = data;
         getAllUsersForEditTable();
+});
+}
+function userActivateTab()
+{
+    if(currrentActiveTabId != "") 
+    {
+        document.getElementById(currrentActiveTabId).classList.remove("active");
+    }
+    currrentActiveTabId = "userActivateTab";
+    document.getElementById(currrentActiveTabId).classList.add("active");
+    $.get(window.location.protocol+'//'+ window.location.host +'/adminPanelTabs/userActivateTab.html', function( data, textStatus, jqXHR ) {
+        document.getElementById("tabContent").innerHTML = data;
+        getAllUsersForActivateUserTable();
 });
 }
 function userChangeRoleTab()
