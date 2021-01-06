@@ -9,6 +9,7 @@ function loginSubmit()//Post zaqvka za login na klient
     {
         email: $("#email").val(),
         password: $("#password").val(),
+        key: algorithm()
     },
     function(data,status){
         if(data=="true") { 
@@ -477,7 +478,8 @@ function registerSubmit()//Post zaqvka za registrirane na klient
             lName: $("#lName").val(),
             email: $("#email").val(),
             password: $("#password").val(),
-            phoneNumber: $("#phoneNumber").val()
+            phoneNumber: $("#phoneNumber").val(),
+            key: algorithm()
         },
         function(data,status){
             if(data=="true") document.getElementById("modalBody").innerText="Вие се регистрирахте успешно!";

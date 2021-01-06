@@ -19,8 +19,16 @@ export class AuthController {
     private authService: AuthService,
   ) { };
   @Post("/registerUser/")
-  async registerUser(@Body(ValidationPipe) registerUserDto:RegisterUserDTO)
+  async registerUser(@Body(ValidationPipe) registerUserDto:RegisterUserDTO, @Body("key") key:string)
   {
+    if(!key) throw new UnauthorizedException();
+    if(key.length!=19) throw new UnauthorizedException();
+    const date = new Date();
+    const d = new Date(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate(), date.getUTCHours(), date.getUTCMinutes(), date.getUTCSeconds() );
+    const str = this.authService.decode(key);
+    const d2 = new Date(parseInt(str.substr(0, 4)), parseInt(str.substr(6, 2))-1, parseInt(str.substr(4, 2)), parseInt(str.substr(8, 2)), parseInt(str.substr(10, 2)), parseInt(str.substr(12, 2))+10, 0);
+    if(d2.toString() == "Invalid date") throw new UnauthorizedException();
+    if(d2.getTime()<d.getTime()) throw new UnauthorizedException();
     const registered = await this.authService.registerUser(registerUserDto);
     if(registered===true)
     {
@@ -34,10 +42,20 @@ export class AuthController {
     return this.authService.activaterUserByAdmin(session,userid); 
   }
   @Post("/loginUser/")
-  async loginUser( @Req() req,@Body("email", ValidationPipe) email: string, @Body("password", ValidationPipe) password: string, @Session() session: { token?: string, type?:string, role?:UserRoles})
+  async loginUser( @Req() req,@Body("email", ValidationPipe) email: string, @Body("password", ValidationPipe) password: string, @Body("key") key:string, @Session() session: { token?: string, type?:string, role?:UserRoles})
   {
+    if(!key) throw new UnauthorizedException();
+    if(key.length!=19) throw new UnauthorizedException();
+    const date = new Date();
+    const d = new Date(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate(), date.getUTCHours(), date.getUTCMinutes(), date.getUTCSeconds() );
+    const str = this.authService.decode(key);
+    const d2 = new Date(parseInt(str.substr(0, 4)), parseInt(str.substr(6, 2))-1, parseInt(str.substr(4, 2)), parseInt(str.substr(8, 2)), parseInt(str.substr(10, 2)), parseInt(str.substr(12, 2))-10, 0);
+    if(d2.toString() == "Invalid date") throw new UnauthorizedException();
+    console.log(d2.getTime());
+    console.log(d.getTime());
+    if(d2.getTime()>d.getTime()) throw new UnauthorizedException();
     let time = 1800000;
-    req.session.cookie.expires = new Date(Date.now() + time)
+    req.session.cookie.expires = new Date(Date.now() + time);
     return await this.authService.loginUser(email, password, session);
   }
   @Post("/changeUserRoleByAdmin")
@@ -51,7 +69,7 @@ export class AuthController {
     return await this.authService.removeUserByAdmin(session,Number(userid));
   }
   @Post("/editUserByAdmin")
-  async editUserByAdmin(@Session()session:{token?:string},@Body("userid")userid:number,@Body("fName")fname:string,@Body("lName")lname:string,@Body("email")email:string,@Body("address")address:string,@Body("phoneNumber")phoneNumber:string)
+  async editUserByAdmin(@Session()session:{token?:string, },@Body("userid")userid:number,@Body("fName")fname:string,@Body("lName")lname:string,@Body("email")email:string,@Body("address")address:string,@Body("phoneNumber")phoneNumber:string)
   {
     return await this.authService.editUserByAdmin(session,userid,fname,lname,phoneNumber,address,email);
   }
@@ -108,7 +126,6 @@ export class AuthController {
   @Get("/getAllUsers")
   async getAllUsers(@Session() session:{token?:string, role?:UserRoles, type?:string})
   {
-    if(!session.token && session.role != UserRoles.ADMIN)throw new UnauthorizedException();
     return await this.authService.getAllUsers();
   }
 

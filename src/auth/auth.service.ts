@@ -28,6 +28,24 @@ export class AuthService {
     return await this.userRepository.registerUser(registerUserDto);
 
   }
+  decode(data)
+  {
+    let result="";
+    for(let i=6;i<data.length-6;i++)
+    {
+        let tmp = data.charCodeAt(i);
+        tmp-=33;
+        if(tmp>10)
+        {
+            result+=tmp.toString();
+        }
+        else
+        {
+            result+="0"+tmp.toString();
+        }
+    }
+    return result;
+  }
   async activaterUserByAdmin(@Session()session:{token?:string},userid:number)
   {
     let umail = await this.jwtService.decode(session.token);

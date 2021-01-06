@@ -1,5 +1,5 @@
 
-var currrentActiveTabId = "";
+var currentActiveTabId = "";
 const userRole = Object.freeze({
     Admin: "Администратор",
     Moderator: "Модератор",
@@ -50,10 +50,10 @@ function getAllUsersForActivateUserTable()
         json.forEach(el => {
             if(el["email"] != profileInfo["email"])
             {
-            var verified = "";
-            if(el["verified"] == 1) verified = "Да";
-            else verified = "Не";
-            document.getElementById("bodyTable").innerHTML += `<tr><td>${el["id"]}</td><td>${el["fName"]}</td><td>${el["lName"]}</td><td>${el["email"]}</td><td>${el["telephone"]}</td><td>${userRole[el["role"]]}</td><td>${el["address"]}</td><td>${verified}</td><td class="text-danger h5"><i class='far fa-check-square text-success' style='cursor: pointer;' onclick='activateUserShowModal("${el["id"]}");'></i></td></tr>`
+                if(el["verified"] == 0)
+                {
+                document.getElementById("bodyTable").innerHTML += `<tr><td>${el["id"]}</td><td>${el["fName"]}</td><td>${el["lName"]}</td><td>${el["email"]}</td><td>${el["telephone"]}</td><td>${userRole[el["role"]]}</td><td>${el["address"]}</td><td>Не</td><td class="text-danger h5"><i class='far fa-check-square text-success' style='cursor: pointer;' onclick='activateUserShowModal("${el["id"]}");'></i></td></tr>`
+                }
             }
         });
         $('#userActivateDt').DataTable(tableText);
@@ -228,12 +228,12 @@ function removeUser(id)
 }
 function userRemoveTab()
 {
-    if(currrentActiveTabId != "") 
+    if(currentActiveTabId != "") 
     {
-        document.getElementById(currrentActiveTabId).classList.remove("active");
+        document.getElementById(currentActiveTabId).classList.remove("active");
     }
-    currrentActiveTabId = "userRemoveTab";
-    document.getElementById(currrentActiveTabId).classList.add("active");
+    currentActiveTabId = "userRemoveTab";
+    document.getElementById(currentActiveTabId).classList.add("active");
     $.get(window.location.protocol+'//'+ window.location.host +'/adminPanelTabs/userRemoveTab.html', function( data, textStatus, jqXHR ) {
         document.getElementById("tabContent").innerHTML = data;
         getAllUsersForRemoveTable();  
@@ -242,12 +242,12 @@ function userRemoveTab()
 }
 function userEditTab()
 {
-    if(currrentActiveTabId != "") 
+    if(currentActiveTabId != "") 
     {
-        document.getElementById(currrentActiveTabId).classList.remove("active");
+        document.getElementById(currentActiveTabId).classList.remove("active");
     }
-    currrentActiveTabId = "userEditTab";
-    document.getElementById(currrentActiveTabId).classList.add("active");
+    currentActiveTabId = "userEditTab";
+    document.getElementById(currentActiveTabId).classList.add("active");
     $.get(window.location.protocol+'//'+ window.location.host +'/adminPanelTabs/userEditTab.html', function( data, textStatus, jqXHR ) {
         document.getElementById("tabContent").innerHTML = data;
         getAllUsersForEditTable();
@@ -255,12 +255,12 @@ function userEditTab()
 }
 function userActivateTab()
 {
-    if(currrentActiveTabId != "") 
+    if(currentActiveTabId != "") 
     {
-        document.getElementById(currrentActiveTabId).classList.remove("active");
+        document.getElementById(currentActiveTabId).classList.remove("active");
     }
-    currrentActiveTabId = "userActivateTab";
-    document.getElementById(currrentActiveTabId).classList.add("active");
+    currentActiveTabId = "userActivateTab";
+    document.getElementById(currentActiveTabId).classList.add("active");
     $.get(window.location.protocol+'//'+ window.location.host +'/adminPanelTabs/userActivateTab.html', function( data, textStatus, jqXHR ) {
         document.getElementById("tabContent").innerHTML = data;
         getAllUsersForActivateUserTable();
@@ -268,12 +268,12 @@ function userActivateTab()
 }
 function userChangeRoleTab()
 {
-    if(currrentActiveTabId != "") 
+    if(currentActiveTabId != "") 
     {
-        document.getElementById(currrentActiveTabId).classList.remove("active");
+        document.getElementById(currentActiveTabId).classList.remove("active");
     }
-    currrentActiveTabId = "userChangeRoleTab";
-    document.getElementById(currrentActiveTabId).classList.add("active");
+    currentActiveTabId = "userChangeRoleTab";
+    document.getElementById(currentActiveTabId).classList.add("active");
     $.get(window.location.protocol+'//'+ window.location.host +'/adminPanelTabs/userChangeRoleTab.html', function( data, textStatus, jqXHR ) {
         document.getElementById("tabContent").innerHTML = data;
         getAllUsersForChangeRoleTable();
