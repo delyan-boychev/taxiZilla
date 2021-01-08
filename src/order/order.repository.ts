@@ -32,6 +32,14 @@ export class OrderRepository extends Repository<taxiOrder>
         const order = await this.findOne({id});
         return order;
     }
+    async deleteOrder(orderID:number)
+    {
+        const order = await this.findOne({id: orderID});
+        const tmp = order;
+        console.log(order);
+        await order.remove();
+        return tmp;
+    }
     async getOrderByUser(user:User)
     {
         let qb = this.createQueryBuilder("order");

@@ -61,7 +61,7 @@ export class AuthService {
   async editUserByAdmin(@Session()session:{token?:string},userid:number,fname:string,lname:string,phoneNumber:string,address:string,email:string)
   {
     let umail = await this.jwtService.decode(session.token);
-    let user = await this.userRepository.findOne({email:umail["email"]});
+    let user = await this.userRepository.findOne({id: userid});
     return await this.userRepository.editUserByAdmin(user,userid,fname,lname,email,phoneNumber,address);
   }
   async removeUserByAdmin(@Session() session:{token?:string},userid:number)

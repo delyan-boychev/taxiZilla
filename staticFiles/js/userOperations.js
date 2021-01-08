@@ -285,6 +285,7 @@ function loginFirmSubmit()//Post zaqvka za login na firma
     {
         eik: $("#eik").val(),
         password: $("#password").val(),
+        key: algorithm()
     },
     function(data,status){
         if(data=="true")
@@ -415,7 +416,8 @@ function registerFirmSubmit()//Post zaqvka za registrirane na firma
             address: $("#address").val(),
             email: $("#email").val(),
             password: $("#password").val(),
-            phoneNumber: $("#phoneNumber").val()
+            phoneNumber: $("#phoneNumber").val(),
+            key: algorithm()
         },
         function(data,status){
             if(data=="true") document.getElementById("modalBody").innerText="Вие се регистрирахте успешно!";

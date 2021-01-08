@@ -24,11 +24,12 @@ export class AuthController {
     if(!key) throw new UnauthorizedException();
     if(key.length!=19) throw new UnauthorizedException();
     const date = new Date();
-    const d = new Date(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate(), date.getUTCHours(), date.getUTCMinutes(), date.getUTCSeconds() );
+    const d = new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate(), date.getUTCHours(), date.getUTCMinutes(), date.getUTCSeconds()+3 ));
     const str = this.authService.decode(key);
-    const d2 = new Date(parseInt(str.substr(0, 4)), parseInt(str.substr(6, 2))-1, parseInt(str.substr(4, 2)), parseInt(str.substr(8, 2)), parseInt(str.substr(10, 2)), parseInt(str.substr(12, 2))+10, 0);
+    const d2 = new Date(Date.UTC(parseInt(str.substr(0, 4)), parseInt(str.substr(6, 2))-1, parseInt(str.substr(4, 2)), parseInt(str.substr(8, 2)), parseInt(str.substr(10, 2)), parseInt(str.substr(12, 2)), 0));
+    const d3 = new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate(), date.getUTCHours(), date.getUTCMinutes(), date.getUTCSeconds()-3));
     if(d2.toString() == "Invalid date") throw new UnauthorizedException();
-    if(d2.getTime()<d.getTime()) throw new UnauthorizedException();
+    if(d2.getTime()>d.getTime() || d3.getTime()>d2.getTime()) throw new UnauthorizedException();
     const registered = await this.authService.registerUser(registerUserDto);
     if(registered===true)
     {
@@ -47,13 +48,12 @@ export class AuthController {
     if(!key) throw new UnauthorizedException();
     if(key.length!=19) throw new UnauthorizedException();
     const date = new Date();
-    const d = new Date(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate(), date.getUTCHours(), date.getUTCMinutes(), date.getUTCSeconds() );
+    const d = new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate(), date.getUTCHours(), date.getUTCMinutes(), date.getUTCSeconds()+3 ));
     const str = this.authService.decode(key);
-    const d2 = new Date(parseInt(str.substr(0, 4)), parseInt(str.substr(6, 2))-1, parseInt(str.substr(4, 2)), parseInt(str.substr(8, 2)), parseInt(str.substr(10, 2)), parseInt(str.substr(12, 2))-10, 0);
+    const d2 = new Date(Date.UTC(parseInt(str.substr(0, 4)), parseInt(str.substr(6, 2))-1, parseInt(str.substr(4, 2)), parseInt(str.substr(8, 2)), parseInt(str.substr(10, 2)), parseInt(str.substr(12, 2)), 0));
+    const d3 = new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate(), date.getUTCHours(), date.getUTCMinutes(), date.getUTCSeconds()-3));
     if(d2.toString() == "Invalid date") throw new UnauthorizedException();
-    console.log(d2.getTime());
-    console.log(d.getTime());
-    if(d2.getTime()>d.getTime()) throw new UnauthorizedException();
+    if(d2.getTime()>d.getTime() || d3.getTime()>d2.getTime()) throw new UnauthorizedException();
     let time = 1800000;
     req.session.cookie.expires = new Date(Date.now() + time);
     return await this.authService.loginUser(email, password, session);

@@ -22,6 +22,24 @@ export class FirmService {
         private userRepository:UserRepository,
         private cityRepository:SupportedCityRepository,
         ){};
+    decode(data)
+    {
+      let result="";
+      for(let i=6;i<data.length-6;i++)
+      {
+          let tmp = data.charCodeAt(i);
+          tmp-=33;
+          if(tmp>10)
+          {
+              result+=tmp.toString();
+          }
+          else
+          {
+              result+="0"+tmp.toString();
+          }
+      }
+      return result;
+    }
     async loginFirm(eik:string,password:string, @Session() session:{token?: string, type?:string})
     {
     const ver = await this.firmRepository.loginFirm(eik,password);

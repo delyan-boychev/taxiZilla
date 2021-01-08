@@ -3,7 +3,7 @@ import { NestExpressApplication } from '@nestjs/platform-express';
 import { response } from 'express';
 import { join } from 'path';
 import { AppModule } from './app.module';
-import { HttpExceptionFilter } from './http-exception.filter';
+import { HttpExceptionFilter, HttpExceptionFilter2 } from './http-exception.filter';
 
 async function bootstrap() {
   const fs = require('fs');
@@ -11,7 +11,7 @@ async function bootstrap() {
   const certFile = fs.readFileSync(__dirname + '/../ssl/cert.pem',  'utf8');
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
   app.useStaticAssets(join(__dirname, "/../staticFiles/"))
-  app.useGlobalFilters(new HttpExceptionFilter())
+  app.useGlobalFilters(new HttpExceptionFilter(), new HttpExceptionFilter2())
   await app.listen(80);
 }
 bootstrap();

@@ -5,6 +5,7 @@ import { tmpdir } from 'os';
 import { UserRoles } from 'src/auth/enums/userRoles.enum';
 import { UserStatus } from 'src/auth/enums/userStatus.enum';
 import { taxiDriver, taxiDriversFindNearest } from 'src/auth/taxiDriver.class';
+import { User } from 'src/auth/user.entity';
 import { UserRepository } from 'src/auth/user.repository';
 import { Statuses, Drivers,x,y, Requests } from 'src/coordsAndStatus.array';
 import { OrderStatus } from './enums/orderStatus.enum';
@@ -42,6 +43,34 @@ export class OrderService {
             
 
         }
+    }
+    async rejectAfterAccept(@Session() session:{token?: string}, orderID: number, sender:User)
+    {
+        let uemail = await this.jwtService.decode(session.token);
+        let user = await this.userRepository.findOne({email:uemail["email"]});
+        const order = await this.orderRepository.deleteOrder(orderID);
+        Statuses[user.id]= UserStatus.Busy;
+        let a:taxiDriversFindNearest = new taxiDriversFindNearest(order.x,order.y,sender ,order.notes, order.address);
+        console.log(order);
+        let k = 0;
+        for(let i=0; i<Drivers.length; i++)
+        {
+            if(Drivers[i])
+            {
+
+                k++;
+            }
+        }
+        if(k > 0)
+        {
+        a.getTheNearestDriver();
+        }
+        else
+        {
+            this.orderRepository.createOrder(sender, null,order.x,order.y, "", order.address, OrderStatus.Canceled); 
+        }
+        Statuses[user.id]= UserStatus.Online;
+
     }
     async createOrder(x:number,y:number, notes:string, @Session() session:{token?:string}, address: string)
     {

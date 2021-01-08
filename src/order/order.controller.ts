@@ -1,5 +1,7 @@
 import { Body, Controller, Get, Post, Session, UnauthorizedException, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
+import { session } from 'passport';
+import { User } from 'src/auth/user.entity';
 import { taxiOrder } from './order.entity';
 import { OrderService } from './order.service';
 
@@ -13,6 +15,11 @@ export class OrderController {
     async getOrderOneSender()
     {
         return await this.orderService.getOrderOneSender();
+    }
+    @Post('/rejectOrderAfterAccept')
+    async rejectOrderAfterAccept(@Session() session: {token?: string}, @Body("orderID") orderID:string, @Body("sender") sender:User)
+    {
+        this.orderService.rejectAfterAccept(session, parseInt(orderID), sender);
     }
     @Post('/createOrder')
     createOrder(@Body('x') x:number,@Body('y') y:number, @Body('notes') notes:string, @Body('address') address:string, @Session() session:{token?:string}, )
