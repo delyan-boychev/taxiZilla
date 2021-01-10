@@ -44,13 +44,12 @@ export class OrderService {
 
         }
     }
-    async rejectAfterAccept(@Session() session:{token?: string}, orderID: number, sender:User)
+    async rejectAfterAccept(@Session() session:{token?: string}, orderID: number, senderID:number)
     {
         let uemail = await this.jwtService.decode(session.token);
-        let user = await this.userRepository.findOne({email:uemail["email"]});
+        let user = await this.userRepository.findOne({id: senderID});
         const order = await this.orderRepository.deleteOrder(orderID);
-        Statuses[user.id]= UserStatus.Busy;
-        let a:taxiDriversFindNearest = new taxiDriversFindNearest(order.x,order.y,sender ,order.notes, order.address);
+        let a:taxiDriversFindNearest = new taxiDriversFindNearest(order.x,order.y,user ,order.notes, order.address);
         console.log(order);
         let k = 0;
         for(let i=0; i<Drivers.length; i++)
@@ -67,9 +66,8 @@ export class OrderService {
         }
         else
         {
-            this.orderRepository.createOrder(sender, null,order.x,order.y, "", order.address, OrderStatus.Canceled); 
+            this.orderRepository.createOrder(user, null,order.x,order.y, "", order.address, OrderStatus.Canceled); 
         }
-        Statuses[user.id]= UserStatus.Online;
 
     }
     async createOrder(x:number,y:number, notes:string, @Session() session:{token?:string}, address: string)

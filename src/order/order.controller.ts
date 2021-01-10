@@ -17,9 +17,9 @@ export class OrderController {
         return await this.orderService.getOrderOneSender();
     }
     @Post('/rejectOrderAfterAccept')
-    async rejectOrderAfterAccept(@Session() session: {token?: string}, @Body("orderID") orderID:string, @Body("sender") sender:User)
+    async rejectOrderAfterAccept(@Session() session: {token?: string}, @Body("orderID") orderID:string, @Body("senderID") senderID:string)
     {
-        this.orderService.rejectAfterAccept(session, parseInt(orderID), sender);
+        this.orderService.rejectAfterAccept(session, parseInt(orderID), parseInt(senderID));
     }
     @Post('/createOrder')
     createOrder(@Body('x') x:number,@Body('y') y:number, @Body('notes') notes:string, @Body('address') address:string, @Session() session:{token?:string}, )

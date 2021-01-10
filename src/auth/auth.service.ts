@@ -35,14 +35,7 @@ export class AuthService {
     {
         let tmp = data.charCodeAt(i);
         tmp-=33;
-        if(tmp>10)
-        {
-            result+=tmp.toString();
-        }
-        else
-        {
-            result+="0"+tmp.toString();
-        }
+        result+=("0" + tmp.toString()).slice(-2);
     }
     return result;
   }
