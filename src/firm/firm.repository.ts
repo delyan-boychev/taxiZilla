@@ -126,4 +126,8 @@ export class FirmRepository extends Repository<Firm>
       return true;
     }
   }
+  async getAllFirms()
+    {
+        return await this.find();
+    }
 }

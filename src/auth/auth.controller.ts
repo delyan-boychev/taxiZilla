@@ -126,6 +126,7 @@ export class AuthController {
   @Get("/getAllUsers")
   async getAllUsers(@Session() session:{token?:string, role?:UserRoles, type?:string})
   {
+    if(!session.token && session.role != UserRoles.ADMIN)throw new UnauthorizedException();
     return await this.authService.getAllUsers();
   }
 

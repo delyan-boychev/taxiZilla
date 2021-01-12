@@ -104,4 +104,10 @@ export class FirmController {
     if(!session.token) throw new UnauthorizedException();
     return await this.firmService.removeFirmByAdmin(session,parseInt(firmID));
   }
+  @Get("/getAllFirms")
+  async getAllFirms(@Session() session:{token?:string, role?:string})
+  {
+    if(!session.token && session.role != UserRoles.ADMIN) throw new UnauthorizedException();
+    return await this.firmService.getAllFirms();
+  }
 }

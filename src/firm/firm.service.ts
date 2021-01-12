@@ -43,16 +43,18 @@ export class FirmService {
     async removeFirmByAdmin(@Session()session:{token?:string},firmID:number)
     {
       let umail = await this.jwtService.decode(session.token);
-      const user = await this.userRepository.findOne(umail["email"]); 
+      const user = await this.userRepository.findOne({ email: umail["email"]}); 
       if(user.role!==UserRoles.ADMIN)
       {
         throw new UnauthorizedException();
       }
       const firm = await this.firmRepository.findOne(firmID);
       firm.drivers.forEach(async(element) => {
-        delete element.firm;
+        element.role = UserRoles.USER;
         await element.save();
       });
+      firm.drivers = [];
+      await firm.save();
       await firm.remove();
       return true;
     }
@@ -168,5 +170,9 @@ export class FirmService {
   async getAllCities()
   {
     return await this.cityRepository.getAllCities();
+  }
+  async getAllFirms()
+  {
+    return await this.firmRepository.getAllFirms()
   }
 }

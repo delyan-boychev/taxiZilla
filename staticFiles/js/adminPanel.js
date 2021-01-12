@@ -11,13 +11,31 @@ const tableText = {
         "sProcessing":     "Обработка на данни...",
         "sSearch":         "Търсене:",
         "sLengthMenu":     "Покажи _MENU_ потребители на страница",
-        "sInfo":           "Показани са _START_ до _END_ потребител от _TOTAL_ потребители",
+        "sInfo":           "Показани са от _START_ до _END_ потребител от общо _TOTAL_ потребители",
         "sInfoEmpty":      "Показани са 0 потребители",
         "sInfoFiltered":   "(общ брой потребители - _MAX_)",
         "sInfoPostFix":    "",
         "sLoadingRecords": "Зареждане на данни...",
         "sZeroRecords":    "Няма намерени потребители!",
         "sEmptyTable":     "Няма потребители",
+        "oPaginate": {
+            "sPrevious":   "Предишна страница",
+            "sNext":       "Следваща страница",
+        }
+    }
+};
+const tableTextFirm = {
+    "language": {
+        "sProcessing":     "Обработка на данни...",
+        "sSearch":         "Търсене:",
+        "sLengthMenu":     "Покажи _MENU_ фирми на страница",
+        "sInfo":           "Показани са от _START_ до _END_ фирма от общо _TOTAL_ фирми",
+        "sInfoEmpty":      "Показани са 0 фирми",
+        "sInfoFiltered":   "(общ брой фирми - _MAX_)",
+        "sInfoPostFix":    "",
+        "sLoadingRecords": "Зареждане на данни...",
+        "sZeroRecords":    "Няма намерени фирми!",
+        "sEmptyTable":     "Няма фирми",
         "oPaginate": {
             "sPrevious":   "Предишна страница",
             "sNext":       "Следваща страница",
@@ -100,6 +118,28 @@ function getAllUsersForChangeRoleTable()
     
 
 }
+function getAllFirmsForRemoveFirmTable()
+{
+    $.get("/firm/getAllFirms", function(json, status)
+    {
+        json.forEach(el => {
+            if(el["email"] != profileInfo["email"])
+            {
+            var verified = "";
+            if(el["verified"] == 1) verified = "Да";
+            else verified = "Не";
+            var modVerified = "";
+            if(el["moderationVerified"] == 1) modVerified = "Да";
+            else modVerified = "Не";
+            document.getElementById("bodyTable").innerHTML += `<tr><td>${el["id"]}</td><td>${el["firmName"]}</td><td>${el["eik"]}</td><td>${el["city"]}</td><td>${el["address"]}</td><td>${el["email"]}</td><td>${el["phoneNumber"]}</td><td>${verified}</td><td>${modVerified}</td><td class="text-secondary h5"><i class='far fa-times-circle' style='cursor: pointer;' onclick='removeFirmShowModal("${el["id"]}");'></i></td></tr>`
+            }
+        });
+        $('#firmRemoveDt').DataTable(tableTextFirm);
+        $('.dataTables_length').addClass('bs-select');
+    });
+    
+
+}
 function changeRoleUser(id)
 {
     $("#modalAdmin").modal('hide');
@@ -110,7 +150,7 @@ function changeRoleUser(id)
     },
     function(data, status)
     {
-        document.getElementById("modalBody").innerText = "Успешно е сменена ролята на потребителя!";
+        document.getElementById("modalBody").innerText = `Успешно е сменена ролята на потребител с ID-${id}!`;
         actionOnCloseModal = userChangeRoleTab;
         $("#modal").modal();
     }
@@ -125,7 +165,7 @@ function activateUser(id)
         },
         function(data, status)
         {
-            document.getElementById("modalBody").innerText = "Профилът е активиран успешно!";
+            document.getElementById("modalBody").innerText = `Профилът на потребител с ID-${id} е активиран успешно!`;
             actionOnCloseModal = userActivateTab;
             $("#modal").modal();
         }
@@ -175,7 +215,7 @@ function editUser(id)
         },
         function(data, status)
         {
-            document.getElementById("modalBody").innerText = "Успешно е редактиран потребител!";
+            document.getElementById("modalBody").innerText = `Успешно е редактиран потребител с ID-${id}!`;
             actionOnCloseModal = userEditTab;
             $("#modal").modal();
         }
@@ -210,6 +250,13 @@ function removeUserShowModal(id)
     document.getElementById("modalAdminButton").onclick = function() {removeUser(id);};
     $("#modalAdmin").modal();
 }
+function removeFirmShowModal(id)
+{
+    document.getElementById("modalAdminLabel").innerText = `Премахване на фирма`;
+    document.getElementById("modalAdminBody").innerText = `Сигурни ли сте, че искате да премахнете фирма с ID-${id}?`;
+    document.getElementById("modalAdminButton").onclick = function() {removeFirm(id);};
+    $("#modalAdmin").modal();
+}
 function removeUser(id)
 {
     if(arguments.callee.caller === null) {console.log("%c You are not permitted to use this method!!!",  'color: red'); return;}
@@ -220,11 +267,28 @@ function removeUser(id)
     },
     function(data, status)
     {
-        document.getElementById("modalBody").innerText = "Успешно е премахнат потребител!";
+        document.getElementById("modalBody").innerText = `Успешно е премахнат потребител с ID-${id}!`;
         actionOnCloseModal = userRemoveTab;
         $("#modal").modal();
     }
     );
+}
+function removeFirm(id)
+{
+    if(arguments.callee.caller === null) {console.log("%c You are not permitted to use this method!!!",  'color: red'); return;}
+    $("#modalAdmin").modal('hide');
+    $.post("/firm/removeFirmByAdmin", 
+    {
+        firmID: id,
+    },
+    function(data, status)
+    {
+        document.getElementById("modalBody").innerText = `Успешно е премахната фирма с ID-${id}!`;
+        actionOnCloseModal = firmRemoveTab;
+        $("#modal").modal();
+    }
+    );
+
 }
 function userRemoveTab()
 {
@@ -278,4 +342,18 @@ function userChangeRoleTab()
         document.getElementById("tabContent").innerHTML = data;
         getAllUsersForChangeRoleTable();
 });
+}
+function firmRemoveTab()
+{
+    if(currentActiveTabId != "") 
+    {
+        document.getElementById(currentActiveTabId).classList.remove("active");
+    }
+    currentActiveTabId = "firmRemoveTab";
+    document.getElementById(currentActiveTabId).classList.add("active");
+    $.get(window.location.protocol+'//'+ window.location.host +'/adminPanelTabs/firmRemoveTab.html', function( data, textStatus, jqXHR ) {
+        document.getElementById("tabContent").innerHTML = data;
+        getAllFirmsForRemoveFirmTable();
+});
+
 }
