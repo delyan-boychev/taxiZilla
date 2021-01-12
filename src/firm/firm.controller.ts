@@ -98,4 +98,10 @@ export class FirmController {
     if(!session.token) throw new UnauthorizedException();
     return await this.firmService.getAllCities();
   }
+  @Post("/removeFirmByAdmin")
+  async removeFirmByAdmin(@Session() session:{token?:string},@Body("firmID")firmID:string)
+  {
+    if(!session.token) throw new UnauthorizedException();
+    return await this.firmService.removeFirmByAdmin(session,parseInt(firmID));
+  }
 }
