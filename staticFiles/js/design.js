@@ -34,14 +34,14 @@ function collapse()//Promqna na navbara pri otvarqne i zatvarqne
         document.getElementById("navbar").style.removeProperty("background-image");
     }
 }
-function showCurrentPosition() 
+function showCurrentPosition()//Update na karta ot tekushto mestopolozenie
 {
     if(arguments.callee.caller === null) {console.log("%c You are not permitted to use this method!!!",  'color: red'); return;}
     getLocation().then(coord => {
             document.getElementById("map").src = "https://maps.google.com/maps?q="+ coord["y"] + ", " + coord["x"] +"&t=&z=17&ie=UTF8&iwloc=&output=embed";
         });
 }
-function updateMapAddress()
+function updateMapAddress()//Update na karta ot zadaden adres
 {
     if(arguments.callee.caller === null) {console.log("%c You are not permitted to use this method!!!",  'color: red'); return;}
 document.getElementById("map").src = "https://maps.google.com/maps?q="+ $("#addressTaxi").val() +", " + $("#city").val() + "&t=&z=17&ie=UTF8&iwloc=&output=embed"; $([document.documentElement, document.body]).animate({

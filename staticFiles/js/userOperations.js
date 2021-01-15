@@ -1,3 +1,4 @@
+//Deklarirane na promenlivi i konstanti
 eval = function () {console.log("%c You are not permitted to use this method!!!",  'color: red');}
 var actionOnCloseModal = undefined;
 const loginInfo = {};
@@ -5,13 +6,14 @@ const profileInfo = {};
 function loginSubmit()//Post zaqvka za login na klient
 {
     if(arguments.callee.caller === null) {console.log("%c You are not permitted to use this method!!!",  'color: red'); return;}
-    $.post("/auth/loginUser",
+    postRequest("/auth/loginUser",
     {
         email: $("#email").val(),
         password: $("#password").val(),
         key: algorithm()
     },
-    function(data,status){
+    ).then(data=>
+    {
         if(data=="true") { 
             document.getElementById("modalBody").innerText="Успешно  влязохте в профила си!";
             actionOnCloseModal = refreshPage;
@@ -19,13 +21,13 @@ function loginSubmit()//Post zaqvka za login na klient
         else if(data=="notVerified") document.getElementById("modalBody").innerText="Моля проверете имейла си и потвърдете профила!";
         else document.getElementById("modalBody").innerText="Неправилна парола или имейл адрес!";
         $("#modal").modal();
-    }
-    );
+    });
     return false;
 }
-function getSupportedCitiesByFirm()
+function getSupportedCitiesByFirm()//Vzemane na poddurzani gradove kato firma
 {
-    $.get("/firm/getCitiesByFirm", function (data, status)
+    if(arguments.callee.caller === null) {console.log("%c You are not permitted to use this method!!!",  'color: red'); return;}
+    getRequest("/firm/getCitiesByFirm").then(data=>
     {
             var json = data;
             if(json.length	=== 0)
@@ -44,7 +46,7 @@ function getSupportedCitiesByFirm()
     });
 
 }
-function addSupporttedCity()
+function addSupporttedCity()//Dobavqne na poddurzan grad
 {
     if(arguments.callee.caller === null) {console.log("%c You are not permitted to use this method!!!",  'color: red'); return;}
     $('#nameCity').addClass("is-valid");
@@ -54,12 +56,11 @@ function addSupporttedCity()
     }
     else
     {
-    $.post("/firm/addSupportedCity", 
+    postRequest("/firm/addSupportedCity", 
     {
         city: document.querySelector('input[name="type"]:checked').value + " " + $("#nameCity").val(),
         region: $("#nameRegion").val()
-    },
-    function(data, status)
+    }).then(data=>
     {
         if(data=="true") 
         {
@@ -75,10 +76,10 @@ function addSupporttedCity()
         });
     }
 }
-function getAllCities()
+function getAllCities()//Vzemane na vsichki gradove, koito sa poddurzani
 {
     if(arguments.callee.caller === null) {console.log("%c You are not permitted to use this method!!!",  'color: red'); return;}
-    $.get("/firm/getAllCities", function (data, status)
+    getRequest("/firm/getAllCities").then(data=>
     {
         var json = data;
         json.forEach(el => {
@@ -86,7 +87,7 @@ function getAllCities()
         });
     });
 }
-function makeOrderTaxiAddress()
+function makeOrderTaxiAddress()//Suzdavane na poruchka ot adres
 {
     if(arguments.callee.caller === null) {console.log("%c You are not permitted to use this method!!!",  'color: red'); return;}
     if($("#addressTaxi").val().length < 6)
@@ -108,25 +109,23 @@ function makeOrderTaxiAddress()
                 }
             }).done(function(json)
             {
-                $.post("/order/createOrder",
+                postRequest("/order/createOrder",
                 {
                 x: json.candidates[0].location.x,
                 y: json.candidates[0].location.y,
                 address: $("#addressTaxi").val() + ", " + $("#city").val(),
                 notes: $('#notes').val(),
-                },
-                function(data,status){
+                }).then(data=>
+                {
                 document.getElementById("modalBody").innerText="Успешно е направенa поръчка!";
                 $("#modal").modal();
                 }
-                ).fail(function(){
-                    refreshPage();
-                });;
+                );
             });
 
     }
 }
-async function getLocation()
+async function getLocation()//Vzemane na tekushto mestopolozenie
 {
     coord = {};
     if(navigator.geolocation) {
@@ -138,15 +137,14 @@ async function getLocation()
         return coord;
     }
 }
-function makeOrderCurrentLocation() 
+function makeOrderCurrentLocation()//Suzdavane na poruchka ot tekushto mestopolozenie
 {
     if(arguments.callee.caller === null) {console.log("%c You are not permitted to use this method!!!",  'color: red'); return;}
     getLocation().then(coord => {
-            $.get("https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/reverseGeocode?location="+ coord["x"]+", " + coord["y"] + "&f=pjson",
-            function(data, status)
+            getRequest("https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/reverseGeocode?location="+ coord["x"]+", " + coord["y"] + "&f=pjson").then(data=>
             {
                 data = JSON.parse(data);
-                $.get("/firm/getAllCities", function (data2, status)
+                getRequest("/firm/getAllCities").then(data2=>
                 {
                     var exists = false;
                     data2.forEach(el => {
@@ -154,20 +152,18 @@ function makeOrderCurrentLocation()
                     });
                     if(exists)
                     {
-                    $.post("/order/createOrder",
+                    postRequest("/order/createOrder",
                     {
                     x: coord["x"],
                     y: coord["y"],
                     address: "",
                     notes: $('#notes').val(),
-                    },
-                    function(data,status){
+                    }).then(data3=>
+                    {
                     document.getElementById("modalBody").innerText="Успешно е направенa поръчка!";
                     $("#modal").modal();
                     }
-                    ).fail(function(){
-                        refreshPage();
-                    });;
+                    );
                     }
                     else
                     {
@@ -179,10 +175,10 @@ function makeOrderCurrentLocation()
         });
 
 }
-function setProfileInfoUser()
+function setProfileInfoUser()//Zadavene na informaciq profil na potrebitel
 {
     if(arguments.callee.caller === null) {console.log("%c You are not permitted to use this method!!!",  'color: red'); return;}
-    $.get("/auth/profile", function(data, status){
+    getRequest("/auth/profile").then(data=> {
             var json = data;
             var nav = document.getElementById("navElements");
             Object.keys(json).forEach(key => 
@@ -206,10 +202,11 @@ function setProfileInfoUser()
             });
 
 }
-function setProfileInfoFirm()
+function setProfileInfoFirm()//Zadavene na informaciq profil na firma
 {
     if(arguments.callee.caller === null) {console.log("%c You are not permitted to use this method!!!",  'color: red'); return;}
-    $.get("/firm/profile", function(data, status){
+    getRequest("/firm/profile").then(data=>
+        {
         var json = data;
             var nav = document.getElementById("navElements");
             Object.keys(json).forEach(key => 
@@ -222,7 +219,7 @@ function setProfileInfoFirm()
       });
 
 }
-function setLoginInfo()
+function setLoginInfo()//Zadavene na informaciq za login
 {
     if(arguments.callee.caller === null) {console.log("%c You are not permitted to use this method!!!",  'color: red'); return;}
     const loginInf = JSON.parse(document.getElementById("res").innerText);
@@ -245,11 +242,11 @@ function changeEmail()//Post zaqvka za smqna na email adresa na klient
     else
     {
         $('#newEmail').removeClass("is-valid");
-    $.post("/auth/changeEmail",
+    postRequest("/auth/changeEmail",
     {
         newEmail: $("#newEmail").val(),
-    },
-    function(data,status){
+    }).then(data=>
+    {
         if(data=="true") 
         {
             document.getElementById("modalBody").innerText="Имейл адресът е сменен успешно! Сега автоматчно ще излезете от профила си! Моля проверете новия си имейл адрес и го потвърдете!";
@@ -261,9 +258,7 @@ function changeEmail()//Post zaqvka za smqna na email adresa na klient
         $("#modal").modal();
         
     }
-    ).fail(function(){
-        refreshPage();
-    });
+    );
     }
 }
 window.mobileCheck = function() {
@@ -281,13 +276,13 @@ function loginFirmSubmit()//Post zaqvka za login na firma
     {
         
     }
-    $.post("/firm/loginFirm",
+    postRequest("/firm/loginFirm",
     {
         eik: $("#eik").val(),
         password: $("#password").val(),
         key: algorithm()
-    },
-    function(data,status){
+    }).then(data=>
+    {
         if(data=="true")
         { 
             document.getElementById("modalBody").innerText="Успешно  влязохте в профила си!";
@@ -408,7 +403,7 @@ function registerFirmSubmit()//Post zaqvka za registrirane na firma
     else $('#phoneNumber').addClass("is-valid");
     if(isChecked == true)
     {
-        $.post("/firm/registerFirm",
+        postRequest("/firm/registerFirm",
         {
             firmName: $("#firmName").val(),
             eik: $("#eik").val(),
@@ -418,8 +413,8 @@ function registerFirmSubmit()//Post zaqvka za registrirane na firma
             password: $("#password").val(),
             phoneNumber: $("#phoneNumber").val(),
             key: algorithm()
-        },
-        function(data,status){
+        }).then(data=>
+        {
             if(data=="true") document.getElementById("modalBody").innerText="Вие се регистрирахте успешно!";
             else document.getElementById("modalBody").innerText="Вече съществува профил с този имейл адрес!";
             $("#modal").modal();
@@ -474,7 +469,7 @@ function registerSubmit()//Post zaqvka za registrirane na klient
     else $('#phoneNumber').addClass("is-valid");
     if(isChecked == true)
     {
-        $.post("/auth/registerUser",
+        postRequest("/auth/registerUser",
         {
             fName: $("#fName").val(),
             lName: $("#lName").val(),
@@ -482,8 +477,7 @@ function registerSubmit()//Post zaqvka za registrirane na klient
             password: $("#password").val(),
             phoneNumber: $("#phoneNumber").val(),
             key: algorithm()
-        },
-        function(data,status){
+        }).then(data=>{
             if(data=="true") document.getElementById("modalBody").innerText="Вие се регистрирахте успешно!";
             else document.getElementById("modalBody").innerText="Вече съществува профил с този имейл адрес!";
             $("#modal").modal();
@@ -495,7 +489,8 @@ function registerSubmit()//Post zaqvka za registrirane na klient
 function getProfile()//Get zaqvka za vzemane na informaciqta ot profila na klient
 {
     if(arguments.callee.caller === null) {console.log("%c You are not permitted to use this method!!!",  'color: red'); return;}
-    $.get("/auth/profile", function(data, status){
+    getRequest("/auth/profile").then(data=>
+        {
         var json = data;
         document.getElementById("fName").value = json["fName"];
         document.getElementById("lName").value = json["lName"];
@@ -505,7 +500,7 @@ function getProfile()//Get zaqvka za vzemane na informaciqta ot profila na klien
 function getProfileFirm()//Get zaqvka za vzemane na inforamciqta ot profila na firma
 {
     if(arguments.callee.caller === null) {console.log("%c You are not permitted to use this method!!!",  'color: red'); return;}
-    $.get("/firm/profile", function(data, status){
+    getRequest("/firm/profile").then(data=>{
         var json = data;
         document.getElementById("firmName").innerText = json["firmName"];
         document.getElementById("eik").innerText = json["eik"];
@@ -517,7 +512,6 @@ function changePassword()//Post zaqvka za smqna na parola na klient
     if(arguments.callee.caller === null) {console.log("%c You are not permitted to use this method!!!",  'color: red'); return;}
     var hasNumber = /\d/;
     var isChecked = true;
-    hideTooltips();
     if($("#oldPass").val().length == 0)
     {
         $('#oldPass').tooltip({'placement':'right','trigger': 'manual', 'title': 'Не сте въвели старата парола!'}).tooltip('show');
@@ -530,18 +524,14 @@ function changePassword()//Post zaqvka za smqna na parola na klient
     }
     if(isChecked == true)
     {
-    $.post("/auth/changePassword",
+    postRequest("/auth/changePassword",
         {
             oldPass: $("#oldPass").val(),
             newPass: $("#newPass").val()
-        },
-        function(data,status){
+        }).then(data=>{
             if(data=="true") document.getElementById("modalBody").innerText="Паролата е сменена успешно!";
             else document.getElementById("modalBody").innerText="Въвели сте грешна стара парола!";
             $("#modal").modal();
-        },
-        function(){
-            refreshPage();
         }
         );
     }
@@ -553,20 +543,16 @@ function delProfile()//Post zaqvka za iztrivane na profil na klient
     if($("#passDel").val().length > 0)
     {
     
-    $.post("/auth/deleteUser",
+    postRequest("/auth/deleteUser",
         {
             password: $("#passDel").val()
-        },
-        function(data,status){
+        }).then(data=>{
             if(data=="true"){
                 document.getElementById("modalBody").innerText="Профилът е изтрит успешно!";
                 actionOnCloseModal = logout;
             }
             else document.getElementById("modalBody").innerText="Въвели сте грешна парола!";
             $("#modal").modal();
-        },
-        function(){
-            refreshPage();
         }
         );
     }
@@ -585,11 +571,10 @@ function addTaxiDriver()//Post zaqvka za dobavqne na taksimetrovi shofyori
     }
     else
     {
-    $.post("/firm/addTaxiDriver",
+    postRequest("/firm/addTaxiDriver",
         {
             email: $("#emailDriver").val()
-        },
-        function(data,status){
+        }).then(data=>{
             if(data=="true")
             { 
                 document.getElementById("modalBody").innerText="Успешено е добавен таксиметровият шофьор!";
@@ -598,48 +583,41 @@ function addTaxiDriver()//Post zaqvka za dobavqne na taksimetrovi shofyori
             else document.getElementById("modalBody").innerText="Не съществува профил с такъв имейл адрес!";
             $("#modal").modal();
         }
-        ).fail(function(){
-            refreshPage();
-        });
+        );
     }
 }
 function removeSupportedCity(name, region)//Post zaqvka za premahvane na poddurjan grad
 {
     if(arguments.callee.caller === null) {console.log("%c You are not permitted to use this method!!!",  'color: red'); return;}
-    $.post("/firm/removeSupportedCity",
+    postRequest("/firm/removeSupportedCity",
         {
             city: name,
             region: region
-        },
-        function(data,status){
+        }).then(data=>{
             if(data=="true") document.getElementById("modalBody").innerText="Населеното място е премахнто успешно!";
             actionOnCloseModal = getSupportedCitiesByFirm;
             $("#modal").modal();
         }
-        ).fail(function(){
-            refreshPage();
-        });
+        );
 }
 function removeTaxiDriver(email)//Post zaqvka za premahvane na taksimetrov shofyor
 {
     if(arguments.callee.caller === null) {console.log("%c You are not permitted to use this method!!!",  'color: red'); return;}
-    $.post("/firm/removeTaxiDriver",
+    postRequest("/firm/removeTaxiDriver",
         {
             email: email
-        },
-        function(data,status){
+        }).then(data=>
+        {
             if(data=="true") document.getElementById("modalBody").innerText="Шофьорът е премахнат успешно!";
             actionOnCloseModal = getTaxiDrivers;
             $("#modal").modal();
         }
-        ).fail(function(){
-            refreshPage();
-        });
+        );
 }
 function getTaxiDrivers()//Get zaqvka za vzimane na taksimetrovi shofyori
 {
     if(arguments.callee.caller === null) {console.log("%c You are not permitted to use this method!!!",  'color: red'); return;}
-    $.get("/firm/getTaxiDrivers", function(data, status){
+    getRequest("/firm/getTaxiDrivers").then(data=>{
         var json = data;
         if(json.length	=== 0)
         { 
@@ -661,6 +639,7 @@ function logout()//Funkciq za izlizane ot profila
     if(arguments.callee.caller === null) {console.log("%c You are not permitted to use this method!!!",  'color: red'); return;}
     window.location = "./logout";
 }
+//Povikvane na funkciq pri zatvarqne na modal
 $('#modal').on('hidden.bs.modal', function () {
     if(actionOnCloseModal !== undefined) actionOnCloseModal();
     actionOnCloseModal = undefined;

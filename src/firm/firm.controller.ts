@@ -98,7 +98,13 @@ export class FirmController {
     if(!session.token) throw new UnauthorizedException();
     return await this.firmService.getAllCities();
   }
-  @Post("/removeFirmByAdmin")
+  @Post("/moderationVerifyFirm/")
+  async moderationVerifyFirm(@Session() session:{token?:string, role?:string}, @Body("firmID")firmID:string)
+  {
+    if(!session.token) throw new UnauthorizedException();
+    return await this.firmService.moderationVerifyFirm(session,parseInt(firmID));
+  }
+  @Post("/removeFirmByAdmin/")
   async removeFirmByAdmin(@Session() session:{token?:string},@Body("firmID")firmID:string)
   {
     if(!session.token) throw new UnauthorizedException();

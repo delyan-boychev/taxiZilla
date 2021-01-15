@@ -58,6 +58,19 @@ export class FirmService {
       await firm.remove();
       return true;
     }
+    async moderationVerifyFirm(@Session()session:{token?:string}, firmID:number)
+    {
+      let umail = await this.jwtService.decode(session.token);
+      const user = await this.userRepository.findOne({ email: umail["email"]}); 
+      if(user.role!==UserRoles.ADMIN)
+      {
+        throw new UnauthorizedException();
+      }
+      const firm = await this.firmRepository.findOne(firmID);
+      firm.moderationVerified = true;
+      await firm.save();
+      return true;
+    }
     async loginFirm(eik:string,password:string, @Session() session:{token?: string, type?:string})
     {
     const ver = await this.firmRepository.loginFirm(eik,password);
