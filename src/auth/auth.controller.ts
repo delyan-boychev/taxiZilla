@@ -69,7 +69,7 @@ export class AuthController {
     return await this.authService.removeUserByAdmin(session,Number(userid));
   }
   @Post("/editUserByAdmin")
-  async editUserByAdmin(@Session()session:{token?:string, },@Body("userid")userid:number,@Body("fName")fname:string,@Body("lName")lname:string,@Body("email")email:string,@Body("address")address:string,@Body("phoneNumber")phoneNumber:string)
+  async editUserByAdmin(@Session() session:{token?:string, role?:string },@Body("userid")userid:number,@Body("fName")fname:string,@Body("lName")lname:string,@Body("email")email:string,@Body("address")address:string,@Body("phoneNumber")phoneNumber:string)
   {
     return await this.authService.editUserByAdmin(session,userid,fname,lname,phoneNumber,address,email);
   }
@@ -126,6 +126,7 @@ export class AuthController {
   @Get("/getAllUsers")
   async getAllUsers(@Session() session:{token?:string, role?:UserRoles, type?:string})
   {
+    if(!session.token && session.role != UserRoles.ADMIN)throw new UnauthorizedException();
     return await this.authService.getAllUsers();
   }
 

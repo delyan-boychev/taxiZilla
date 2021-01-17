@@ -98,10 +98,27 @@ export class FirmController {
     if(!session.token) throw new UnauthorizedException();
     return await this.firmService.getAllCities();
   }
-  @Post("/removeFirmByAdmin")
+  @Post("/moderationVerifyFirm/")
+  async moderationVerifyFirm(@Session() session:{token?:string, role?:string}, @Body("firmID")firmID:string)
+  {
+    if(!session.token) throw new UnauthorizedException();
+    return await this.firmService.moderationVerifyFirm(session,parseInt(firmID));
+  }
+  @Post("/removeFirmByAdmin/")
   async removeFirmByAdmin(@Session() session:{token?:string},@Body("firmID")firmID:string)
   {
     if(!session.token) throw new UnauthorizedException();
     return await this.firmService.removeFirmByAdmin(session,parseInt(firmID));
+  }
+  @Post("/editFirmByAdmin/")
+  async editFirmByAdmin(@Session() session:{token?:string}, @Body("firmID") firmID:string, @Body("eik") eik:string,@Body("email") email:string, @Body("firmName") firmName:string,@Body("phoneNumber") phoneNumber:string, @Body("address") address:string, @Body("city") city:string)
+  {
+    
+  }
+  @Get("/getAllFirms")
+  async getAllFirms(@Session() session:{token?:string, role?:string})
+  {
+    if(!session.token && session.role != UserRoles.ADMIN) throw new UnauthorizedException();
+    return await this.firmService.getAllFirms();
   }
 }

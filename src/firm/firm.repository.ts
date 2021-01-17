@@ -4,6 +4,7 @@ import { Firm } from "./firm.entity";
 import * as bcrypt from 'bcrypt';
 import e from "express";
 import { User } from "src/auth/user.entity";
+import { Session, UnauthorizedException, UseGuards } from "@nestjs/common";
 import { UserRoles } from "src/auth/enums/userRoles.enum";
 
 @EntityRepository(Firm)
@@ -112,6 +113,26 @@ export class FirmRepository extends Repository<Firm>
       return true;
     }
   }
+  async editFirmByAdmin(sender:User,firmid:number,eik:string,firmName:string,email:string,phoneNumber:string,address:string, city:string)
+  {
+    if(sender.role===UserRoles.ADMIN)
+    {
+      const firm = await this.findOne({id: firmid});
+      firm.eik = eik;
+      firm.firmName=firmName;
+      firm.email=email;
+      firm.phoneNumber=phoneNumber;
+      firm.address = address;
+      firm.city=city;
+      firm.address=address;
+      await firm.save();
+      return true;
+    }
+    else
+    {
+      throw new UnauthorizedException();
+    }
+  }
   async verifyFirm(eik:string)
   {
     let firm:Firm = await this.findOne({ eik });
@@ -126,4 +147,8 @@ export class FirmRepository extends Repository<Firm>
       return true;
     }
   }
+  async getAllFirms()
+    {
+        return await this.find();
+    }
 }

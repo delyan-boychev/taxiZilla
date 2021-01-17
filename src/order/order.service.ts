@@ -113,5 +113,11 @@ export class OrderService {
             return idOrder;
         }
     }
+    async getOrdersByUser(@Session() session:{token?:string})
+    {
+        let uemail = await this.jwtService.decode(session.token);
+        let user = await this.userRepository.findOne({email:uemail["email"]});
+        return user.orders;
 
+    }
 }

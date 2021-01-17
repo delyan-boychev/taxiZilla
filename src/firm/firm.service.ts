@@ -43,17 +43,32 @@ export class FirmService {
     async removeFirmByAdmin(@Session()session:{token?:string},firmID:number)
     {
       let umail = await this.jwtService.decode(session.token);
-      const user = await this.userRepository.findOne(umail["email"]); 
+      const user = await this.userRepository.findOne({ email: umail["email"]}); 
       if(user.role!==UserRoles.ADMIN)
       {
         throw new UnauthorizedException();
       }
       const firm = await this.firmRepository.findOne(firmID);
       firm.drivers.forEach(async(element) => {
-        delete element.firm;
+        element.role = UserRoles.USER;
         await element.save();
       });
+      firm.drivers = [];
+      await firm.save();
       await firm.remove();
+      return true;
+    }
+    async moderationVerifyFirm(@Session()session:{token?:string}, firmID:number)
+    {
+      let umail = await this.jwtService.decode(session.token);
+      const user = await this.userRepository.findOne({ email: umail["email"]}); 
+      if(user.role!==UserRoles.ADMIN)
+      {
+        throw new UnauthorizedException();
+      }
+      const firm = await this.firmRepository.findOne(firmID);
+      firm.moderationVerified = true;
+      await firm.save();
       return true;
     }
     async loginFirm(eik:string,password:string, @Session() session:{token?: string, type?:string})
@@ -170,8 +185,18 @@ export class FirmService {
     const firm = await this.firmRepository.findOne({eik});
     return await this.cityRepository.getCitiesByFirm(firm);
   }
+  async editFirmByAdmin(@Session() session:{token?:string}, firmID:number, eik:string, email:string, phoneNumber:string, address:string, city:string)
+  {
+    const decoded = await this.jwtService.decode(session.token);
+    
+
+  }
   async getAllCities()
   {
     return await this.cityRepository.getAllCities();
+  }
+  async getAllFirms()
+  {
+    return await this.firmRepository.getAllFirms()
   }
 }

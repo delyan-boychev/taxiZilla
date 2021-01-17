@@ -1,4 +1,4 @@
-
+//Deklarirane na promenlivi i konstanti
 var currentActiveTabId = "";
 const userRole = Object.freeze({
     Admin: "Администратор",
@@ -11,7 +11,7 @@ const tableText = {
         "sProcessing":     "Обработка на данни...",
         "sSearch":         "Търсене:",
         "sLengthMenu":     "Покажи _MENU_ потребители на страница",
-        "sInfo":           "Показани са _START_ до _END_ потребител от _TOTAL_ потребители",
+        "sInfo":           "Показани са от _START_ до _END_ потребител от общо _TOTAL_ потребители",
         "sInfoEmpty":      "Показани са 0 потребители",
         "sInfoFiltered":   "(общ брой потребители - _MAX_)",
         "sInfoPostFix":    "",
@@ -24,9 +24,28 @@ const tableText = {
         }
     }
 };
-function getAllUsersForRemoveTable()
+const tableTextFirm = {
+    "language": {
+        "sProcessing":     "Обработка на данни...",
+        "sSearch":         "Търсене:",
+        "sLengthMenu":     "Покажи _MENU_ фирми на страница",
+        "sInfo":           "Показани са от _START_ до _END_ фирма от общо _TOTAL_ фирми",
+        "sInfoEmpty":      "Показани са 0 фирми",
+        "sInfoFiltered":   "(общ брой фирми - _MAX_)",
+        "sInfoPostFix":    "",
+        "sLoadingRecords": "Зареждане на данни...",
+        "sZeroRecords":    "Няма намерени фирми!",
+        "sEmptyTable":     "Няма фирми",
+        "oPaginate": {
+            "sPrevious":   "Предишна страница",
+            "sNext":       "Следваща страница",
+        }
+    }
+};
+function getAllUsersForRemoveTable()//Injectvane na potrebiteli v tablica za premahvane na potrebiteli
 {
-    $.get("/auth/getAllUsers", function(json, status)
+    if(arguments.callee.caller === null) {console.log("%c You are not permitted to use this method!!!",  'color: red'); return;}
+    getRequest("/auth/getAllUsers").then(json=>
     {
         json.forEach(el => {
             if(el["email"] != profileInfo["email"])
@@ -43,9 +62,10 @@ function getAllUsersForRemoveTable()
     
 
 }
-function getAllUsersForActivateUserTable()
+function getAllUsersForActivateUserTable()//Injectvane na potrebiteli v tablica za aktivirane na akaunti na potrebiteli
 {
-    $.get("/auth/getAllUsers", function(json, status)
+    if(arguments.callee.caller === null) {console.log("%c You are not permitted to use this method!!!",  'color: red'); return;}
+    getRequest("/auth/getAllUsers").then(json=>
     {
         json.forEach(el => {
             if(el["email"] != profileInfo["email"])
@@ -62,9 +82,10 @@ function getAllUsersForActivateUserTable()
     
 
 }
-function getAllUsersForEditTable()
+function getAllUsersForEditTable()//Injectvane na potrebiteli v tablica za redkatirane na potrebiteli
 {
-    $.get("/auth/getAllUsers", function(json, status)
+    if(arguments.callee.caller === null) {console.log("%c You are not permitted to use this method!!!",  'color: red'); return;}
+    getRequest("/auth/getAllUsers").then(json=>
     {
         json.forEach(el => {
             if(el["email"] != profileInfo["email"])
@@ -81,9 +102,10 @@ function getAllUsersForEditTable()
     
 
 }
-function getAllUsersForChangeRoleTable()
+function getAllUsersForChangeRoleTable()//Injectvane na potrebiteli v tablica za smqna rolq na potrebiteli
 {
-    $.get("/auth/getAllUsers", function(json, status)
+    if(arguments.callee.caller === null) {console.log("%c You are not permitted to use this method!!!",  'color: red'); return;}
+    getRequest("/auth/getAllUsers").then(json=>
     {
         json.forEach(el => {
             if(el["email"] != profileInfo["email"])
@@ -100,39 +122,86 @@ function getAllUsersForChangeRoleTable()
     
 
 }
-function changeRoleUser(id)
+function getAllFirmsForRemoveFirmTable()//Injectvane na firmi v tablica za premahvane na firmi
 {
+    if(arguments.callee.caller === null) {console.log("%c You are not permitted to use this method!!!",  'color: red'); return;}
+    getRequest("/firm/getAllFirms").then(json=>
+    {
+        json.forEach(el => {
+            if(el["email"] != profileInfo["email"])
+            {
+            var verified = "";
+            if(el["verified"] == 1) verified = "Да";
+            else verified = "Не";
+            var modVerified = "";
+            if(el["moderationVerified"] == 1) modVerified = "Да";
+            else modVerified = "Не";
+            document.getElementById("bodyTable").innerHTML += `<tr><td>${el["id"]}</td><td>${el["firmName"]}</td><td>${el["eik"]}</td><td>${el["city"]}</td><td>${el["address"]}</td><td>${el["email"]}</td><td>${el["phoneNumber"]}</td><td>${verified}</td><td>${modVerified}</td><td class="text-secondary h5"><i class='far fa-times-circle text-danger' style='cursor: pointer;' onclick='removeFirmShowModal("${el["id"]}");'></i></td></tr>`
+            }
+        });
+        $('#firmRemoveDt').DataTable(tableTextFirm);
+        $('.dataTables_length').addClass('bs-select');
+    });
+    
+
+}
+function getAllFirmsForModerationVerifyFirmTable()//Injectvane na firmi v tablica za odobrqvane na firmi
+{
+    if(arguments.callee.caller === null) {console.log("%c You are not permitted to use this method!!!",  'color: red'); return;}
+    getRequest("/firm/getAllFirms").then(json=>
+    {
+        json.forEach(el => {
+            if(el["email"] != profileInfo["email"])
+            {
+                if(el["moderationVerified"] == 0)
+                {
+            var verified = "";
+            if(el["verified"] == 1) verified = "Да";
+            else verified = "Не";
+            document.getElementById("bodyTable").innerHTML += `<tr><td>${el["id"]}</td><td>${el["firmName"]}</td><td>${el["eik"]}</td><td>${el["city"]}</td><td>${el["address"]}</td><td>${el["email"]}</td><td>${el["phoneNumber"]}</td><td>${verified}</td><td>Не</td><td class="text-secondary h5"><i class='far fa-check-square text-success' style='cursor: pointer;' onclick='firmModerationVerifyShowModal("${el["id"]}");'></i></td></tr>`
+            }
+        }
+        });
+        $('#firmModerationVerifyDt').DataTable(tableTextFirm);
+        $('.dataTables_length').addClass('bs-select');
+    });
+    
+
+}
+function changeRoleUser(id)//Smqna rolq na potrebitel po id
+{
+    if(arguments.callee.caller === null) {console.log("%c You are not permitted to use this method!!!",  'color: red'); return;}
     $("#modalAdmin").modal('hide');
-    $.post("/auth/changeUserRoleByAdmin", 
+    postRequest("/auth/changeUserRoleByAdmin", 
     {
         userid: id,
         role: $("#newRole").val(),
-    },
-    function(data, status)
+    }).then(data=>
     {
-        document.getElementById("modalBody").innerText = "Успешно е сменена ролята на потребителя!";
+        document.getElementById("modalBody").innerText = `Успешно е сменена ролята на потребител с ID-${id}!`;
         actionOnCloseModal = userChangeRoleTab;
         $("#modal").modal();
     }
     );
 }
-function activateUser(id)
+function activateUser(id)//Aktivirane na potrebitel po id
 {
+    if(arguments.callee.caller === null) {console.log("%c You are not permitted to use this method!!!",  'color: red'); return;}
     $("#modalAdmin").modal('hide');
-    $.post("/auth/activateUserByAdmin", 
+    postRequest("/auth/activateUserByAdmin", 
         {
             userid: id,
-        },
-        function(data, status)
+        }).then(data=>
         {
-            document.getElementById("modalBody").innerText = "Профилът е активиран успешно!";
+            document.getElementById("modalBody").innerText = `Профилът на потребител с ID-${id} е активиран успешно!`;
             actionOnCloseModal = userActivateTab;
             $("#modal").modal();
         }
         );
 }
-function editUser(id)
+function editUser(id)//Redaktirane na potrebitel po id
 {
+    if(arguments.callee.caller === null) {console.log("%c You are not permitted to use this method!!!",  'color: red'); return;}
     $("input").removeClass("is-invalid");
     var isChecked = true;
     var isDigit = /^\d+$/;
@@ -164,7 +233,7 @@ function editUser(id)
     if(isChecked)
     {
         $("#modalAdmin").modal('hide');
-        $.post("/auth/editUserByAdmin", 
+        postRequest("/auth/editUserByAdmin", 
         {
             userid: id,
             fName: $("#fName").val(),
@@ -172,110 +241,193 @@ function editUser(id)
             email: $("#email").val(),
             phoneNumber: $("#phoneNumber").val(),
             address: $("#address").val(),
-        },
-        function(data, status)
+        }).then(data=>
         {
-            document.getElementById("modalBody").innerText = "Успешно е редактиран потребител!";
+            document.getElementById("modalBody").innerText = `Успешно е редактиран потребител с ID-${id}!`;
             actionOnCloseModal = userEditTab;
             $("#modal").modal();
         }
         );
     }
 }
-function activateUserShowModal(id)
+function activateUserShowModal(id)//Pokazvane na modal za aktivirane na potrebitel
 {
+    if(arguments.callee.caller === null) {console.log("%c You are not permitted to use this method!!!",  'color: red'); return;}
     document.getElementById("modalAdminLabel").innerText = `Активация профил на потребител`;
     document.getElementById("modalAdminBody").innerHTML =  `Сигурни ли сте, че искате да активирате профила на потребител с ID-${id}?`;
     document.getElementById("modalAdminButton").onclick = function() {activateUser(id);};
     $("#modalAdmin").modal();
 }
-function changeUserRoleShowModal(id)
+function changeUserRoleShowModal(id)//Pokazvane na modal za smqna rolq na potrebitel
 {
+    if(arguments.callee.caller === null) {console.log("%c You are not permitted to use this method!!!",  'color: red'); return;}
     document.getElementById("modalAdminLabel").innerText = `Смяна роля на потребителя`;
     document.getElementById("modalAdminBody").innerHTML =  `<div class="d-flex justify-content-between "><label class="text-center w-100" for="newRole">Нова роля: </label><select name="newRole" id="newRole" class="form-control"> <option value="Admin">Администратор</option> <option value="Moderator">Модератор</option> <option value="User">Потребител</option> <option value="Driver">Шофьор</option> </select></div>`;
     document.getElementById("modalAdminButton").onclick = function() {changeRoleUser(id);};
     $("#modalAdmin").modal();
 }
-function editUserShowModal(id, fName, lName, email, phoneNumber, address)
+function editUserShowModal(id, fName, lName, email, phoneNumber, address)//Pokazvane na modal za redaktirane na potrebitel
 {
+    if(arguments.callee.caller === null) {console.log("%c You are not permitted to use this method!!!",  'color: red'); return;}
     document.getElementById("modalAdminLabel").innerText = `Редактиране на потребител`;
     document.getElementById("modalAdminBody").innerHTML =  `<div class="form-group"><input type="text" class="form-control" id="fName"  placeholder="Име" value="${fName}"> </div> <div class="form-group"> <input type="text" class="form-control" id="lName" placeholder="Фамилия" value="${lName}"> </div> <div class="form-group"><input type="email" class="form-control" id="email" placeholder="Имейл" value="${email}"></div> <div class="form-group"><input type="text" class="form-control" id="phoneNumber" placeholder="Телефонен номер" value="${phoneNumber}"> </div> <div class="form-group"> <input type="text" class="form-control" id="address" placeholder="Адрес" value="${address}"></div>`;
     document.getElementById("modalAdminButton").onclick = function() {editUser(id);};
     $("#modalAdmin").modal();
 }
-function removeUserShowModal(id)
+function removeUserShowModal(id)//Pokazvane na modal za premahvane na potrebitel
 {
+    if(arguments.callee.caller === null) {console.log("%c You are not permitted to use this method!!!",  'color: red'); return;}
     document.getElementById("modalAdminLabel").innerText = `Премахване на потребител`;
     document.getElementById("modalAdminBody").innerText = `Сигурни ли сте, че искате да премахнете потребител с ID-${id}?`;
     document.getElementById("modalAdminButton").onclick = function() {removeUser(id);};
     $("#modalAdmin").modal();
 }
-function removeUser(id)
+function removeFirmShowModal(id)//Pokazvane na modal za premahvane na firma
+{
+    if(arguments.callee.caller === null) {console.log("%c You are not permitted to use this method!!!",  'color: red'); return;}
+    document.getElementById("modalAdminLabel").innerText = `Премахване на фирма`;
+    document.getElementById("modalAdminBody").innerText = `Сигурни ли сте, че искате да премахнете фирма с ID-${id}?`;
+    document.getElementById("modalAdminButton").onclick = function() {removeFirm(id);};
+    $("#modalAdmin").modal();
+}
+function firmModerationVerifyShowModal(id)//Pokazvane na modal za odobrqvane na firma
+{
+    if(arguments.callee.caller === null) {console.log("%c You are not permitted to use this method!!!",  'color: red'); return;}
+    document.getElementById("modalAdminLabel").innerText = `Одобряване на фирма`;
+    document.getElementById("modalAdminBody").innerText = `Сигурни ли сте, че искате да одобрите фирма с ID-${id}?`;
+    document.getElementById("modalAdminButton").onclick = function() {moderationVerifyFirm(id);};
+    $("#modalAdmin").modal()
+}
+function removeUser(id)//Premahvane na potrebitel po id
 {
     if(arguments.callee.caller === null) {console.log("%c You are not permitted to use this method!!!",  'color: red'); return;}
     $("#modalAdmin").modal('hide');
-    $.post("/auth/removeUser", 
+    postRequest("/auth/removeUserByAdmin", 
     {
         userid: id,
-    },
-    function(data, status)
+    }).then(data=>
     {
-        document.getElementById("modalBody").innerText = "Успешно е премахнат потребител!";
+        document.getElementById("modalBody").innerText = `Успешно е премахнат потребител с ID-${id}!`;
         actionOnCloseModal = userRemoveTab;
         $("#modal").modal();
     }
     );
 }
-function userRemoveTab()
+function removeFirm(id)//Premahvane na firma po id
 {
+    if(arguments.callee.caller === null) {console.log("%c You are not permitted to use this method!!!",  'color: red'); return;}
+    $("#modalAdmin").modal('hide');
+    postRequest("/firm/removeFirmByAdmin", 
+    {
+        firmID: id,
+    }).then(data=>
+    {
+        document.getElementById("modalBody").innerText = `Успешно е премахната фирма с ID-${id}!`;
+        actionOnCloseModal = firmRemoveTab;
+        $("#modal").modal();
+    }
+    );
+
+}
+function moderationVerifyFirm(id)//Odobrqvane na firma po id
+{
+    if(arguments.callee.caller === null) {console.log("%c You are not permitted to use this method!!!",  'color: red'); return;}
+    $("#modalAdmin").modal('hide');
+    postRequest("/firm/moderationVerifyFirm", 
+    {
+         firmID: id,
+    }).then(data=>
+    {
+        document.getElementById("modalBody").innerText = `Успешно е одобрена фирма с ID-${id}!`;
+        actionOnCloseModal = getAllFirmsForModerationVerifyFirmTable;
+        $("#modal").modal();
+    }
+    );
+}
+function userRemoveTab()//Tab za premahvane na potrebiteli
+{
+    if(arguments.callee.caller === null) {console.log("%c You are not permitted to use this method!!!",  'color: red'); return;}
     if(currentActiveTabId != "") 
     {
         document.getElementById(currentActiveTabId).classList.remove("active");
     }
     currentActiveTabId = "userRemoveTab";
     document.getElementById(currentActiveTabId).classList.add("active");
-    $.get(window.location.protocol+'//'+ window.location.host +'/adminPanelTabs/userRemoveTab.html', function( data, textStatus, jqXHR ) {
+    getRequest(window.location.protocol+'//'+ window.location.host +'/adminPanelTabs/userRemoveTab.html').then(data=>{
         document.getElementById("tabContent").innerHTML = data;
         getAllUsersForRemoveTable();  
             });
 
 }
-function userEditTab()
+function userEditTab()//Tab za redaktirane na potrebiteli
 {
+    if(arguments.callee.caller === null) {console.log("%c You are not permitted to use this method!!!",  'color: red'); return;}
     if(currentActiveTabId != "") 
     {
         document.getElementById(currentActiveTabId).classList.remove("active");
     }
     currentActiveTabId = "userEditTab";
     document.getElementById(currentActiveTabId).classList.add("active");
-    $.get(window.location.protocol+'//'+ window.location.host +'/adminPanelTabs/userEditTab.html', function( data, textStatus, jqXHR ) {
+    getRequest(window.location.protocol+'//'+ window.location.host +'/adminPanelTabs/userEditTab.html').then(data=>{
         document.getElementById("tabContent").innerHTML = data;
         getAllUsersForEditTable();
 });
 }
-function userActivateTab()
+function userActivateTab()//Tab za aktivirane na potrebiteli
 {
+    if(arguments.callee.caller === null) {console.log("%c You are not permitted to use this method!!!",  'color: red'); return;}
     if(currentActiveTabId != "") 
     {
         document.getElementById(currentActiveTabId).classList.remove("active");
     }
     currentActiveTabId = "userActivateTab";
     document.getElementById(currentActiveTabId).classList.add("active");
-    $.get(window.location.protocol+'//'+ window.location.host +'/adminPanelTabs/userActivateTab.html', function( data, textStatus, jqXHR ) {
+    getRequest(window.location.protocol+'//'+ window.location.host +'/adminPanelTabs/userActivateTab.html').then(data=>{
         document.getElementById("tabContent").innerHTML = data;
         getAllUsersForActivateUserTable();
 });
 }
-function userChangeRoleTab()
+function userChangeRoleTab()//Tab za smqna rolq na potrebiteli
 {
+    if(arguments.callee.caller === null) {console.log("%c You are not permitted to use this method!!!",  'color: red'); return;}
     if(currentActiveTabId != "") 
     {
         document.getElementById(currentActiveTabId).classList.remove("active");
     }
     currentActiveTabId = "userChangeRoleTab";
     document.getElementById(currentActiveTabId).classList.add("active");
-    $.get(window.location.protocol+'//'+ window.location.host +'/adminPanelTabs/userChangeRoleTab.html', function( data, textStatus, jqXHR ) {
+    getRequest(window.location.protocol+'//'+ window.location.host +'/adminPanelTabs/userChangeRoleTab.html').then(data=>{
         document.getElementById("tabContent").innerHTML = data;
         getAllUsersForChangeRoleTable();
 });
+}
+function firmRemoveTab()//Tab za premahvane na firmi
+{
+    if(arguments.callee.caller === null) {console.log("%c You are not permitted to use this method!!!",  'color: red'); return;}
+    if(currentActiveTabId != "") 
+    {
+        document.getElementById(currentActiveTabId).classList.remove("active");
+    }
+    currentActiveTabId = "firmRemoveTab";
+    document.getElementById(currentActiveTabId).classList.add("active");
+    getRequest(window.location.protocol+'//'+ window.location.host +'/adminPanelTabs/firmRemoveTab.html').then(data=>{
+        document.getElementById("tabContent").innerHTML = data;
+        getAllFirmsForRemoveFirmTable();
+});
+
+}
+function moderationVerifyFirmTab()//Tab za odobrqvane na firmi
+{
+    if(arguments.callee.caller === null) {console.log("%c You are not permitted to use this method!!!",  'color: red'); return;}
+    if(currentActiveTabId != "") 
+    {
+        document.getElementById(currentActiveTabId).classList.remove("active");
+    }
+    currentActiveTabId = "moderationVerifyFirmTab";
+    document.getElementById(currentActiveTabId).classList.add("active");
+    getRequest(window.location.protocol+'//'+ window.location.host +'/adminPanelTabs/moderationVerifyFirmTab.html').then(data=>{
+        document.getElementById("tabContent").innerHTML = data;
+        getAllFirmsForModerationVerifyFirmTable();
+});
+
 }

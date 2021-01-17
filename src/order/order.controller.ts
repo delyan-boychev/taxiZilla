@@ -46,6 +46,12 @@ export class OrderController {
         if(!session.token) throw new UnauthorizedException();
         this.orderService.finishOrder(Number(id));
     }
+    @Get("/getOrdersByUser")
+    async getOrdersByUser(@Session() session:{token?:string})
+    {
+        if(!session.token) throw new UnauthorizedException();
+        return await this.orderService.getOrdersByUser(session);
+    }
 
 }
 
