@@ -180,6 +180,12 @@ export class FirmService {
     const firm = await this.firmRepository.findOne({eik});
     return await this.cityRepository.getCitiesByFirm(firm);
   }
+  async editFirmByAdmin(@Session() session:{token?:string}, firmID:number, eik:string, email:string, phoneNumber:string, address:string, city:string)
+  {
+    const decoded = await this.jwtService.decode(session.token);
+    
+
+  }
   async getAllCities()
   {
     return await this.cityRepository.getAllCities();
