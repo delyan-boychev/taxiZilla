@@ -7,9 +7,11 @@ import { AuthService } from './auth.service';
 import { FirmRepository } from '../firm/firm.repository';
 import { JwtStrategy } from './jwt-strategy';
 import { UserRepository } from './user.repository';
+import { FirmModule } from 'src/firm/firm.module';
 
 @Module({
   imports: [
+    FirmModule,
     PassportModule.register({defaultStrategy:'jwt'}),
     TypeOrmModule.forFeature([UserRepository, FirmRepository]),
     JwtModule.register({

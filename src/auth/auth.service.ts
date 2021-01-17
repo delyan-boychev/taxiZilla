@@ -14,6 +14,7 @@ import { UserRoles } from './enums/userRoles.enum';
 import { UserStatus } from './enums/userStatus.enum';
 import { Drivers, Statuses, x, y, Requests } from 'src/coordsAndStatus.array';
 import { taxiDriver } from './taxiDriver.class';
+import { FirmService } from 'src/firm/firm.service';
 
 @Injectable()
 export class AuthService {
@@ -22,6 +23,7 @@ export class AuthService {
     private userRepository: UserRepository,
     private firmRepository: FirmRepository,
     private jwtService:JwtService,
+    private firmService:FirmService,
   ) { };
   async registerUser(registerUserDto: RegisterUserDTO)
   {
@@ -38,6 +40,19 @@ export class AuthService {
         result+=("0" + tmp.toString()).slice(-2);
     }
     return result;
+  }
+  async addCityByAdmin(@Session()session:{token?:string},firmID:number,city:string,region:string)
+  {
+    let umail = await this.jwtService.decode(session.token);
+    let user = await this.userRepository.findOne({email:umail["email"]});
+    if(user.role!=UserRoles.ADMIN)
+    {
+      throw new UnauthorizedException();
+    }
+    else
+    {
+      return await this.firmService.addCityByAdmin(city,region,firmID);
+    }
   }
   async activaterUserByAdmin(@Session()session:{token?:string},userid:number)
   {

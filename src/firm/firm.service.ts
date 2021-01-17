@@ -151,6 +151,11 @@ export class FirmService {
       const firm = await this.firmRepository.findOne({eik});
       return await this.cityRepository.addCity(city,region,firm);
   }
+  async addCityByAdmin(city:string,region:string, firmID:number)
+  {
+    const firm = await this.firmRepository.findOne(firmID);
+    return await this.cityRepository.addCity(city,region,firm);
+  }
   async removeCity(city:string,region:string, @Session() session:{token?: string})
   {
       const decoded=await this.jwtService.decode(session.token);

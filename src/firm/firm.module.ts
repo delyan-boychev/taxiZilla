@@ -20,7 +20,7 @@ import { SupportedCityRepository } from './cityRepository';
       }
     })
   ],
-  exports: [JwtStrategyFirm, PassportModule],
+  exports: [JwtStrategyFirm, PassportModule, FirmService],
   providers: [FirmService,JwtStrategyFirm],
   controllers: [FirmController]
 })
