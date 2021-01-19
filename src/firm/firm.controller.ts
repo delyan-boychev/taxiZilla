@@ -121,4 +121,10 @@ export class FirmController {
     if(!session.token && session.role != UserRoles.ADMIN) throw new UnauthorizedException();
     return await this.firmService.getAllFirms();
   }
+  @Post("/addTaxiDriverByAdmin")
+  async addTaxiDriverByAdmin(@Session() session:{token?:string, role?:string}, @Body("firmID") firmID:string, @Body("userID") userID:string)
+  {
+    if(!session.token && session.role != UserRoles.ADMIN) throw new UnauthorizedException();
+    await this.firmService.addTaxiDriverByAdmin(session, parseInt(firmID), parseInt(userID));
+  }
 }

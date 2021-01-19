@@ -191,6 +191,15 @@ export class FirmService {
     
 
   }
+  async addTaxiDriverByAdmin(@Session() session:{token?:string}, firmID:number, userID:number)
+  {
+    const firm = await this.firmRepository.findOne({id: firmID});
+    const user = await this.userRepository.findOne({id:userID});
+    if(firm)
+    {
+      this.firmRepository.addTaxiDriver(firm.eik, user);
+    }
+  }
   async getAllCities()
   {
     return await this.cityRepository.getAllCities();

@@ -168,6 +168,38 @@ function getAllFirmsForModerationVerifyFirmTable()//Injectvane na firmi v tablic
     
 
 }
+function getAllUsersForAddDriverTabTable()//Injectvane na potrebitel v tablica za dobavqne na shofyori
+{
+    if(arguments.callee.caller === null) {console.log("%c You are not permitted to use this method!!!",  'color: red'); return;}
+    getRequest("/auth/getAllUsers").then(json=>
+    {
+        json.forEach(el => {
+            if(el["email"] != profileInfo["email"])
+            {
+                if(el["role"] !=  "Driver")
+                {
+            var verified = "";
+            if(el["verified"] == 1) verified = "Да";
+            else verified = "Не";
+            document.getElementById("bodyTable").innerHTML += `<tr><td>${el["id"]}</td><td>${el["fName"]}</td><td>${el["lName"]}</td><td>${el["email"]}</td><td>${el["telephone"]}</td><td>${userRole[el["role"]]}</td><td>${el["address"]}</td><td>${verified}</td><td class="text-secondary h5"><i class='fas fa-tag' style='cursor: pointer;' onclick='addTaxiDriverShowModal("${el["id"]}");'></i></td></tr>`
+            }
+        }
+        });
+        $('#addDriverDt').DataTable(tableText);
+        $('.dataTables_length').addClass('bs-select');
+    });
+}
+function getAllFirmsForAddDrivers()//Injektvane na firmi v select tag za dobavqne na taksimetrovi shofyori
+{
+    if(arguments.callee.caller === null) {console.log("%c You are not permitted to use this method!!!",  'color: red'); return;}
+    getRequest("/firm/getAllFirms").then(json=>
+    {
+        json.forEach(el => {
+            document.getElementById("allFirmsForAddDriver").innerHTML += `<option value="${el["id"]}">${el["firmName"]}</option>`
+
+        });
+    });
+}
 function changeRoleUser(id)//Smqna rolq na potrebitel po id
 {
     if(arguments.callee.caller === null) {console.log("%c You are not permitted to use this method!!!",  'color: red'); return;}
@@ -250,6 +282,21 @@ function editUser(id)//Redaktirane na potrebitel po id
         );
     }
 }
+function addTaxiDriver(id)
+{
+    $("#modalAdmin").modal('hide');
+        postRequest("/firm/addTaxiDriverByAdmin", 
+        {
+            firmID: $("#allFirmsForAddDriver").val(),
+            userID: id,
+        }).then(data=>
+        {
+            document.getElementById("modalBody").innerText = `Успешно е добавен таксиметров шофьор с ID-${id} към фирма с име-${document.getElementById("allFirmsForAddDriver").options[document.getElementById("allFirmsForAddDriver").selectedIndex].text}!`;
+            actionOnCloseModal = addDriverTab;
+            $("#modal").modal();
+        }
+        );
+}
 function activateUserShowModal(id)//Pokazvane na modal za aktivirane na potrebitel
 {
     if(arguments.callee.caller === null) {console.log("%c You are not permitted to use this method!!!",  'color: red'); return;}
@@ -262,7 +309,7 @@ function changeUserRoleShowModal(id)//Pokazvane na modal za smqna rolq na potreb
 {
     if(arguments.callee.caller === null) {console.log("%c You are not permitted to use this method!!!",  'color: red'); return;}
     document.getElementById("modalAdminLabel").innerText = `Смяна роля на потребителя`;
-    document.getElementById("modalAdminBody").innerHTML =  `<div class="d-flex justify-content-between "><label class="text-center w-100" for="newRole">Нова роля: </label><select name="newRole" id="newRole" class="form-control"> <option value="Admin">Администратор</option> <option value="Moderator">Модератор</option> <option value="User">Потребител</option> <option value="Driver">Шофьор</option> </select></div>`;
+    document.getElementById("modalAdminBody").innerHTML =  `<div class="d-flex justify-content-between "><label class="text-center w-100" for="newRole">Нова роля: </label><select name="newRole" id="newRole" class="form-control"> <option value="Admin">Администратор</option> <option value="Moderator">Модератор</option> <option value="User">Потребител</option></select></div>`;
     document.getElementById("modalAdminButton").onclick = function() {changeRoleUser(id);};
     $("#modalAdmin").modal();
 }
@@ -296,6 +343,15 @@ function firmModerationVerifyShowModal(id)//Pokazvane na modal za odobrqvane na 
     document.getElementById("modalAdminLabel").innerText = `Одобряване на фирма`;
     document.getElementById("modalAdminBody").innerText = `Сигурни ли сте, че искате да одобрите фирма с ID-${id}?`;
     document.getElementById("modalAdminButton").onclick = function() {moderationVerifyFirm(id);};
+    $("#modalAdmin").modal()
+}
+function addTaxiDriverShowModal(id)//Pokazvane na modal za dobavqne na shofyori
+{
+    if(arguments.callee.caller === null) {console.log("%c You are not permitted to use this method!!!",  'color: red'); return;}
+    document.getElementById("modalAdminLabel").innerText = `Добавяне на шофьор`;
+    document.getElementById("modalAdminBody").innerHTML = `<p class="text-center">Към коя фирма искате да добавите шофьор с ID-${id}?</p><select id="allFirmsForAddDriver" class="form-control"></select>`;
+    getAllFirmsForAddDrivers();
+    document.getElementById("modalAdminButton").onclick = function() {addTaxiDriver(id);};
     $("#modalAdmin").modal()
 }
 function removeUser(id)//Premahvane na potrebitel po id
@@ -430,4 +486,18 @@ function moderationVerifyFirmTab()//Tab za odobrqvane na firmi
         getAllFirmsForModerationVerifyFirmTable();
 });
 
+}
+function addDriverTab()//Tab za dobavqne na shofyori
+{
+    if(arguments.callee.caller === null) {console.log("%c You are not permitted to use this method!!!",  'color: red'); return;}
+    if(currentActiveTabId != "") 
+    {
+        document.getElementById(currentActiveTabId).classList.remove("active");
+    }
+    currentActiveTabId = "addDriverTab";
+    document.getElementById(currentActiveTabId).classList.add("active");
+    getRequest(window.location.protocol+'//'+ window.location.host +'/adminPanelTabs/addDriverTab.html').then(data=>{
+        document.getElementById("tabContent").innerHTML = data;
+        getAllUsersForAddDriverTabTable();
+    });
 }
