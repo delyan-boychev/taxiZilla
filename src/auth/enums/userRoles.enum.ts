@@ -1,3 +1,4 @@
+//Възможни роли
 export enum UserRoles
 {
   USER = "User",

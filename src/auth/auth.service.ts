@@ -18,6 +18,8 @@ import { FirmService } from 'src/firm/firm.service';
 
 @Injectable()
 export class AuthService {
+
+  //Dependency injection на необходимите неща
   constructor(
     @InjectRepository(UserRepository)
     private userRepository: UserRepository,
@@ -25,11 +27,13 @@ export class AuthService {
     private jwtService:JwtService,
     private firmService:FirmService,
   ) { };
+  //Извикване на регистрация
   async registerUser(registerUserDto: RegisterUserDTO)
   {
     return await this.userRepository.registerUser(registerUserDto);
 
   }
+  //Функция която декодира ключа
   decode(data)
   {
     let result="";
@@ -41,6 +45,7 @@ export class AuthService {
     }
     return result;
   }
+  //Добавяне на град като админ
   async addCityByAdmin(@Session()session:{token?:string},firmID:number,city:string,region:string)
   {
     let umail = await this.jwtService.decode(session.token);
@@ -54,30 +59,35 @@ export class AuthService {
       return await this.firmService.addCityByAdmin(city,region,firmID);
     }
   }
+  // Активация на потребител. Взимаме потребителя по email-а кодиран в тоукена и го активираме
   async activaterUserByAdmin(@Session()session:{token?:string},userid:number)
   {
     let umail = await this.jwtService.decode(session.token);
     let user = await this.userRepository.findOne({email:umail["email"]});
     return this.userRepository.activateUserByAdmin(user,userid);
   }
+  //Смяна на роля на потребител
   async changeUserRoleAdmin(@Session() session:{token?:string},userid:number,role:UserRoles)
   {
     let umail = await this.jwtService.decode(session.token);
     let user = await this.userRepository.findOne({email:umail["email"]});
     return await this.userRepository.changeUserRoleAdmin(user,userid,role);
   }
+  //Редактиране на потребител като админ
   async editUserByAdmin(@Session()session:{token?:string},userid:number,fname:string,lname:string,phoneNumber:string,address:string,email:string)
   {
     let umail = await this.jwtService.decode(session.token);
     let user = await this.userRepository.findOne({email: umail["email"]});
     return await this.userRepository.editUserByAdmin(user,userid,fname,lname,email,phoneNumber,address);
   }
+  //Премахване като админ
   async removeUserByAdmin(@Session() session:{token?:string},userid:number)
   {
     let umail = await this.jwtService.decode(session.token);
     let user = await this.userRepository.findOne({email:umail["email"]});
     return await this.userRepository.removeUserByAdmin(user,userid);
   }
+  //Смяна на статус и локация на шофьор
   async changeStatusAndLocation(@Session() session:{token?:string},newStatus:UserStatus,x:number, y:number)
   {
     const date = new Date();
@@ -88,23 +98,29 @@ export class AuthService {
     if(newStatus == UserStatus.Busy)
     {
       Drivers[user.id] = undefined;
+      //Ако е бизи не ни трябва
     }
     else
     {
     if(!Drivers[user.id])
     {
       Drivers[user.id]=new taxiDriver();
+      //ако го няма просто го записваме
     }
     Drivers[user.id].x=x;
     Drivers[user.id].y=y;
     Drivers[user.id].driver = user;
+    //Актуализираме координатите и на кой шофьор са
     }
+    //Връщаме поръчките
     return await this.getMyOrders(user);
   }
+  //Взимане на поръчки на шофьор
   async getMyOrders(user:User)
     {;
         if(user.role==UserRoles.DRIVER)
         {
+            //Пазим ги в масива Requests
             return Requests[user.id]; 
         }
         else
@@ -112,30 +128,37 @@ export class AuthService {
             return false;
         }
     }
+    //Вписване
   async loginUser(email: string, password: string, @Session() session: { token?: string, type?:string, role?:UserRoles})
   {
     const ver = await this.userRepository.loginUser(email, password,session);
     if (!ver)
     {
       return false;
+      //Грешни данни
     }
     else
     {
       if (ver === "notVerified")
       {
         return ver;
+        //Не потвърден email
       }
       else
       {
+        //Вписване създаваме обект и подписваме JWT Token 
         const payload: JWTPayload = { email };
         const JWTToken = this.jwtService.sign(payload);
+        //Задаваме данни на сесията
         session.token = JWTToken;
         session.type="User";
         session.role=ver.role;
+        //Връщаме true защото всичко е било успешно
         return true;
       }
     }
   }
+  //Влизаме като шофьор единствената разлика е проверката дали човекът е шофьор
   async loginTaxiDriver(email: string, password: string, @Session() session: { token?: string, type?:string, role?:UserRoles})
   {
     const ver = await this.userRepository.loginUser(email, password,session);
@@ -164,6 +187,7 @@ export class AuthService {
       }
     }
   }
+  //Проверка на данните подадени от потребителя
   async checkUser(@Session() session: { token?: string, type?:string, role:UserRoles }, password: string)
   {
     let userJSON = await this.jwtService.decode(session.token);
@@ -176,6 +200,7 @@ export class AuthService {
       return await this.userRepository.checkPassword(userJSON["email"], password);
     }
   }
+  //Изтриване на акаунта
   async deleteUser(@Session() session: { token?: string , type?:string, role:UserRoles}, pass:string)
   {
     let userJSON = await this.jwtService.decode(session.token);
@@ -187,6 +212,7 @@ export class AuthService {
       return await this.userRepository.deleteUser(userJSON["email"],pass);  
     }
   }
+  //Смяна на парола
   async changePassword(@Session() session: { token?: string , type?:string, role:UserRoles}, oldPass: string, newPass: string)
   {
     let userJSON = await this.jwtService.decode(session.token);
@@ -199,6 +225,7 @@ export class AuthService {
     }
     
   }
+  //Взимане на профила
   async getProfile(@Session() session: {token?: string, type?:string, role:UserRoles}):Promise<User>
   {
     let userJSON = await this.jwtService.decode(session.token);
@@ -212,8 +239,10 @@ export class AuthService {
       return user;
     }
   }
+  //Потвърждение на потребител
   async verify(code:string)
   {
+    //Разкриптираме кода от линка който е потребителското име на човека и го потвърждаваме
     const encrypter = new Cryptr("mXb35Bw^FvCz9MLN");
     const username = encrypter.decrypt(code);
     let result = await this.userRepository.verifyUser(username);
@@ -221,10 +250,12 @@ export class AuthService {
   }
   getVerifyPage(verified:boolean):string
   {
+    //Взимане на страницата за потвърждение зависи от това дали се е потвърдил или не.
     const fs = require("fs");
     if(verified === true) return fs.readFileSync(join(__dirname, "/../../staticFiles/pages/verifiedTrue.html")).toString();
     else return fs.readFileSync(join(__dirname, "/../../staticFiles/pages/verifiedFalse.html")).toString();
   }
+  //Смяна на email на потребител
   async changeEmail(@Session() session: {token?:string}, newEmail: string)
   {
     let userJSON = await this.jwtService.decode(session.token);
@@ -232,11 +263,13 @@ export class AuthService {
     this.sendVerify(newEmail);
     return stat;
   }
+  //Взимане на всички потребители
   async getAllUsers()
   {
     return await this.userRepository.getAllUsers();
   }
   
+  //Функция, която изпраща email за потвърждение. Тук се вижда че реално кода е криптирано потребителско име
   async sendVerify(username:string)
   {
     const encrypter = new Cryptr("mXb35Bw^FvCz9MLN");

@@ -2,6 +2,7 @@ import { Drivers, Requests, Statuses } from "src/coordsAndStatus.array";
 import { UserStatus } from "./enums/userStatus.enum";
 import { User } from "./user.entity";
 
+//Тук се случва намирането на най-близък шофьор
 export class taxiDriver
 {
     driver:User;
@@ -28,6 +29,7 @@ export class taxiDriversFindNearest
     y: number;
     notes:string;
     sender:User;
+    //Всички шофьори влизат в масив с тяхната дистанция и индекса на шофьора. Дистанцията се пресмята по формулата за разстояние на точки
     private taxiDriversDistance: Array<Pair> = new Array<Pair>();
     calculateDistance()
     {
@@ -50,16 +52,19 @@ export class taxiDriversFindNearest
             }
         }
     }
+    //Този масив се сортира по дистанция във възходящ ред и се изпраща заявка на най-близкия шофьор (0 индекс в масива)
     getTheNearestDriver(): void
     {
         this.calculateDistance();
         this.taxiDriversDistance.sort(function(item1,item2){
+            //Колбак за сравняване използван от функцията sort с цел да знае как да бъдат подредени
             if(item2.distance>item1.distance)return -1;
             else if(item2.distance===item1.distance)return 0;
             else return 1;
         });
         var index = -1;
         let i:number = 0;
+        //Инициализация на заявка
         Requests[Drivers[this.taxiDriversDistance[i].index].driver.id]={
                 x:this.x,
                 y:this.y,

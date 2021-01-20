@@ -1,5 +1,6 @@
 import { IsEmail, IsMobilePhone, IsNotEmpty } from "class-validator";
 
+//Data transfer object за регистрация
 export class RegisterUserDTO
 {
   @IsNotEmpty()

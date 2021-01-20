@@ -15,12 +15,16 @@ import { User } from './user.entity';
 
 @Controller('auth')
 export class AuthController {
+  //Dependency injection на AuthService
   constructor(
     private authService: AuthService,
   ) { };
+
+  //Регистрация на потребител
   @Post("/registerUser/")
   async registerUser(@Body(ValidationPipe) registerUserDto:RegisterUserDTO, @Body("key") key:string)
   {
+    // Декодиране на ключ и валидация
     if(!key) throw new UnauthorizedException();
     if(key.length!=19) throw new UnauthorizedException();
     const date = new Date();
@@ -30,6 +34,8 @@ export class AuthController {
     const d3 = new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate(), date.getUTCHours(), date.getUTCMinutes(), date.getUTCSeconds()-3));
     if(d2.toString() == "Invalid date") throw new UnauthorizedException();
     if(d2.getTime()>d.getTime() || d3.getTime()>d2.getTime()) throw new UnauthorizedException();
+    //=====================================================
+    //Същинско регистриране и връщане на обект с данните
     const registered = await this.authService.registerUser(registerUserDto);
     if(registered===true)
     {
@@ -37,14 +43,18 @@ export class AuthController {
     }
     return registered;
   }
+
+  //Заявка за активиране на потребител
   @Post("/activateUserByAdmin")
   async activateUserByAdmin(@Session()session:{token?:string}, @Body("userid") userid:number)
   {
     return this.authService.activaterUserByAdmin(session,userid); 
   }
+  //Логин на потребител
   @Post("/loginUser/")
   async loginUser( @Req() req,@Body("email", ValidationPipe) email: string, @Body("password", ValidationPipe) password: string, @Body("key") key:string, @Session() session: { token?: string, type?:string, role?:UserRoles})
   {
+    //Защита
     if(!key) throw new UnauthorizedException();
     if(key.length!=19) throw new UnauthorizedException();
     const date = new Date();
@@ -54,25 +64,30 @@ export class AuthController {
     const d3 = new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate(), date.getUTCHours(), date.getUTCMinutes(), date.getUTCSeconds()-3));
     if(d2.toString() == "Invalid date") throw new UnauthorizedException();
     if(d2.getTime()>d.getTime() || d3.getTime()>d2.getTime()) throw new UnauthorizedException();
+    //Създаване на бисквитка и записване на данни в сесията
     let time = 1800000;
     req.session.cookie.expires = new Date(Date.now() + time);
     return await this.authService.loginUser(email, password, session);
   }
+  //Смяна на ролята
   @Post("/changeUserRoleByAdmin")
   async changeUserRoleByAdmin(@Session()session:{token?:string},@Body("userid")userid:number,@Body("role")role:UserRoles)
   {
     return await this.authService.changeUserRoleAdmin(session,userid,role);
   }
+  //Изтриване на потребител
   @Post("/removeUserByAdmin")
   async removeUserByAdmin(@Session()session:{token?:string},@Body("userid")userid:number)
   {
     return await this.authService.removeUserByAdmin(session,Number(userid));
   }
+  //Редакция на потребител
   @Post("/editUserByAdmin")
   async editUserByAdmin(@Session() session:{token?:string, role?:string },@Body("userid")userid:number,@Body("fName")fname:string,@Body("lName")lname:string,@Body("email")email:string,@Body("address")address:string,@Body("phoneNumber")phoneNumber:string)
   {
     return await this.authService.editUserByAdmin(session,userid,fname,lname,phoneNumber,address,email);
   }
+  //Влизане като шофьор
   @Post("/loginTaxiDriver/")
   async loginTaxiDriver( @Req() req,@Body("email", ValidationPipe) email: string, @Body("password", ValidationPipe) password: string, @Session() session: { token?: string, type?:string, role?:UserRoles})
   {
@@ -80,12 +95,14 @@ export class AuthController {
     req.session.cookie.expires = new Date(Date.now() + time)
     return await this.authService.loginTaxiDriver(email, password, session);
   }
+  //Заявка за взимане на профила на влезлия потребител
   @Get("/profile/")
   async getProfile(@Session() session: { token?: string , type?:string,role:UserRoles})
   {
     if(!session.token)throw new UnauthorizedException();
     return await this.authService.getProfile(session);
   }
+  //Потвърждение на потребител
   @Get("/verify/:code")
   async verify(@Param("code") code:string)
   {
@@ -93,36 +110,42 @@ export class AuthController {
     // res.set("verified", verified.toString());
     return verified;
   }
+  //Проверка на данните на потребител
   @Post("/checkUser/")
   async checkUser(@Session() session: { token?: string , type?:string,role:UserRoles}, @Body("password") password: string)
   {
     if(!session.token)throw new UnauthorizedException();
     return this.authService.checkUser(session, password);
   }
+  //Изтриване на потребител
   @Post("/deleteUser/")
   async deleteUser(@Session() session: {token?: string, type?:string,role:UserRoles}, @Body("password") pass:string)
   {
     if(!session.token)throw new UnauthorizedException();
     return await this.authService.deleteUser(session,pass);
   }
+  //Смяна на паролата
   @Post("/changePassword/")
   async changePassword(@Session() session: { token?: string , type?:string,role:UserRoles}, @Body("oldPass") oldPass: string, @Body("newPass") newPass: string)
   {
     if(!session.token)throw new UnauthorizedException();
     return await this.authService.changePassword(session, oldPass, newPass);
   }
+  //Смяна на Email адрес
   @Post("/changeEmail/")
   async changeEmail(@Session() session: { token?: string }, @Body("newEmail") newEmail: string)
   {
     if(!session.token)throw new UnauthorizedException();
     return await this.authService.changeEmail(session, newEmail);
   }
+  //Промяна на статус и проверка за поръчки. Само за шофьори
   @Post("/changeStatusAndCheckForOrders/")
   async changeStatusAndLocation(@Session() session:{token?:string, role?:UserRoles}, @Body("newStatus")newStatus:UserStatus, @Body("x") x:string, @Body("y") y:string)
   {
     if(!session.token && session.role != UserRoles.DRIVER)throw new UnauthorizedException();
     return this.authService.changeStatusAndLocation(session,newStatus,parseFloat(x),parseFloat(y));
   }
+  //Взимане на всички потребители
   @Get("/getAllUsers")
   async getAllUsers(@Session() session:{token?:string, role?:UserRoles, type?:string})
   {

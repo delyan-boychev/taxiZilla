@@ -6,18 +6,22 @@ import * as bcrypt from 'bcrypt';
 import { Session, UnauthorizedException, UseGuards } from "@nestjs/common";
 import e from "express";
 
-
+//Операции с базата данни
 @EntityRepository(User)
 export class UserRepository extends Repository<User>
 {
+  //Регистрация на потребител
   async registerUser(registerUserDto: RegisterUserDTO)
   {
+    //Създаваме нов обект от тип User
     let user:User = new User();
     const { fName, lName, email, phoneNumber, password } = registerUserDto;
     const dupUser = await User.findOne({email: email});
+    //Проверка за липса на дубликати
     let exists = dupUser==undefined;
     if(exists)
     {
+      //Ако няма дубликат задава стойности на новия потребител
       user.email = email;
       user.fName = fName;
       user.lName = lName;
@@ -31,15 +35,19 @@ export class UserRepository extends Repository<User>
       const passHash = await bcrypt.hash(password, salt);
       user.passHash = passHash;
       user.salt = salt;
+      //Записване в базата данни
       await user.save();
     }
     return exists;
   }
+  //Промяна на потребител от админ
   async editUserByAdmin(sender:User,userid:number,fname:string,lname:string,email:string,phoneNumber:string,address:string)
   {
     if(sender.role===UserRoles.ADMIN)
     {
+      //Ако този който изпраща заявката е админ то намира потребителя, който трябва да се промени.
       const user = await this.findOne(userid);
+      //Присвояване на промените и запис в базата данни.
       user.fName=fname;
       user.lName=lname;
       user.email=email;
@@ -50,13 +58,16 @@ export class UserRepository extends Repository<User>
     }
     else
     {
+      //Ако не хвърляме 401 Unauthorized
       throw new UnauthorizedException();
     }
   }
+  //Активация на потребител от админ
   async activateUserByAdmin(sender:User,userid:number)
   {
     if(sender.role===UserRoles.ADMIN)
     {
+      //Ако е админ променяме verified на true което потвърждава потребителя и записва в базата данни
       const user = await this.findOne(userid);
       user.verified=true;
       await user.save();
@@ -67,6 +78,7 @@ export class UserRepository extends Repository<User>
       throw new UnauthorizedException();
     }
   }
+  //Смяна на роля на потребител
   async changeUserRoleAdmin(sender:User,userid:number,role:UserRoles)
   {
     if(sender.role===UserRoles.ADMIN)
@@ -80,6 +92,7 @@ export class UserRepository extends Repository<User>
       throw new UnauthorizedException();
     }
   }
+  //Премахване на потребител от админ
   async removeUserByAdmin(sender:User,userid)
   {
     if(sender.role===UserRoles.ADMIN)
@@ -93,6 +106,7 @@ export class UserRepository extends Repository<User>
         throw new UnauthorizedException();
     }
   }
+  //Потвърждаване на профила
   async verifyUser(email: string)
   {
     let user: User = await this.findOne({ email });
@@ -107,6 +121,7 @@ export class UserRepository extends Repository<User>
       return true;
     }
   }
+  //Вписване на потребител
   async loginUser(email: string, password: string, @Session() session: { token?: string, type?:string, role?:UserRoles})
   {
     const user = await this.findOne({ email });
@@ -119,19 +134,23 @@ export class UserRepository extends Repository<User>
     {
       return undefined;  
     }
+    //Сравняваме хеша на паролата с хеша на тази на потребителя
     if (hashed === user.passHash) {
       if (user.verified === true)
       {
+        //Ако съвпадат вписването е успешно
         return user; 
       }
       else
       {
+        //Ако не е потвърден
         return "notVerified";
       }
     }
     return undefined;
     
   }
+  //Взимане на всички потребители
   async getAllUsers()
   {
     let users = await this.find();
@@ -141,13 +160,16 @@ export class UserRepository extends Repository<User>
     });
     return users;
   }
+  //Проверка на паролата
   async checkPassword(email: string, password: string)
   {
     const user = await this.findOne({ email });
     let hashed = "";
     if (user)
     {
+      //Хеширане на предполагаемата
       hashed = await bcrypt.hash(password, user.salt);
+      //Сравняване на хеш
       if (hashed === user.passHash)
       {
         return true;  
@@ -162,13 +184,17 @@ export class UserRepository extends Repository<User>
       return undefined;
     }
   }
+  //Промяна на паролата
   async changePassword(email: string, oldPass: string, newPass: string)
   {
     let user = await this.findOne({ email });
     let hashed = await bcrypt.hash(oldPass, user.salt);
+    //Проверка на парола
     if (hashed === user.passHash)
     {
+      //Хеширане на новата парола
       let hash2 = await bcrypt.hash(newPass, user.salt);
+      //Смяна на хеша и запис
       user.passHash = hash2;
       await user.save();
       return true;
@@ -178,6 +204,7 @@ export class UserRepository extends Repository<User>
       return false;
     }
   }
+  //Промяна на email
   async changeEmail(newEmail: string, email: string)
   {
     let usercheck = await this.findOne({ email: newEmail });
@@ -190,6 +217,7 @@ export class UserRepository extends Repository<User>
     return "true";
     }
   }
+  //Изтриване на потребител
   async deleteUser(email:string, pass:string)
   {
     let user = await this.findOne({ email });
@@ -204,7 +232,8 @@ export class UserRepository extends Repository<User>
       return false;  
     }
   }
-  async getProfile(email: string)//Вземане на информация за профила
+  //Взимане на информацията на профила
+  async getProfile(email: string)
   {
     const user: User = await this.findOne({ email });
     delete user.passHash;

@@ -6,6 +6,7 @@ import { SupportedCity } from "./supportedCity.entity";
 @EntityRepository(SupportedCity)
 export class SupportedCityRepository extends Repository<SupportedCity>
 {
+    //Добавяне на поддържан град от фирма
     async addCity(city:string,region:string, firm:Firm)
     {
         let qb = this.createQueryBuilder("supportedCity");

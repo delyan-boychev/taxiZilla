@@ -3,6 +3,7 @@ import { UserRoles } from "./enums/userRoles.enum";
 import { Firm } from "../firm/firm.entity";
 import { taxiOrder } from "src/order/order.entity";
 
+//Модел на таблицата user в базата данни
 @Entity()
 export class User extends BaseEntity
 {
