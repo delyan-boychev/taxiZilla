@@ -3,7 +3,6 @@ import { AuthGuard } from '@nestjs/passport';
 import {Response} from 'express-serve-static-core';
 import { AppService } from './app.service';
 import { UserRoles } from './auth/enums/userRoles.enum';
-import { Resp } from './response.decorator';
 
 @Controller()
 export class AppController {
