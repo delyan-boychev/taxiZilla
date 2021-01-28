@@ -25,20 +25,13 @@ export class FirmService {
     decode(data)
     {
       let result="";
-      for(let i=6;i<data.length-6;i++)
-      {
-          let tmp = data.charCodeAt(i);
-          tmp-=33;
-          if(tmp>10)
-          {
-              result+=tmp.toString();
-          }
-          else
-          {
-              result+="0"+tmp.toString();
-          }
-      }
-      return result;
+    for(let i=6;i<data.length-6;i++)
+    {
+        let tmp = data.charCodeAt(i);
+        tmp-=33;
+        result+=("0" + tmp.toString()).slice(-2);
+    }
+    return result;
     }
     async removeFirmByAdmin(@Session()session:{token?:string},firmID:number)
     {

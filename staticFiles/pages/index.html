@@ -3,7 +3,7 @@
 
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="x-ua-compatible" content="ie=edge">
   <title>taxiZilla</title>
   <link rel="icon" type="image/png" href="./assets/img/logo.png"/>
@@ -48,10 +48,10 @@ position:absolute;
                         <li class="nav-item">
                             <a class="nav-link text-secondary" onclick="homePage()">Начална страница</a>
                         </li>
-                        <li class="nav-item">
-                          <a class="nav-link text-secondary" id="makeOrderNav" onclick="makeOrderPage()">Викни такси</a>
+                        <li class="nav-item" id="makeOrderNav">
+                          <a class="nav-link text-secondary" onclick="makeOrderPage()">Викни такси</a>
                         </li>
-                        <li class="nav-item dropdown" id="loginNav">
+                        <li class="nav-item dropdown" id="registerNav">
                           <a class="nav-link dropdown-toggle  text-secondary" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             Регистриране
                           </a>
@@ -61,7 +61,7 @@ position:absolute;
                             <a class="dropdown-item  text-secondary" onclick="pageRegisterFirm()">Регистриране като фирма</a>
                           </div>
                         </li>
-                        <li class="nav-item dropdown" id="registerNav">
+                        <li class="nav-item dropdown" id="loginNav">
                           <a class="nav-link dropdown-toggle  text-secondary" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             Влизане
                           </a>
@@ -71,8 +71,6 @@ position:absolute;
                             <a class="dropdown-item  text-secondary" onclick="loginFirmPage()">Влизане като фирма</a>
                           </div>
                         </li>
-                        <li class="nav-item" id="loginNav">
-                      </li>
                       
                     </ul>
                 </div>

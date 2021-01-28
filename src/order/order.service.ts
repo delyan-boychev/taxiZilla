@@ -36,7 +36,7 @@ export class OrderService {
                 }
                 else
                 {
-                    this.orderRepository.createOrder(Requests[user.id]["sender"],user.id,Requests[user.id]["x"],Requests[user.id]["y"], Requests[user.id]["notes"], Requests[user.id]["address"], OrderStatus.Canceled); 
+                    this.orderRepository.createOrder(Requests[user.id]["sender"],null,Requests[user.id]["x"],Requests[user.id]["y"], Requests[user.id]["notes"], Requests[user.id]["address"], OrderStatus.Canceled); 
                 }
                 Requests[user.id]=undefined;
             }
@@ -117,7 +117,7 @@ export class OrderService {
     {
         let uemail = await this.jwtService.decode(session.token);
         let user = await this.userRepository.findOne({email:uemail["email"]});
-        return user.orders;
+        return await this.orderRepository.getOrderByUser(user);
 
     }
 }

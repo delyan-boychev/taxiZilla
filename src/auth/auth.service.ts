@@ -71,6 +71,12 @@ export class AuthService {
   {
     let umail = await this.jwtService.decode(session.token);
     let user = await this.userRepository.findOne({email:umail["email"]});
+    let u = await this.userRepository.findOne({id: userid});  
+    console.log(u.firm);
+    if(u.role == UserRoles.DRIVER)
+    {
+      this.firmRepository.removeTaxiDriver(u.firm.eik, u);
+    }
     return await this.userRepository.changeUserRoleAdmin(user,userid,role);
   }
   //Редактиране на потребител като админ

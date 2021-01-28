@@ -1,8 +1,14 @@
+
 //Deklarirane na promenlivi i konstanti
 eval = function () {console.log("%c You are not permitted to use this method!!!",  'color: red');}
 var actionOnCloseModal = undefined;
 const loginInfo = {};
 const profileInfo = {};
+const orderStatus = Object.freeze({
+    OPEN: "Приета",
+    CLOSED: "Приключена",
+    CANCELED: "Отказана",
+    });
 function loginSubmit()//Post zaqvka za login na klient
 {
     if(arguments.callee.caller === null) {console.log("%c You are not permitted to use this method!!!",  'color: red'); return;}
@@ -189,15 +195,15 @@ function setProfileInfoUser()//Zadavene na informaciq profil na potrebitel
                 });
                 if(loginInfo["Role"] == "Admin")
                 {
-                    nav.innerHTML += '<li class="nav-item" id="adminPanelNav"><a class="nav-link text-secondary" onclick="adminPanelPage()">Администраторски панел</a></li><li class="nav-item" id="loginNav"><a class="nav-link text-secondary" onclick="profilePage()">Моят профил(<i class="fas fa-user-cog"></i>'+ profileInfo["fName"] + " " + profileInfo["lName"] +')</a></li><li class="nav-item" id="loginNav"><a class="nav-link text-secondary" onclick="document.location = \'./logout\'">Излизане</a></li>';
+                    nav.innerHTML += '<li class="nav-item"><a class="nav-link text-secondary waves-effect waves-light" onclick="adminPanelPage()">Администраторски панел</a></li><li class="nav-item"><a class="nav-link text-secondary waves-effect waves-light" onclick="profilePage()">Моят профил(<i class="fas fa-user-cog"></i>'+ profileInfo["fName"] + " " + profileInfo["lName"] +')</a></li><li class="nav-item"><a class="nav-link text-secondary waves-effect waves-light" onclick="document.location = \'./logout\'">Излизане</a></li>';
                 }
                 else if(loginInfo["Role"] == "Moderator")
                 {
-                    nav.innerHTML += '<li class="nav-item" id="loginNav"><a class="nav-link text-secondary" onclick="profilePage()">Моят профил(<i class="fas fa-user-shield"></i>'+ profileInfo["fName"] + " " + profileInfo["lName"] +')</a></li><li class="nav-item" id="loginNav"><a class="nav-link text-secondary" onclick="document.location = \'./logout\'">Излизане</a></li>';
+                    nav.innerHTML += '<li class="nav-item"><a class="nav-link text-secondary waves-effect waves-light" onclick="profilePage()">Моят профил(<i class="fas fa-user-shield"></i>'+ profileInfo["fName"] + " " + profileInfo["lName"] +')</a></li><li class="nav-item"><a class="nav-link text-secondary waves-effect waves-light" onclick="document.location = \'./logout\'">Излизане</a></li>';
                 }
                 else if(loginInfo["Role"] == "User")
                 {
-                nav.innerHTML += '<li class="nav-item" id="loginNav"><a class="nav-link text-secondary" onclick="profilePage()">Моят профил(<i class="fas fa-user"></i>'+ profileInfo["fName"] + " " + profileInfo["lName"] +')</a></li><li class="nav-item" id="loginNav"><a class="nav-link text-secondary" onclick="document.location = \'./logout\'">Излизане</a></li>';
+                nav.innerHTML += '<li class="nav-item"><a class="nav-link text-secondary waves-effect waves-light" onclick="profilePage()">Моят профил(<i class="fas fa-user"></i>'+ profileInfo["fName"] + " " + profileInfo["lName"] +')</a></li><li class="nav-item"><a class="nav-link text-secondary waves-effect waves-light" onclick="document.location = \'./logout\'">Излизане</a></li>';
                 }         
             });
 
@@ -215,9 +221,33 @@ function setProfileInfoFirm()//Zadavene na informaciq profil na firma
                         value: json[key]
                     });
                 });
-            nav.innerHTML += '<li class="nav-item" id="loginNav"><a class="nav-link text-secondary" onclick="profileFirmPage()">Моят профил(<i class="fas fa-building"></i>'+ profileInfo["firmName"] +')</a></li><li class="nav-item" id="loginNav"><a class="nav-link text-secondary" onclick="document.location = \'./logout\'">Излизане</a></li>';
+            nav.innerHTML += '<li class="nav-item"><a class="nav-link text-secondary waves-effect waves-light" onclick="profileFirmPage()">Моят профил(<i class="fas fa-building"></i>'+ profileInfo["firmName"] +')</a></li><li class="nav-item"><a class="nav-link text-secondary waves-effect waves-light" onclick="document.location = \'./logout\'">Излизане</a></li>';
       });
 
+}
+function getOrdersUser()//Vzemane na poruchki napraveni ot potrebitel
+{
+    if(arguments.callee.caller === null) {console.log("%c You are not permitted to use this method!!!",  'color: red'); return;}
+    getRequest("/order/getOrdersByUser").then(
+        data=>
+        {
+            var bodyTableOrders = document.getElementById("ordersTableBody");
+            bodyTableOrders.innerHTML = "";
+            if(data.length === 0)
+            {
+                document.getElementById("noOrders").style = "display:block";
+            }
+            else
+            {
+            data.forEach(order => {
+                var driverId = "";
+                if(order["driverId"] != null) driverId = order["driverId"];
+                bodyTableOrders.innerHTML += `<td>${order["id"]}</td><td>${order["address"]}</td><td>${order["y"]}</td><td>${order["x"]}</td><td>${driverId}</td><td>${order["date"]}</td><td>${orderStatus[order["orderStatus"]]}</td>`;
+            });
+            }
+
+        }
+    );
 }
 function setLoginInfo()//Zadavene na informaciq za login
 {
@@ -644,3 +674,9 @@ $('#modal').on('hidden.bs.modal', function () {
     if(actionOnCloseModal !== undefined) actionOnCloseModal();
     actionOnCloseModal = undefined;
   });
+
+$( "#modal" ).on('shown.bs.modal', function(){
+    setTimeout(()=>{
+ $("#modal").modal('hide');
+    }, 5000);
+});

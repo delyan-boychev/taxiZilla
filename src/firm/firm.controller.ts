@@ -12,6 +12,7 @@ export class FirmController {
   async registerFirm(@Body(ValidationPipe) registerFirmDto:RegisterFirmDTO, @Body("key") key:string)
   {
     if(!key) throw new UnauthorizedException();
+    if(!key) throw new UnauthorizedException();
     if(key.length!=19) throw new UnauthorizedException();
     const date = new Date();
     const d = new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate(), date.getUTCHours(), date.getUTCMinutes(), date.getUTCSeconds()+3 ));

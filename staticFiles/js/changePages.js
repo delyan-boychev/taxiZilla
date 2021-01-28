@@ -68,7 +68,7 @@ function profilePage()//Smqna na stranica za profila na klienta
         if(arguments.callee.caller === null) {console.log("%c You are not permitted to use this method!!!",  'color: red'); return;}
         hideTooltips()
         getRequest(window.location.protocol+'//'+ window.location.host +'/pages/profilePage.html').then(data=>{
-        document.getElementById("pageContent").innerHTML = data; getProfile();});
+        document.getElementById("pageContent").innerHTML = data; getProfile(); getOrdersUser();});
 
 }
 function profileFirmPage()//Smqna na stranica za profila na firmata

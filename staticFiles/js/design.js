@@ -54,25 +54,22 @@ function designChangeOnStart()//Nastroivane na dizain pri startirane
     var nav = document.getElementById("navElements");
     if(loginInfo["isLoggedIn"] == "true")
     {
-        if(loginInfo["Type"] == "Firm")
-        {
         document.getElementById("loginNav").remove();
         document.getElementById("registerNav").remove();
+        if(loginInfo["Type"] == "Firm")
+        {
         document.getElementById("makeOrderButton").remove();
         document.getElementById("makeOrderNav").remove();
         setProfileInfoFirm();
-    }
-    else
-    {
-        if(loginInfo["Role"] == "Driver") 
-        {
-        document.getElementById("makeOrderNav").remove()
-        document.getElementById("makeOrderButton").remove();
         }
-        
-        document.getElementById("loginNav").remove();
-        document.getElementById("registerNav").remove();
-        setProfileInfoUser();
-    }
+        else
+        {
+            if(loginInfo["Role"] == "Driver") 
+            {
+            document.getElementById("makeOrderNav").remove()
+            document.getElementById("makeOrderButton").remove();
+            }
+            setProfileInfoUser();
+        }
    }
 }

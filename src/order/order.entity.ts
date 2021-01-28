@@ -32,5 +32,8 @@ export class taxiOrder extends BaseEntity
     @Column()
     orderStatus:OrderStatus;
 
+    @Column()
+    date:string;
+
 
 }
