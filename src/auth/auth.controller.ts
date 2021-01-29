@@ -84,9 +84,9 @@ export class AuthController {
   }
   //Редакция на потребител
   @Post("/editUserByAdmin")
-  async editUserByAdmin(@Session() session:{token?:string, role?:string },@Body("userid")userid:number,@Body("fName")fname:string,@Body("lName")lname:string,@Body("email")email:string,@Body("address")address:string,@Body("phoneNumber")phoneNumber:string)
+  async editUserByAdmin(@Session() session:{token?:string, role?:string },@Body("userid")userid:number,@Body("fName")fname:string,@Body("lName")lname:string,@Body("email")email:string,@Body("phoneNumber")phoneNumber:string)
   {
-    return await this.authService.editUserByAdmin(session,userid,fname,lname,phoneNumber,address,email);
+    return await this.authService.editUserByAdmin(session,userid,fname,lname,phoneNumber,email);
   }
   //Влизане като шофьор
   @Post("/loginTaxiDriver/")

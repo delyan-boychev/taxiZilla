@@ -68,10 +68,12 @@ function getAllUsersForRemoveTable()//Injectvane na potrebiteli v tablica za pre
         json.forEach(el => {
             if(el["email"] != profileInfo["email"])
             {
+            var firmId = "Няма";
             var verified = "";
             if(el["verified"] == 1) verified = "Да";
+            if(el["firmId"] != null) firmId = el["firmId"];
             else verified = "Не";
-            document.getElementById("bodyTable").innerHTML += `<tr><td>${el["id"]}</td><td>${el["fName"]}</td><td>${el["lName"]}</td><td>${el["email"]}</td><td>${el["telephone"]}</td><td>${userRole[el["role"]]}</td><td>${el["address"]}</td><td>${verified}</td><td class="text-danger h5"><i class='far fa-times-circle' style='cursor: pointer;' onclick='removeUserShowModal("${el["id"]}");'></i></td></tr>`
+            document.getElementById("bodyTable").innerHTML += `<tr><td>${el["id"]}</td><td>${el["fName"]}</td><td>${el["lName"]}</td><td>${el["email"]}</td><td>${el["telephone"]}</td><td>${userRole[el["role"]]}</td><td>${firmId}</td><td>${verified}</td><td class="text-danger h5"><i class='far fa-times-circle' style='cursor: pointer;' onclick='removeUserShowModal("${el["id"]}");'></i></td></tr>`
             }
         });
         $('#userRemoveDt').DataTable(tableText);
@@ -90,7 +92,9 @@ function getAllUsersForActivateUserTable()//Injectvane na potrebiteli v tablica 
             {
                 if(el["verified"] == 0)
                 {
-                document.getElementById("bodyTable").innerHTML += `<tr><td>${el["id"]}</td><td>${el["fName"]}</td><td>${el["lName"]}</td><td>${el["email"]}</td><td>${el["telephone"]}</td><td>${userRole[el["role"]]}</td><td>${el["address"]}</td><td>Не</td><td class="text-danger h5"><i class='far fa-check-square text-success' style='cursor: pointer;' onclick='activateUserShowModal("${el["id"]}");'></i></td></tr>`
+                var firmId = "Няма";
+                if(el["firmId"] != null) firmId = el["firmId"];
+                document.getElementById("bodyTable").innerHTML += `<tr><td>${el["id"]}</td><td>${el["fName"]}</td><td>${el["lName"]}</td><td>${el["email"]}</td><td>${el["telephone"]}</td><td>${userRole[el["role"]]}</td><td>${firmId}</td><td>Не</td><td class="text-danger h5"><i class='far fa-check-square text-success' style='cursor: pointer;' onclick='activateUserShowModal("${el["id"]}");'></i></td></tr>`
                 }
             }
         });
@@ -109,9 +113,11 @@ function getAllUsersForEditTable()//Injectvane na potrebiteli v tablica za redka
             if(el["email"] != profileInfo["email"])
             {
             var verified = "";
+            var firmId = "Няма";
+            if(el["firmId"] != null) firmId = el["firmId"];
             if(el["verified"] == 1) verified = "Да";
             else verified = "Не";
-            document.getElementById("bodyTable").innerHTML += `<tr><td>${el["id"]}</td><td>${el["fName"]}</td><td>${el["lName"]}</td><td>${el["email"]}</td><td>${el["telephone"]}</td><td>${userRole[el["role"]]}</td><td>${el["address"]}</td><td>${verified}</td><td class="text-secondary h5"><i class='far fa-edit' style='cursor: pointer;' onclick='editUserShowModal("${el["id"]}", "${el["fName"]}", "${el["lName"]}", "${el["email"]}", "${el["telephone"]}", "${el["address"]}");'></i></td></tr>`
+            document.getElementById("bodyTable").innerHTML += `<tr><td>${el["id"]}</td><td>${el["fName"]}</td><td>${el["lName"]}</td><td>${el["email"]}</td><td>${el["telephone"]}</td><td>${userRole[el["role"]]}</td><td>${firmId}</td><td>${verified}</td><td class="text-secondary h5"><i class='far fa-edit' style='cursor: pointer;' onclick='editUserShowModal("${el["id"]}", "${el["fName"]}", "${el["lName"]}", "${el["email"]}", "${el["telephone"]}");'></i></td></tr>`
             }
         });
         $('#userEditDt').DataTable(tableText);
@@ -129,9 +135,11 @@ function getAllUsersForChangeRoleTable()//Injectvane na potrebiteli v tablica za
             if(el["email"] != profileInfo["email"])
             {
             var verified = "";
+            var firmId = "Няма";
+            if(el["firmId"] != null) firmId = el["firmId"];
             if(el["verified"] == 1) verified = "Да";
             else verified = "Не";
-            document.getElementById("bodyTable").innerHTML += `<tr><td>${el["id"]}</td><td>${el["fName"]}</td><td>${el["lName"]}</td><td>${el["email"]}</td><td>${el["telephone"]}</td><td>${userRole[el["role"]]}</td><td>${el["address"]}</td><td>${verified}</td><td class="text-secondary h5"><i class='fas fa-tag' style='cursor: pointer;' onclick='changeUserRoleShowModal("${el["id"]}");'></i></td></tr>`
+            document.getElementById("bodyTable").innerHTML += `<tr><td>${el["id"]}</td><td>${el["fName"]}</td><td>${el["lName"]}</td><td>${el["email"]}</td><td>${el["telephone"]}</td><td>${userRole[el["role"]]}</td><td>${firmId}</td><td>${verified}</td><td class="text-secondary h5"><i class='fas fa-tag' style='cursor: pointer;' onclick='changeUserRoleShowModal("${el["id"]}");'></i></td></tr>`
             }
         });
         $('#userChangeRoleDt').DataTable(tableText);
@@ -196,12 +204,14 @@ function getAllUsersForAddDriverTabTable()//Injectvane na potrebitel v tablica z
             {
                 if(el["role"] !=  "Driver")
                 {
-            var verified = "";
-            if(el["verified"] == 1) verified = "Да";
-            else verified = "Не";
-            document.getElementById("bodyTable").innerHTML += `<tr><td>${el["id"]}</td><td>${el["fName"]}</td><td>${el["lName"]}</td><td>${el["email"]}</td><td>${el["telephone"]}</td><td>${userRole[el["role"]]}</td><td>${el["address"]}</td><td>${verified}</td><td class="text-secondary h5"><i class='fas fa-plus text-success' style='cursor: pointer;' onclick='addTaxiDriverShowModal("${el["id"]}");'></i></td></tr>`
+                    var verified = "";
+                    var firmId = "Няма";
+                    if(el["firmId"] != null) firmId = el["firmId"];
+                    if(el["verified"] == 1) verified = "Да";
+                    else verified = "Не";
+                    document.getElementById("bodyTable").innerHTML += `<tr><td>${el["id"]}</td><td>${el["fName"]}</td><td>${el["lName"]}</td><td>${el["email"]}</td><td>${el["telephone"]}</td><td>${firmId}</td><td>${userRole[el["role"]]}</td><td>${verified}</td><td class="text-secondary h5"><i class='fas fa-plus text-success' style='cursor: pointer;' onclick='addTaxiDriverShowModal("${el["id"]}");'></i></td></tr>`
+                }
             }
-        }
         });
         $('#addDriverDt').DataTable(tableText);
         $('.dataTables_length').addClass('bs-select');
@@ -230,7 +240,7 @@ function getAllOrdersForListAndRemove()//Injektvane na poruchki v tablica za pre
             if(order["driverId"] != null) driverId = order["driverId"];
             if(order["notes"] != "") driverId = order["notes"];
             if(order["items"] != "") driverId = order["items"];
-            document.getElementById("bodyTable").innerHTML += `<tr><td>${order["id"]}</td><td>${order["address"]}</td><td>${order["y"]}</td><td>${order["x"]}</td><td>${driverId}</td><td>${listOrder}</td><td>${notes}</td><td>${order["date"]}</td><td>${orderStatus[order["orderStatus"]]}</td><td class="text-danger h5"><i class='far fa-times-circle' style='cursor: pointer;' onclick='removeOrderShowModal("${order["id"]}");'></i></td></tr>`;
+            document.getElementById("bodyTable").innerHTML += `<tr><td>${order["id"]}</td><td>${order["address"]}</td><td>${order["y"]}</td><td>${order["x"]}</td><td>${driverId}</td><td>${order["userOrderedId"]}</td><td>${listOrder}</td><td>${notes}</td><td>${order["date"]}</td><td>${orderStatus[order["orderStatus"]]}</td><td class="text-danger h5"><i class='far fa-times-circle' style='cursor: pointer;' onclick='removeOrderShowModal("${order["id"]}");'></i></td></tr>`;
         });
         $('#allOrdersDt').DataTable(tableTextOrder);
         $('.dataTables_length').addClass('bs-select');
@@ -309,7 +319,6 @@ function editUser(id)//Redaktirane na potrebitel po id
             lName: $("#lName").val(),
             email: $("#email").val(),
             phoneNumber: $("#phoneNumber").val(),
-            address: $("#address").val(),
         }).then(data=>
         {
             document.getElementById("modalBody").innerText = `Успешно е редактиран потребител с ID-${id}!`;
@@ -350,11 +359,11 @@ function changeUserRoleShowModal(id)//Pokazvane na modal za smqna rolq na potreb
     document.getElementById("modalAdminButton").onclick = function() {changeRoleUser(id);};
     $("#modalAdmin").modal();
 }
-function editUserShowModal(id, fName, lName, email, phoneNumber, address)//Pokazvane na modal za redaktirane na potrebitel
+function editUserShowModal(id, fName, lName, email, phoneNumber)//Pokazvane na modal za redaktirane na potrebitel
 {
     if(arguments.callee.caller === null) {console.log("%c You are not permitted to use this method!!!",  'color: red'); return;}
     document.getElementById("modalAdminLabel").innerText = `Редактиране на потребител`;
-    document.getElementById("modalAdminBody").innerHTML =  `<div class="form-group"><input type="text" class="form-control" id="fName"  placeholder="Име" value="${fName}"> </div> <div class="form-group"> <input type="text" class="form-control" id="lName" placeholder="Фамилия" value="${lName}"> </div> <div class="form-group"><input type="email" class="form-control" id="email" placeholder="Имейл" value="${email}"></div> <div class="form-group"><input type="text" class="form-control" id="phoneNumber" placeholder="Телефонен номер" value="${phoneNumber}"> </div> <div class="form-group"> <input type="text" class="form-control" id="address" placeholder="Адрес" value="${address}"></div>`;
+    document.getElementById("modalAdminBody").innerHTML =  `<div class="form-group"><input type="text" class="form-control" id="fName"  placeholder="Име" value="${fName}"> </div> <div class="form-group"> <input type="text" class="form-control" id="lName" placeholder="Фамилия" value="${lName}"> </div> <div class="form-group"><input type="email" class="form-control" id="email" placeholder="Имейл" value="${email}"></div> <div class="form-group"><input type="text" class="form-control" id="phoneNumber" placeholder="Телефонен номер" value="${phoneNumber}"> </div> <div class="form-group"></div>`;
     document.getElementById("modalAdminButton").onclick = function() {editUser(id);};
     $("#modalAdmin").modal();
 }
@@ -455,7 +464,7 @@ function moderationVerifyFirm(id)//Odobrqvane na firma po id
     }).then(data=>
     {
         document.getElementById("modalBody").innerText = `Успешно е одобрена фирма с ID-${id}!`;
-        actionOnCloseModal = getAllFirmsForModerationVerifyFirmTable;
+        actionOnCloseModal = moderationVerifyFirmTab;
         $("#modal").modal();
     }
     );

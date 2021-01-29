@@ -83,11 +83,11 @@ export class AuthService {
     }
   }
   //Редактиране на потребител като админ
-  async editUserByAdmin(@Session()session:{token?:string},userid:number,fname:string,lname:string,phoneNumber:string,address:string,email:string)
+  async editUserByAdmin(@Session()session:{token?:string},userid:number,fname:string,lname:string,phoneNumber:string, email:string)
   {
     let umail = await this.jwtService.decode(session.token);
     let user = await this.userRepository.findOne({email: umail["email"]});
-    return await this.userRepository.editUserByAdmin(user,userid,fname,lname,email,phoneNumber,address);
+    return await this.userRepository.editUserByAdmin(user,userid,fname,lname,email,phoneNumber);
   }
   //Премахване като админ
   async removeUserByAdmin(@Session() session:{token?:string},userid:number)

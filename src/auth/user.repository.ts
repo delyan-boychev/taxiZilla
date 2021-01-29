@@ -27,7 +27,6 @@ export class UserRepository extends Repository<User>
       user.lName = lName;
       user.telephone = phoneNumber;
       user.role = UserRoles.USER;
-      user.address = "";
       user.verified = false;
       const bcrypt = require('bcrypt');
       const saltRounds = 10;
@@ -41,7 +40,7 @@ export class UserRepository extends Repository<User>
     return exists;
   }
   //Промяна на потребител от админ
-  async editUserByAdmin(sender:User,userid:number,fname:string,lname:string,email:string,phoneNumber:string,address:string)
+  async editUserByAdmin(sender:User,userid:number,fname:string,lname:string,email:string,phoneNumber:string)
   {
     if(sender.role===UserRoles.ADMIN)
     {
@@ -52,7 +51,6 @@ export class UserRepository extends Repository<User>
       user.lName=lname;
       user.email=email;
       user.telephone=phoneNumber;
-      user.address=address;
       await user.save();
       return true;
     }

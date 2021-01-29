@@ -46,6 +46,9 @@ export class FirmService {
         element.role = UserRoles.USER;
         await element.save();
       });
+      firm.supportedCities.forEach(async(element) => {
+        await this.cityRepository.removeCity(element.city, element.region, firm);
+      });
       firm.drivers = [];
       await firm.save();
       await firm.remove();

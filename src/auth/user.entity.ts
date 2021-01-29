@@ -32,9 +32,6 @@ export class User extends BaseEntity
   salt: string;
 
   @Column()
-  address:string;
-
-  @Column()
   verified: boolean;
 
   @OneToMany(type => taxiOrder, order => order.userOrdered, { cascade: true, onDelete:'CASCADE'})

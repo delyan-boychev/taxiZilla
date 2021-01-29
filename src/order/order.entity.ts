@@ -1,4 +1,4 @@
-import { BaseEntity, Column, Entity, ManyToOne, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { BaseEntity, Column, Entity, JoinColumn, ManyToOne, OneToOne, PrimaryGeneratedColumn, RelationId } from "typeorm";
 import {User} from "../auth/user.entity"
 import { OrderStatus } from "./enums/orderStatus.enum";
 
@@ -15,6 +15,7 @@ export class taxiOrder extends BaseEntity
     y:number;
 
     @ManyToOne(type => User, user => user.orders)
+    @JoinColumn({ name: 'userOrderedId' })
     userOrdered:User;
 
     @Column()
@@ -22,6 +23,8 @@ export class taxiOrder extends BaseEntity
 
     @Column({nullable: true})
     driverId:number;
+    @Column()
+    userOrderedId:number;
     
     @Column({default: ""})
     address: string;
