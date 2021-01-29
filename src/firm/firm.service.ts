@@ -143,7 +143,7 @@ export class FirmService {
     const driver:User = await this.userRepository.findOne({email});
     const decoded=await this.jwtService.decode(session.token);
     const eik=decoded["eik"];
-    return this.firmRepository.removeTaxiDriver(eik,driver);
+    return this.firmRepository.removeTaxiDriver(eik,driver, UserRoles.USER);
 
   }
   async getTaxiDrivers(@Session() session:{token?: string})

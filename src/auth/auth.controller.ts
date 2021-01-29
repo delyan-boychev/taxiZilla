@@ -73,6 +73,7 @@ export class AuthController {
   @Post("/changeUserRoleByAdmin")
   async changeUserRoleByAdmin(@Session()session:{token?:string},@Body("userid")userid:number,@Body("role")role:UserRoles)
   {
+    if(!session.token)throw new UnauthorizedException();
     return await this.authService.changeUserRoleAdmin(session,userid,role);
   }
   //Изтриване на потребител

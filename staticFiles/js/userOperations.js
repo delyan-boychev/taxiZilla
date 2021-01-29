@@ -240,9 +240,13 @@ function getOrdersUser()//Vzemane na poruchki napraveni ot potrebitel
             else
             {
             data.forEach(order => {
-                var driverId = "";
+                var driverId = "Няма";
+                var listOrder = "Няма";
+                var notes = "Няма";
                 if(order["driverId"] != null) driverId = order["driverId"];
-                bodyTableOrders.innerHTML += `<td>${order["id"]}</td><td>${order["address"]}</td><td>${order["y"]}</td><td>${order["x"]}</td><td>${driverId}</td><td>${order["date"]}</td><td>${orderStatus[order["orderStatus"]]}</td>`;
+                if(order["notes"] != "") driverId = order["notes"];
+                if(order["items"] != "") driverId = order["items"];
+                bodyTableOrders.innerHTML += `<td>${order["id"]}</td><td>${order["address"]}</td><td>${order["y"]}</td><td>${order["x"]}</td><td>${driverId}</td><td>${listOrder}</td><td>${notes}</td><td>${order["date"]}</td><td>${orderStatus[order["orderStatus"]]}</td>`;
             });
             }
 

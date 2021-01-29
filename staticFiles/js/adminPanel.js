@@ -42,6 +42,24 @@ const tableTextFirm = {
         }
     }
 };
+const tableTextOrder = {
+    "language": {
+        "sProcessing":     "Обработка на данни...",
+        "sSearch":         "Търсене:",
+        "sLengthMenu":     "Покажи _MENU_ поръчки на страница",
+        "sInfo":           "Показани са от _START_ до _END_ поръчка от общо _TOTAL_ поръчки",
+        "sInfoEmpty":      "Показани са 0 фирми",
+        "sInfoFiltered":   "(общ брой поръчки - _MAX_)",
+        "sInfoPostFix":    "",
+        "sLoadingRecords": "Зареждане на данни...",
+        "sZeroRecords":    "Няма намерени поръчки!",
+        "sEmptyTable":     "Няма поръчки",
+        "oPaginate": {
+            "sPrevious":   "Предишна страница",
+            "sNext":       "Следваща страница",
+        }
+    }
+};
 function getAllUsersForRemoveTable()//Injectvane na potrebiteli v tablica za premahvane na potrebiteli
 {
     if(arguments.callee.caller === null) {console.log("%c You are not permitted to use this method!!!",  'color: red'); return;}
@@ -200,6 +218,25 @@ function getAllFirmsForAddDrivers()//Injektvane na firmi v select tag za dobavqn
         });
     });
 }
+function getAllOrdersForListAndRemove()//Injektvane na poruchki v tablica za premahvane i razgledjdane na poruchki
+{
+    if(arguments.callee.caller === null) {console.log("%c You are not permitted to use this method!!!",  'color: red'); return;}
+    getRequest("/order/getAllOrders").then(json=>
+    {
+        json.forEach(order => {
+            var driverId = "Няма";
+            var listOrder = "Няма";
+            var notes = "Няма";
+            if(order["driverId"] != null) driverId = order["driverId"];
+            if(order["notes"] != "") driverId = order["notes"];
+            if(order["items"] != "") driverId = order["items"];
+            document.getElementById("bodyTable").innerHTML += `<tr><td>${order["id"]}</td><td>${order["address"]}</td><td>${order["y"]}</td><td>${order["x"]}</td><td>${driverId}</td><td>${listOrder}</td><td>${notes}</td><td>${order["date"]}</td><td>${orderStatus[order["orderStatus"]]}</td><td class="text-danger h5"><i class='far fa-times-circle' style='cursor: pointer;' onclick='removeOrderShowModal("${order["id"]}");'></i></td></tr>`;
+        });
+        $('#allOrdersDt').DataTable(tableTextOrder);
+        $('.dataTables_length').addClass('bs-select');
+    });
+
+}
 function changeRoleUser(id)//Smqna rolq na potrebitel po id
 {
     if(arguments.callee.caller === null) {console.log("%c You are not permitted to use this method!!!",  'color: red'); return;}
@@ -354,6 +391,29 @@ function addTaxiDriverShowModal(id)//Pokazvane na modal za dobavqne na shofyori
     document.getElementById("modalAdminButton").onclick = function() {addTaxiDriver(id);};
     $("#modalAdmin").modal()
 }
+function removeOrderShowModal(id)//Pokazvane na modal za iztrivane na poruchka
+{
+    if(arguments.callee.caller === null) {console.log("%c You are not permitted to use this method!!!",  'color: red'); return;}
+    document.getElementById("modalAdminLabel").innerText = `Премахване на поръчка`;
+    document.getElementById("modalAdminBody").innerText = `Сигурни ли сте, че искате да премахнете поръчка с ID-${id}?`;
+    document.getElementById("modalAdminButton").onclick = function() {removeOrder(id);};
+    $("#modalAdmin").modal()
+}
+function removeOrder(id)//Premahvane na poruchka po id
+{
+    if(arguments.callee.caller === null) {console.log("%c You are not permitted to use this method!!!",  'color: red'); return;}
+    $("#modalAdmin").modal('hide');
+    postRequest("/order/removeOrder", 
+    {
+        orderId: id,
+    }).then(data=>
+    {
+        document.getElementById("modalBody").innerText = `Успешно е премахната поръчка с ID-${id}!`;
+        actionOnCloseModal = orderListAndRemoveTab;
+        $("#modal").modal();
+    }
+    );
+}
 function removeUser(id)//Premahvane na potrebitel po id
 {
     if(arguments.callee.caller === null) {console.log("%c You are not permitted to use this method!!!",  'color: red'); return;}
@@ -499,5 +559,19 @@ function addDriverTab()//Tab za dobavqne na shofyori
     getRequest(window.location.protocol+'//'+ window.location.host +'/adminPanelTabs/addDriverTab.html').then(data=>{
         document.getElementById("tabContent").innerHTML = data;
         getAllUsersForAddDriverTabTable();
+    });
+}
+function orderListAndRemoveTab()
+{
+    if(arguments.callee.caller === null) {console.log("%c You are not permitted to use this method!!!",  'color: red'); return;}
+    if(currentActiveTabId != "") 
+    {
+        document.getElementById(currentActiveTabId).classList.remove("active");
+    }
+    currentActiveTabId = "orderListAndRemoveTab";
+    document.getElementById(currentActiveTabId).classList.add("active");
+    getRequest(window.location.protocol+'//'+ window.location.host +'/adminPanelTabs/orderListAndRemoveTab.html').then(data=>{
+        document.getElementById("tabContent").innerHTML = data;
+        getAllOrdersForListAndRemove();
     });
 }

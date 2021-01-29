@@ -45,14 +45,17 @@ export class OrderRepository extends Repository<taxiOrder>
     {
         const order = await this.findOne({id: orderID});
         const tmp = order;
-        console.log(order);
         await order.remove();
         return tmp;
     }
     async getOrderByUser(user:User)
     {
         let orders = await this.find({userOrdered: user});
-        console.log(orders);
+        return orders;
+    }
+    async getAllOrders()
+    {
+        let orders = await this.find();
         return orders;
     }
 }

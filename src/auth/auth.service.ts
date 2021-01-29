@@ -15,6 +15,7 @@ import { UserStatus } from './enums/userStatus.enum';
 import { Drivers, Statuses, x, y, Requests } from 'src/coordsAndStatus.array';
 import { taxiDriver } from './taxiDriver.class';
 import { FirmService } from 'src/firm/firm.service';
+import { use } from 'passport';
 
 @Injectable()
 export class AuthService {
@@ -70,14 +71,16 @@ export class AuthService {
   async changeUserRoleAdmin(@Session() session:{token?:string},userid:number,role:UserRoles)
   {
     let umail = await this.jwtService.decode(session.token);
-    let user = await this.userRepository.findOne({email:umail["email"]});
-    let u = await this.userRepository.findOne({id: userid});  
-    console.log(u.firm);
+    let u = await this.userRepository.findOne({id:userid});
     if(u.role == UserRoles.DRIVER)
     {
-      this.firmRepository.removeTaxiDriver(u.firm.eik, u);
+      const firm = await this.firmRepository.findOne({id: u.firmId});
+      this.firmRepository.removeTaxiDriver(firm.eik, u, role);
     }
-    return await this.userRepository.changeUserRoleAdmin(user,userid,role);
+    else
+    {
+      await this.userRepository.changeUserRoleAdmin(userid,role);
+    }
   }
   //Редактиране на потребител като админ
   async editUserByAdmin(@Session()session:{token?:string},userid:number,fname:string,lname:string,phoneNumber:string,address:string,email:string)

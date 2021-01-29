@@ -1,6 +1,7 @@
 import { Body, Controller, Get, Post, Session, UnauthorizedException, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { session } from 'passport';
+import { parse } from 'path';
 import { User } from 'src/auth/user.entity';
 import { taxiOrder } from './order.entity';
 import { OrderService } from './order.service';
@@ -46,11 +47,23 @@ export class OrderController {
         if(!session.token) throw new UnauthorizedException();
         this.orderService.finishOrder(Number(id));
     }
+    @Get("/getAllOrders")
+    async getAllOrders(@Session() session:{token?:string})
+    {
+        if(!session.token) throw new UnauthorizedException();
+        return await this.orderService.getAllOrders();
+    }
     @Get("/getOrdersByUser")
     async getOrdersByUser(@Session() session:{token?:string})
     {
         if(!session.token) throw new UnauthorizedException();
         return await this.orderService.getOrdersByUser(session);
+    }
+    @Post("/removeOrder")
+    async removeOrder(@Session() session:{token?:string}, @Body("orderId") orderId:string)
+    {
+        if(!session.token) throw new UnauthorizedException();
+        return await this.orderService.removeOrder(parseInt(orderId));
     }
 
 }

@@ -79,18 +79,11 @@ export class UserRepository extends Repository<User>
     }
   }
   //Смяна на роля на потребител
-  async changeUserRoleAdmin(sender:User,userid:number,role:UserRoles)
+  async changeUserRoleAdmin(userid:number,role:UserRoles)
   {
-    if(sender.role===UserRoles.ADMIN)
-    {
       const user = await this.findOne(userid);
       user.role = role;
       await user.save();
-    }
-    else
-    {
-      throw new UnauthorizedException();
-    }
   }
   //Премахване на потребител от админ
   async removeUserByAdmin(sender:User,userid)

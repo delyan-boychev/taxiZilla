@@ -120,4 +120,12 @@ export class OrderService {
         return await this.orderRepository.getOrderByUser(user);
 
     }
+    async getAllOrders()
+    {
+        return this.orderRepository.getAllOrders();
+    }
+    async removeOrder(orderId:number)
+    {
+        this.orderRepository.deleteOrder(orderId);
+    }
 }
