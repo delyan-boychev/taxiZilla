@@ -204,6 +204,10 @@ function setProfileInfoUser()//Zadavene na informaciq profil na potrebitel
                 else if(loginInfo["Role"] == "User")
                 {
                 nav.innerHTML += '<li class="nav-item"><a class="nav-link text-secondary waves-effect waves-light" onclick="profilePage()">Моят профил(<i class="fas fa-user"></i>'+ profileInfo["fName"] + " " + profileInfo["lName"] +')</a></li><li class="nav-item"><a class="nav-link text-secondary waves-effect waves-light" onclick="document.location = \'./logout\'">Излизане</a></li>';
+                }
+                else if(loginInfo["Role"] == "Driver")
+                {
+                    nav.innerHTML += '<li class="nav-item"><a class="nav-link text-secondary waves-effect waves-light" onclick="profileDriverPage()">Моят профил(<i class="fas fa-taxi"></i>'+ profileInfo["fName"] + " " + profileInfo["lName"] +')</a></li><li class="nav-item"><a class="nav-link text-secondary waves-effect waves-light" onclick="document.location = \'./logout\'">Излизане</a></li>';
                 }         
             });
 
@@ -247,6 +251,32 @@ function getOrdersUser()//Vzemane na poruchki napraveni ot potrebitel
                 if(order["notes"] != "") driverId = order["notes"];
                 if(order["items"] != "") driverId = order["items"];
                 bodyTableOrders.innerHTML += `<td>${order["id"]}</td><td>${order["address"]}</td><td>${order["y"]}</td><td>${order["x"]}</td><td>${driverId}</td><td>${listOrder}</td><td>${notes}</td><td>${order["date"]}</td><td>${orderStatus[order["orderStatus"]]}</td>`;
+            });
+            }
+
+        }
+    );
+}
+function getOrdersDriver()//Vzemane na poruchki prieti ot shofyor
+{
+    if(arguments.callee.caller === null) {console.log("%c You are not permitted to use this method!!!",  'color: red'); return;}
+    getRequest("/order/getOrdersByDriver").then(
+        data=>
+        {
+            var bodyTableOrders = document.getElementById("ordersTableBody");
+            bodyTableOrders.innerHTML = "";
+            if(data.length === 0)
+            {
+                document.getElementById("noOrders").style = "display:block";
+            }
+            else
+            {
+            data.forEach(order => {
+                var listOrder = "Няма";
+                var notes = "Няма";
+                if(order["notes"] != "") driverId = order["notes"];
+                if(order["items"] != "") driverId = order["items"];
+                bodyTableOrders.innerHTML += `<td>${order["id"]}</td><td>${order["address"]}</td><td>${order["y"]}</td><td>${order["x"]}</td><td>${order["userOrderedId"]}</td><td>${listOrder}</td><td>${notes}</td><td>${order["date"]}</td><td>${orderStatus[order["orderStatus"]]}</td>`;
             });
             }
 
@@ -529,6 +559,7 @@ function getProfile()//Get zaqvka za vzemane na informaciqta ot profila na klien
         document.getElementById("fName").value = json["fName"];
         document.getElementById("lName").value = json["lName"];
         document.getElementById("phoneNumber").value = json["telephone"];
+        document.getElementById("role").innerHTML += userRole[json["role"]];
       });
 }
 function getProfileFirm()//Get zaqvka za vzemane na inforamciqta ot profila na firma
@@ -573,11 +604,11 @@ function changePassword()//Post zaqvka za smqna na parola na klient
 function delProfile()//Post zaqvka za iztrivane na profil na klient
 {
     if(arguments.callee.caller === null) {console.log("%c You are not permitted to use this method!!!",  'color: red'); return;}
-    $("#passDel").tooltip('hide');
-    if($("#passDel").val().length > 0)
+    $("#passDel").removeClass("is-invalid");
+    if($("#passDel").val().length > 6)
     {
-    
-    postRequest("/auth/deleteUser",
+        $("#passDel").addClass("is-valid");
+        postRequest("/auth/deleteUser",
         {
             password: $("#passDel").val()
         }).then(data=>{
@@ -592,7 +623,7 @@ function delProfile()//Post zaqvka za iztrivane na profil na klient
     }
     else
     {
-        $("#passDel").tooltip({'placement':'left','trigger': 'manual', 'title': 'Въведете парола!'}).tooltip('show');
+        $("#passDel").addClass("is-invalid");
     }
 }
 function addTaxiDriver()//Post zaqvka za dobavqne na taksimetrovi shofyori

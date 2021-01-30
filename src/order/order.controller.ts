@@ -59,6 +59,12 @@ export class OrderController {
         if(!session.token) throw new UnauthorizedException();
         return await this.orderService.getOrdersByUser(session);
     }
+    @Get("/getOrdersByDriver")
+    async getOrdersByDriver(@Session() session:{token?:string})
+    {
+        if(!session.token) throw new UnauthorizedException();
+        return await this.orderService.getOrdersByDriver(session);
+    }
     @Post("/removeOrder")
     async removeOrder(@Session() session:{token?:string}, @Body("orderId") orderId:string)
     {

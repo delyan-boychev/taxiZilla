@@ -102,7 +102,7 @@ export class FirmService {
   {
     const encrypter = new Cryptr("mXb35Bw^FvCz9MLN");
     const link = encrypter.encrypt(registerFirmDto.eik);
-    const htmlcode = "<a href='http://localhost:3000/firm/verifyFirm/"+link+"'>ТУК</a>";
+    const htmlcode = "<a href='https://taxizillabg.com/firm/verifyFirm/"+link+"'>ТУК</a>";
     const info = await transport.sendMail({
       from: "taxiZilla",
       to:registerFirmDto.email,

@@ -53,6 +53,11 @@ export class OrderRepository extends Repository<taxiOrder>
         let orders = await this.find({userOrdered: user});
         return orders;
     }
+    async getOrdersByDriver(driverId:number)
+    {
+        let orders = await this.find({driverId: driverId});
+        return orders;
+    }
     async getAllOrders()
     {
         let orders = await this.find();

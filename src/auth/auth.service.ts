@@ -126,7 +126,7 @@ export class AuthService {
   }
   //Взимане на поръчки на шофьор
   async getMyOrders(user:User)
-    {;
+    {
         if(user.role==UserRoles.DRIVER)
         {
             //Пазим ги в масива Requests

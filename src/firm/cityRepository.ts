@@ -18,12 +18,10 @@ export class SupportedCityRepository extends Repository<SupportedCity>
         {
             if(record.firms.includes(firm))
             {
-                console.log("Putka");
                 return false;
             }
             else
             {
-                console.log("Kurec");
                 record.firms.push(firm);
                 firm.supportedCities.push(record);
                 await record.save();

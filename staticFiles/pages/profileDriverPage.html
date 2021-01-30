@@ -16,7 +16,7 @@
                 <i class="fas fa-shield-alt"></i> Сигурност
               </a>
               <a href="#orders" data-toggle="tab" class="nav-item nav-link has-icon nav-link-faded text-secondary"  onclick="hideTooltips()">
-                <i class="fas fa-tasks"></i> Направени поръчки
+                <i class="fas fa-tasks"></i> Приети поръчки
               </a>
             </nav>
           </div>
@@ -45,19 +45,19 @@
             <div class="tab-pane active" id="profile">
               <h5 class="font-weight-bold">Информация за профила</h5>
               <hr>
-              <div class="form-group">
-                <input type="text" class="form-control" id="fName" placeholder="Име">
-                <div class="invalid-feedback">Името трябва да бъде по-дълго от 2 символа!</div>
-              </div>
-              <div class="form-group">
-                <input type="text" class="form-control" id="lName" placeholder="Фамилия">
-                <div class="invalid-feedback">Фамилията трябва да бъде по-дълга от 2 символа!</div>
-              </div>
-              <div class="form-group">
-                <input type="text" class="form-control" id="phoneNumber" placeholder="Телефонен номер">
-                <div class="invalid-feedback">Телефонният номер е невалиден!</div>
-              </div>
-                <div><p id="role"><span class="font-weight-bold">Роля:</span> </p></div>
+                <div class="form-group">
+                  <input type="text" class="form-control" id="fName" placeholder="Име">
+                  <div class="invalid-feedback">Името трябва да бъде по-дълго от 2 символа!</div>
+                </div>
+                <div class="form-group">
+                  <input type="text" class="form-control" id="lName" placeholder="Фамилия">
+                  <div class="invalid-feedback">Фамилията трябва да бъде по-дълга от 2 символа!</div>
+                </div>
+                <div class="form-group">
+                  <input type="text" class="form-control" id="phoneNumber" placeholder="Телефонен номер">
+                  <div class="invalid-feedback">Телефонният номер е невалиден!</div>
+                </div>
+                <div><p id="role"><span class="font-weight-bold">Роля: </span></p></div>
                 <button type="button" class="btn btn-primary text-secondary">Редактиране на профила</button>
             </div>
             <div class="tab-pane" id="account">
@@ -92,7 +92,7 @@
               
             </div>
             <div class="tab-pane" id="orders">
-              <h5 class="font-weight-bold">Направени поръчки</h5>
+              <h5 class="font-weight-bold">Приети поръчки</h5>
               <hr>
               <div class="alert alert-warning" role="alert">
                 Ако не можете да намерите поръчката си означава, че тя все още се обработва! Когато бъде обработена, ще успеете да я видите отдолу!
@@ -105,7 +105,7 @@
                     <th>Адрес</th>
                     <th>Географска ширина</th>
                     <th>Географска дължина</th> 
-                    <th>ID Таксиметров шофьор</th>
+                    <th>ID на потребител</th>
                     <th>Списък за пазаруване</th>
                     <th>Бележки</th>
                     <th style="width: 25%">Дата и час на поръчка</th>
@@ -116,7 +116,7 @@
                 
                 </tbody>
               </table>
-              <p class="text-center" id="noOrders" style="display: none;">Няма направени поръчки!</p>
+              <p class="text-center" id="noOrders" style="display: none;">Няма приети поръчки!</p>
             </div>
             </div>
           </div>

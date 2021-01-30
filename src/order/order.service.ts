@@ -2,6 +2,7 @@ import { Injectable, Session } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
 import { tmpdir } from 'os';
+import { session } from 'passport';
 import { UserRoles } from 'src/auth/enums/userRoles.enum';
 import { UserStatus } from 'src/auth/enums/userStatus.enum';
 import { taxiDriver, taxiDriversFindNearest } from 'src/auth/taxiDriver.class';
@@ -119,6 +120,12 @@ export class OrderService {
         let user = await this.userRepository.findOne({email:uemail["email"]});
         return await this.orderRepository.getOrderByUser(user);
 
+    }
+    async getOrdersByDriver(@Session() session:{token?:string})
+    {
+        let uemail = await this.jwtService.decode(session.token);
+        let user = await this.userRepository.findOne({email:uemail["email"]});
+        return await this.orderRepository.getOrdersByDriver(user.id);
     }
     async getAllOrders()
     {
