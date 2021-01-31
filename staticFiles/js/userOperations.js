@@ -559,7 +559,7 @@ function getProfile()//Get zaqvka za vzemane na informaciqta ot profila na klien
         document.getElementById("fName").value = json["fName"];
         document.getElementById("lName").value = json["lName"];
         document.getElementById("phoneNumber").value = json["telephone"];
-        document.getElementById("role").innerHTML = `<span class="font-weight-bold">Роля:</span>` + userRole[json["role"]];
+        document.getElementById("role").innerHTML = `<span class="font-weight-bold">Роля: </span>` + userRole[json["role"]];
       });
 }
 function getProfileFirm()//Get zaqvka za vzemane na inforamciqta ot profila na firma
