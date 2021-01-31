@@ -57,8 +57,8 @@
                   <input type="text" class="form-control" id="phoneNumber" placeholder="Телефонен номер">
                   <div class="invalid-feedback">Телефонният номер е невалиден!</div>
                 </div>
-                <div><p id="role"><span class="font-weight-bold">Роля: </span></p></div>
-                <button type="button" class="btn btn-primary text-secondary">Редактиране на профила</button>
+                <div><p id="role"></p></div>
+                <button type="button" class="btn btn-primary text-secondary" onclick="editProfile()">Редактиране на профила</button>
             </div>
             <div class="tab-pane" id="account">
               <h5 class="font-weight-bold">Настройки на профила</h5>
@@ -68,14 +68,6 @@
                   <div class="invalid-feedback">Невалиден имейл адрес!</div>
                   <button class="btn btn-primary text-secondary" type="button" onclick="changeEmail()">Смяна на имейл</button>
                 </div>
-                <hr>
-                <div class="form-group">
-                  <label class="d-block text-danger">Изтриване на профил</label>
-                  <div class="alert alert-danger">При изтриване на профила никога няма да можете да достъпите информацията от него никога повече!</div>
-                </div>
-                <input type="password" class="form-control mb-4" id="passDel" placeholder="Парола">
-                <div class="invalid-feedback">Не сте въвели парола!</div>
-                <button class="btn btn-danger" type="button" onclick="delProfile()">Изтриване на профил</button>
             </div>
             <div class="tab-pane" id="security">
               <h5 class="font-weight-bold">Сигурност</h5>

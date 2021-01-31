@@ -60,6 +60,14 @@ export class UserRepository extends Repository<User>
       throw new UnauthorizedException();
     }
   }
+  async editUser(userEmail:string, fName:string, lName:string, phoneNumber:string)
+  {
+    const user = await this.findOne({email:userEmail});
+    user.fName = fName;
+    user.lName = lName;
+    user.telephone = phoneNumber;
+    await user.save();
+  }
   //Активация на потребител от админ
   async activateUserByAdmin(sender:User,userid:number)
   {

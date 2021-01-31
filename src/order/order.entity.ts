@@ -14,7 +14,7 @@ export class taxiOrder extends BaseEntity
     @Column({ type: "float", precision: 10, scale: 6 } )
     y:number;
 
-    @ManyToOne(type => User, user => user.orders)
+    @ManyToOne(type => User, user => user.orders, {onDelete:'CASCADE'})
     @JoinColumn({ name: 'userOrderedId' })
     userOrdered:User;
 

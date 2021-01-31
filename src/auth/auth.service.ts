@@ -209,18 +209,6 @@ export class AuthService {
       return await this.userRepository.checkPassword(userJSON["email"], password);
     }
   }
-  //Изтриване на акаунта
-  async deleteUser(@Session() session: { token?: string , type?:string, role:UserRoles}, pass:string)
-  {
-    let userJSON = await this.jwtService.decode(session.token);
-    if (userJSON === null) {
-      throw new UnauthorizedException("Unauthorized"); 
-    }
-    else
-    {
-      return await this.userRepository.deleteUser(userJSON["email"],pass);  
-    }
-  }
   //Смяна на парола
   async changePassword(@Session() session: { token?: string , type?:string, role:UserRoles}, oldPass: string, newPass: string)
   {
@@ -292,5 +280,11 @@ export class AuthService {
       html: '<b>За да потвърдиш email адреса си натисни </b>'+htmlcode,
     });
     return "Sended";
+  }
+  async editUser(@Session() session:{token?:string}, fName:string, lName:string, phoneNumber:string)
+  {
+    let userJSON = await this.jwtService.decode(session.token);
+    return await this.userRepository.editUser(userJSON["email"], fName, lName, phoneNumber);
+
   }
 }

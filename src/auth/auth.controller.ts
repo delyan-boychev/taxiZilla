@@ -118,13 +118,6 @@ export class AuthController {
     if(!session.token)throw new UnauthorizedException();
     return this.authService.checkUser(session, password);
   }
-  //Изтриване на потребител
-  @Post("/deleteUser/")
-  async deleteUser(@Session() session: {token?: string, type?:string,role:UserRoles}, @Body("password") pass:string)
-  {
-    if(!session.token)throw new UnauthorizedException();
-    return await this.authService.deleteUser(session,pass);
-  }
   //Смяна на паролата
   @Post("/changePassword/")
   async changePassword(@Session() session: { token?: string , type?:string,role:UserRoles}, @Body("oldPass") oldPass: string, @Body("newPass") newPass: string)
@@ -152,6 +145,12 @@ export class AuthController {
   {
     if(!session.token && session.role != UserRoles.ADMIN)throw new UnauthorizedException();
     return await this.authService.getAllUsers();
+  }
+  @Post("/editUser/")
+  async editUser(@Session() session:{token?:string, role?:UserRoles, type?:string}, @Body("fName") fName:string, @Body("lName") lName:string, @Body("phoneNumber") phoneNumber:string)
+  {
+    if(!session.token)throw new UnauthorizedException();
+    return await this.authService.editUser(session, fName, lName, phoneNumber);
   }
 
 }

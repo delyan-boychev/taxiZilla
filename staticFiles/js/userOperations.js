@@ -559,7 +559,7 @@ function getProfile()//Get zaqvka za vzemane na informaciqta ot profila na klien
         document.getElementById("fName").value = json["fName"];
         document.getElementById("lName").value = json["lName"];
         document.getElementById("phoneNumber").value = json["telephone"];
-        document.getElementById("role").innerHTML += userRole[json["role"]];
+        document.getElementById("role").innerHTML = `<span class="font-weight-bold">Роля:</span>` + userRole[json["role"]];
       });
 }
 function getProfileFirm()//Get zaqvka za vzemane na inforamciqta ot profila na firma
@@ -577,15 +577,35 @@ function changePassword()//Post zaqvka za smqna na parola na klient
     if(arguments.callee.caller === null) {console.log("%c You are not permitted to use this method!!!",  'color: red'); return;}
     var hasNumber = /\d/;
     var isChecked = true;
-    if($("#oldPass").val().length == 0)
+    $('#oldPass').removeClass("is-invalid");
+    $('#newPass').removeClass("is-invalid");
+    $('#newPassConfirm').removeClass("is-invalid");
+    if($("#oldPass").val().length < 8)
     {
-        $('#oldPass').tooltip({'placement':'right','trigger': 'manual', 'title': 'Не сте въвели старата парола!'}).tooltip('show');
+        $('#oldPass').addClass("is-invalid");
         isChecked = false;
+    }
+    else
+    {
+        $('#oldPass').addClass("is-valid");
     }
     if($("#newPass").val().length < 8 && !hasNumber.test($("#newPass").val()))
     {
-        $('#newPass').tooltip({'placement':'right','trigger': 'manual', 'title': 'Новата парола трябва да съдържа поне 1 цифра и да е по-дълга от 7 символа!'}).tooltip('show');
+        $('#newPass').addClass("is-invalid");
         isChecked = false;
+    }
+    else
+    {
+        $('#newPass').addClass("is-valid");
+    }
+    if($("#newPassConfirm").val() != $("#newPass").val())
+    {
+        $('#newPassConfirm').addClass("is-invalid");
+        isChecked = false;
+    }
+    else
+    {
+        $('#newPassConfirm').addClass("is-valid");
     }
     if(isChecked == true)
     {
@@ -601,29 +621,52 @@ function changePassword()//Post zaqvka za smqna na parola na klient
         );
     }
 }
-function delProfile()//Post zaqvka za iztrivane na profil na klient
+function editProfile()//Post zaqvka za redaktirane na profil na klient
 {
     if(arguments.callee.caller === null) {console.log("%c You are not permitted to use this method!!!",  'color: red'); return;}
-    $("#passDel").removeClass("is-invalid");
-    if($("#passDel").val().length > 6)
+    $("input").removeClass("is-invalid");
+    var checked = true;
+    var isDigit = /^\d+$/;
+    if($("#fName").val().length < 3)
     {
-        $("#passDel").addClass("is-valid");
-        postRequest("/auth/deleteUser",
-        {
-            password: $("#passDel").val()
-        }).then(data=>{
-            if(data=="true"){
-                document.getElementById("modalBody").innerText="Профилът е изтрит успешно!";
-                actionOnCloseModal = logout;
-            }
-            else document.getElementById("modalBody").innerText="Въвели сте грешна парола!";
-            $("#modal").modal();
-        }
-        );
+        $("#fName").addClass("is-invalid");
+        checked = false;
     }
     else
     {
-        $("#passDel").addClass("is-invalid");
+        $("#fName").addClass("is-valid");
+    }
+    if($("#lName").val().length < 3)
+    {
+        $("#lName").addClass("is-invalid");
+        checked = false;
+    }
+    else
+    {
+        $("#lName").addClass("is-valid");
+    }
+    if($("#phoneNumber").val().length < 10 || $("#phoneNumber").val().charAt(0) != '0' || !isDigit.test($("#phoneNumber").val()))
+    {
+        $("#phoneNumber").addClass("is-invalid");
+        checked = false;
+    }
+    else
+    {
+        $("#phoneNumber").addClass("is-valid");
+    }
+    if(checked)
+    {
+    postRequest("/auth/editUser",
+        {
+            fName: $("#fName").val(),
+            lName:$("#lName").val(),
+            phoneNumber: $("#phoneNumber").val()
+        }).then(data=>{
+                document.getElementById("modalBody").innerText="Профилът е редактиран успешно!";
+                actionOnCloseModal = getProfile;
+            $("#modal").modal();
+        }
+        );
     }
 }
 function addTaxiDriver()//Post zaqvka za dobavqne na taksimetrovi shofyori
