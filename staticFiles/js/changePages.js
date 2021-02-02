@@ -28,6 +28,13 @@ function pageRegisterUser()//Smqna na stranica za registraciq na klient
 
           
 }
+function resetPasswordPage()//Smqna na stranica za zabravena parola
+{
+        if(arguments.callee.caller === null) {console.log("%c You are not permitted to use this method!!!",  'color: red'); return;}
+        getRequest(window.location.protocol+'//'+ window.location.host +'/pages/resetPasswordPage.html').then(data=>{
+        document.getElementById("pageContent").innerHTML = data;
+});
+}
 function adminPanelPage()//Smqna na stranica za administratorski panel
 {
         if(arguments.callee.caller === null) {console.log("%c You are not permitted to use this method!!!",  'color: red'); return;}

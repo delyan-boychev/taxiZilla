@@ -42,5 +42,7 @@ export class User extends BaseEntity
 
   @ManyToOne(type => Firm, firm => firm.drivers)
   firm: Firm;
+  @Column()
+  lastChangePassword:string;
 
 }

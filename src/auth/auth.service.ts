@@ -41,6 +41,9 @@ export class AuthService {
   }
   async resetPassword(email:string)
   {
+    const user = await this.userRepository.findOne({email});
+    if(user)
+    {
     const encrypter = new Cryptr("mXb35Bw^FvCz9MLN");
     const newPass = this.generateString(10);
     const data = new Date();
@@ -57,8 +60,14 @@ export class AuthService {
       text: '',
       html: '<br>Нова парола: '+newPass+'</br><br>За да я активираш натисни </br>'+htmlcode,
     });
+    return true;
   }
-  async verifyResestPassword(email:string,password:string,time:string)
+  else
+  {
+    return false;
+  }
+  }
+  async verifyResetPassword(email:string,password:string,time:string)
   {
     const encrypter = new Cryptr("mXb35Bw^FvCz9MLN");
     const emaddr = await encrypter.decrypt(email);
@@ -66,17 +75,25 @@ export class AuthService {
     const timeStr=await encrypter.decrypt(time);
     const timeSt = new Date(timeStr);
     const now = new Date();
+    const fs = require("fs");
+    const user = await this.userRepository.findOne({email: emaddr});
+    const lastChangePassword = new Date(user.lastChangePassword);
+    lastChangePassword.setHours(lastChangePassword.getHours() + 1);
     if(now.getTime()>timeSt.getTime())
     {
-      return "expired";
+      return fs.readFileSync(join(__dirname, "/../../staticFiles/pages/passwordChangeExpired.html")).toString();
+    }
+    else if(lastChangePassword.getTime() > now.getTime())
+    {
+      return fs.readFileSync(join(__dirname, "/../../staticFiles/pages/passwordChangeExpired.html")).toString();
     }
     else
     {
-      const user = await this.userRepository.findOne({email});
       const bcrypt = require('bcrypt');
+      user.lastChangePassword = now.toString();
       user.passHash= await bcrypt.hash(passw,user.salt);
       await user.save();
-      return "changed";
+      return fs.readFileSync(join(__dirname, "/../../staticFiles/pages/passwordChanged.html")).toString();
     }
     
   }

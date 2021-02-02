@@ -299,7 +299,38 @@ function setLoginInfo()//Zadavene na informaciq za login
         });
     document.getElementById("res").remove();
 }
-function changeEmail()//Post zaqvka za smqna na email adresa na klient
+function resetPassword()//Post zaqvka za generirane na nova parola na potrebitel
+{
+    if(arguments.callee.caller === null) {console.log("%c You are not permitted to use this method!!!",  'color: red'); return;}
+    var isEmail = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+    if(!isEmail.test($("#email").val()))
+    {
+        $('#email').addClass("is-invalid");
+    }
+    else
+    {
+        $('#email').removeClass("is-invalid");
+        $('#email').addClass("is-valid");
+    postRequest("/auth/resetPassword",
+    {
+        email: $("#email").val(),
+        key: algorithm()
+    }).then(data=>
+    {
+        if(data=="true") 
+        {
+            document.getElementById("modalBody").innerText="Изпратено е съобщение на имейл адреса с временна парола!";
+        }
+        else if(data=="false") {
+            document.getElementById("modalBody").innerText="Не съществува профил с такъв имейл адрес";
+        }
+        $("#modal").modal();
+        
+    }
+    );
+    }
+}
+function changeEmail()//Post zaqvka za smqna na email adresa na potrebitel
 {
     if(arguments.callee.caller === null) {console.log("%c You are not permitted to use this method!!!",  'color: red'); return;}
     var isEmail = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
