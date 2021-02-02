@@ -16,17 +16,19 @@ export class Pair
 }
 export class taxiDriversFindNearest
 {
-    constructor(x:number, y:number,sender:User,notes:string, address:string)
+    constructor(x:number, y:number,sender:User,notes:string, address:string, ip:string)
     {
         this.x=x;
         this.y=y;
         this.address = address;
         this.notes=notes;
         this.sender=sender;
+        this.ip = ip;
     }
     address: string;
     x: number;
     y: number;
+    ip:string;
     notes:string;
     sender:User;
     //Всички шофьори влизат в масив с тяхната дистанция и индекса на шофьора. Дистанцията се пресмята по формулата за разстояние на точки
@@ -70,6 +72,7 @@ export class taxiDriversFindNearest
                 y:this.y,
                 address: this.address,
                 sender:this.sender,
+                ip:this.ip,
                 status:0,
                 distances:this.taxiDriversDistance,
                 curdriveridx:0,

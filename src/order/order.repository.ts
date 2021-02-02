@@ -6,7 +6,7 @@ import { taxiOrder } from "./order.entity";
 @EntityRepository(taxiOrder)
 export class OrderRepository extends Repository<taxiOrder>
 {
-    async createOrder(sender:User,driverId:number,x:number,y:number, notes:string, address:string, statusOrder:OrderStatus)
+    async createOrder(sender:User,driverId:number,x:number,y:number, notes:string, address:string, ip:string, statusOrder:OrderStatus)
     {
         let newOrder = new taxiOrder();
         newOrder.x=x;
@@ -15,8 +15,10 @@ export class OrderRepository extends Repository<taxiOrder>
         newOrder.notes = notes;
         newOrder.orderStatus=statusOrder;
         newOrder.userOrdered=sender;
+        newOrder.userId = sender.id;
         newOrder.driverId=driverId;
         newOrder.items = "";
+        newOrder.ip = ip;
         var today = new Date();
         var dd = String(today.getDate()).padStart(2, '0');
         var mm = String(today.getMonth() + 1).padStart(2, '0'); 
@@ -50,7 +52,7 @@ export class OrderRepository extends Repository<taxiOrder>
     }
     async getOrderByUser(user:User)
     {
-        let orders = await this.find({userOrdered: user});
+        let orders = await this.find({userId: user.id});
         return orders;
     }
     async getOrdersByDriver(driverId:number)

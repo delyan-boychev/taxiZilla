@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, Session, UnauthorizedException, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Post, Request, Session, UnauthorizedException, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { session } from 'passport';
 import { parse } from 'path';
@@ -23,11 +23,11 @@ export class OrderController {
         this.orderService.rejectAfterAccept(session, parseInt(orderID), parseInt(senderID));
     }
     @Post('/createOrder')
-    createOrder(@Body('x') x:number,@Body('y') y:number, @Body('notes') notes:string, @Body('address') address:string, @Session() session:{token?:string}, )
+    createOrder(@Body('x') x:number,@Body('y') y:number, @Body('notes') notes:string, @Body('address') address:string, @Session() session:{token?:string}, @Request() req:Request)
     {
         if(!session.token)throw new UnauthorizedException();
-        return this.orderService.createOrder(x,y,notes, session, address);
-        
+        const ip = req.headers["cf-connecting-ip"];
+        return this.orderService.createOrder(x,y,notes, session, address, ip);
     }
     @Post("/acceptOrder/")
     async acceptOrder(@Session() session:{token?:string})

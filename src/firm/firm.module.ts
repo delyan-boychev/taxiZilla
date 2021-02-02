@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { HttpModule, Module } from '@nestjs/common';
 import { FirmService } from './firm.service';
 import { FirmController } from './firm.controller';
 import { JwtStrategyFirm } from './jwt-strategy';

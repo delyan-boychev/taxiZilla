@@ -15,7 +15,6 @@ export class taxiOrder extends BaseEntity
     y:number;
 
     @ManyToOne(type => User, user => user.orders, {onDelete:'CASCADE'})
-    @JoinColumn({ name: 'userOrderedId' })
     userOrdered:User;
 
     @Column()
@@ -23,8 +22,9 @@ export class taxiOrder extends BaseEntity
 
     @Column({nullable: true})
     driverId:number;
-    @Column()
-    userOrderedId:number;
+
+    @Column({nullable:true})
+    userId:number;
     
     @Column({default: ""})
     address: string;
@@ -34,6 +34,9 @@ export class taxiOrder extends BaseEntity
 
     @Column()
     orderStatus:OrderStatus;
+
+    @Column()
+    ip:string;
 
     @Column()
     date:string;

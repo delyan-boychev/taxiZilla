@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { HttpModule, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -27,11 +27,18 @@ import { taxiOrder } from './order/order.entity';
     
     ,
     SessionModule.forRoot({
-      session: { secret: '33P7Ma@S85u6?K6mRCM2wXzXQdwGFsSs?Geqy!gqYPt@m8EG5e=mVZhPGMJ_jw+j',
+      
+      session: { 
+      secret: '33P7Ma@S85u6?K6mRCM2wXzXQdwGFsSs?Geqy!gqYPt@m8EG5e=mVZhPGMJ_jw+j',
       name: "taxiZilla",
       proxy: true,
       resave: true,
-      saveUninitialized: true },
+      saveUninitialized: true,
+      cookie:{
+        sameSite: true,
+        secure: true
+      }
+    },
 
     }),
     AuthModule,

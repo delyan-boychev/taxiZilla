@@ -138,7 +138,7 @@ export class FirmService {
     else{
     const decoded=await this.jwtService.decode(session.token);
     const eik=decoded["eik"];
-    return this.firmRepository.addTaxiDriver(eik,driver);
+    return await this.firmRepository.addTaxiDriver(eik,driver);
     }
   }
   async removeTaxiDriver(@Session() session:{token?:string}, email:string)
@@ -203,5 +203,11 @@ export class FirmService {
   async getAllFirms()
   {
     return await this.firmRepository.getAllFirms()
+  }
+  async changePassword(@Session() session:{token?:string}, oldPass:string, newPass:string)
+  {
+    const decoded = await this.jwtService.decode(session.token);
+    const eik=decoded["eik"];
+    return await this.firmRepository.changePassword(eik, newPass, oldPass);
   }
 }

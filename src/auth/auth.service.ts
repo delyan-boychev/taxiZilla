@@ -100,7 +100,6 @@ export class AuthService {
   async changeStatusAndLocation(@Session() session:{token?:string},newStatus:UserStatus,x:number, y:number)
   {
     const date = new Date();
-    console.log(date);
     let umail = await this.jwtService.decode(session.token);
     let user = await this.userRepository.findOne({email:umail["email"]});
     Statuses[user.id]=newStatus;

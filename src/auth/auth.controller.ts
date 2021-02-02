@@ -90,8 +90,17 @@ export class AuthController {
   }
   //Влизане като шофьор
   @Post("/loginTaxiDriver/")
-  async loginTaxiDriver( @Req() req,@Body("email", ValidationPipe) email: string, @Body("password", ValidationPipe) password: string, @Session() session: { token?: string, type?:string, role?:UserRoles})
+  async loginTaxiDriver( @Req() req,@Body("email", ValidationPipe) email: string, @Body("password", ValidationPipe) password: string, @Body("key") key:string, @Session() session: { token?: string, type?:string, role?:UserRoles})
   {
+    if(!key) throw new UnauthorizedException();
+    if(key.length!=19) throw new UnauthorizedException();
+    const date = new Date();
+    const d = new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate(), date.getUTCHours(), date.getUTCMinutes(), date.getUTCSeconds()+3 ));
+    const str = this.authService.decode(key);
+    const d2 = new Date(Date.UTC(parseInt(str.substr(0, 4)), parseInt(str.substr(6, 2))-1, parseInt(str.substr(4, 2)), parseInt(str.substr(8, 2)), parseInt(str.substr(10, 2)), parseInt(str.substr(12, 2)), 0));
+    const d3 = new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate(), date.getUTCHours(), date.getUTCMinutes(), date.getUTCSeconds()-3));
+    if(d2.toString() == "Invalid date") throw new UnauthorizedException();
+    if(d2.getTime()>d.getTime() || d3.getTime()>d2.getTime()) throw new UnauthorizedException();
     let time = 1800000;
     req.session.cookie.expires = new Date(Date.now() + time)
     return await this.authService.loginTaxiDriver(email, password, session);

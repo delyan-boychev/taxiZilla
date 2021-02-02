@@ -96,6 +96,23 @@ export class FirmRepository extends Repository<Firm>
       return true;
     
   }
+  async changePassword(eik, newPass:string, oldPass:string)
+  {
+    const firm = await this.findOne({eik: eik});
+    const hashed = await bcrypt.hash(oldPass,firm.salt);
+    const newhash = await bcrypt.hash(newPass,firm.salt);
+    if(firm.passHash == hashed)
+    {
+      firm.passHash = newhash;
+      await firm.save();
+      return true;
+    }
+    else
+    {
+      return false;
+    }
+
+  }
   async addTaxiDriver(eik:string, driver:User)
   {
     let firm:Firm = await this.findOne({eik});
@@ -106,11 +123,18 @@ export class FirmRepository extends Repository<Firm>
     else
     {
       firm.drivers.push(driver);
+      if(driver.role == UserRoles.USER)
+      {
       driver.firm=firm;
       driver.role=UserRoles.DRIVER;
       await firm.save();
       await driver.save();
       return true;
+      }
+      else
+      {
+        return false;
+      }
     }
   }
   async editFirmByAdmin(sender:User,firmid:number,eik:string,firmName:string,email:string,phoneNumber:string,address:string, city:string)

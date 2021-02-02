@@ -128,4 +128,10 @@ export class FirmController {
     if(!session.token && session.role != UserRoles.ADMIN) throw new UnauthorizedException();
     await this.firmService.addTaxiDriverByAdmin(session, parseInt(firmID), parseInt(userID));
   }
+  @Post("/changePassword/")
+  async changePassword(@Session() session:{token:string}, @Body("oldPass") oldPass:string, @Body("newPass") newPass:string)
+  {
+    if(!session.token) throw new UnauthorizedException();
+    return await this.firmService.changePassword(session, oldPass, newPass);
+  }
 }

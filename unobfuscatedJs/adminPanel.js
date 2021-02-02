@@ -71,8 +71,8 @@ function getAllUsersForRemoveTable()//Injectvane na potrebiteli v tablica za pre
             var firmId = "Няма";
             var verified = "";
             if(el["verified"] == 1) verified = "Да";
-            else verified = "Не";
             if(el["firmId"] != null) firmId = el["firmId"];
+            else verified = "Не";
             document.getElementById("bodyTable").innerHTML += `<tr><td>${el["id"]}</td><td>${el["fName"]}</td><td>${el["lName"]}</td><td>${el["email"]}</td><td>${el["telephone"]}</td><td>${userRole[el["role"]]}</td><td>${firmId}</td><td>${verified}</td><td class="text-danger h5"><i class='far fa-times-circle' style='cursor: pointer;' onclick='removeUserShowModal("${el["id"]}");'></i></td></tr>`
             }
         });
@@ -209,7 +209,7 @@ function getAllUsersForAddDriverTabTable()//Injectvane na potrebitel v tablica z
                     if(el["firmId"] != null) firmId = el["firmId"];
                     if(el["verified"] == 1) verified = "Да";
                     else verified = "Не";
-                    document.getElementById("bodyTable").innerHTML += `<tr><td>${el["id"]}</td><td>${el["fName"]}</td><td>${el["lName"]}</td><td>${el["email"]}</td><td>${el["telephone"]}</td><td>${userRole[el["role"]]}</td><td>${firmId}</td><td>${verified}</td><td class="text-secondary h5"><i class='fas fa-plus text-success' style='cursor: pointer;' onclick='addTaxiDriverShowModal("${el["id"]}");'></i></td></tr>`
+                    document.getElementById("bodyTable").innerHTML += `<tr><td>${el["id"]}</td><td>${el["fName"]}</td><td>${el["lName"]}</td><td>${el["email"]}</td><td>${el["telephone"]}</td><td>${firmId}</td><td>${userRole[el["role"]]}</td><td>${verified}</td><td class="text-secondary h5"><i class='fas fa-plus text-success' style='cursor: pointer;' onclick='addTaxiDriverShowModal("${el["id"]}");'></i></td></tr>`
                 }
             }
         });
@@ -328,7 +328,7 @@ function editUser(id)//Redaktirane na potrebitel po id
         );
     }
 }
-function addTaxiDriverByAdmin(id)
+function addTaxiDriver(id)
 {
     $("#modalAdmin").modal('hide');
         postRequest("/firm/addTaxiDriverByAdmin", 
@@ -397,7 +397,7 @@ function addTaxiDriverShowModal(id)//Pokazvane na modal za dobavqne na shofyori
     document.getElementById("modalAdminLabel").innerText = `Добавяне на шофьор`;
     document.getElementById("modalAdminBody").innerHTML = `<p class="text-center">Към коя фирма искате да добавите шофьор с ID-${id}?</p><select id="allFirmsForAddDriver" class="form-control"></select>`;
     getAllFirmsForAddDrivers();
-    document.getElementById("modalAdminButton").onclick = function() {addTaxiDriverByAdmin(id);};
+    document.getElementById("modalAdminButton").onclick = function() {addTaxiDriver(id);};
     $("#modalAdmin").modal()
 }
 function removeOrderShowModal(id)//Pokazvane na modal za iztrivane na poruchka
