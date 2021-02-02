@@ -15,12 +15,19 @@ import { User } from './user.entity';
 
 @Controller('auth')
 export class AuthController {
+
   //Dependency injection на AuthService
   constructor(
     private authService: AuthService,
   ) { };
-
+  
   //Регистрация на потребител
+  @Post("/resetPassword/")
+  async resetPassword(@Body("email")email:string)
+  {
+    //const password = this.generateString(10);
+    this.authService.resetPassword("martinmarinov150402@gmail.com");
+  }
   @Post("/registerUser/")
   async registerUser(@Body(ValidationPipe) registerUserDto:RegisterUserDTO, @Body("key") key:string)
   {

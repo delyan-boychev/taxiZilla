@@ -28,6 +28,58 @@ export class AuthService {
     private jwtService:JwtService,
     private firmService:FirmService,
   ) { };
+  generateString(length)//Funkciq za generirane na niz po zadadena duljina
+  {
+    var result           = '';
+    var characters       = '$%!@#^&*()-ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    var charactersLength = characters.length;
+    for ( var i = 0; i < length; i++ )
+    {
+        result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    }
+    return result;
+  }
+  async resetPassword(email:string)
+  {
+    const encrypter = new Cryptr("mXb35Bw^FvCz9MLN");
+    const newPass = this.generateString(10);
+    const data = new Date();
+    data.setHours(data.getHours() + 1);
+    const timeStamp = await encrypter.encrypt(data.toString());
+    const emcr = await encrypter.encrypt(email);
+    const crPass = await encrypter.encrypt(newPass);
+    const link = "https://taxizillabg.com/auth/verifyResetPassword/"+emcr+"/"+crPass+"/"+timeStamp;
+    const htmlcode = "<a href='" + link + "'>ТУК</a>";
+    const info = await transport.sendMail({
+      from: 'Taxi Zilla',
+      to: email,
+      subject: 'Смяна на парола',
+      text: '',
+      html: '<br>Нова парола: '+newPass+'</br><br>За да я активираш натисни </br>'+htmlcode,
+    });
+  }
+  async verifyResestPassword(email:string,password:string,time:string)
+  {
+    const encrypter = new Cryptr("mXb35Bw^FvCz9MLN");
+    const emaddr = await encrypter.decrypt(email);
+    const passw = await encrypter.decrypt(password);
+    const timeStr=await encrypter.decrypt(time);
+    const timeSt = new Date(timeStr);
+    const now = new Date();
+    if(now.getTime()>timeSt.getTime())
+    {
+      return "expired";
+    }
+    else
+    {
+      const user = await this.userRepository.findOne({email});
+      const bcrypt = require('bcrypt');
+      user.passHash= await bcrypt.hash(passw,user.salt);
+      await user.save();
+      return "changed";
+    }
+    
+  }
   //Извикване на регистрация
   async registerUser(registerUserDto: RegisterUserDTO)
   {
