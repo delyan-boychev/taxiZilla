@@ -44,11 +44,19 @@ export class AuthService {
     const user = await this.userRepository.findOne({email});
     if(user)
     {
+    const date = new Date();
+    const lastChangePassword = new Date(user.lastChangePassword);
+    lastChangePassword.setHours(lastChangePassword.getHours() + 1);
+    if(lastChangePassword.getTime()> date.getTime())
+    {
+      return "too often";
+    }
+    else
+    {
     const encrypter = new Cryptr("mXb35Bw^FvCz9MLN");
     const newPass = this.generateString(10);
-    const data = new Date();
-    data.setHours(data.getHours() + 1);
-    const timeStamp = await encrypter.encrypt(data.toString());
+    date.setHours(date.getHours() + 1);
+    const timeStamp = await encrypter.encrypt(date.toString());
     const emcr = await encrypter.encrypt(email);
     const crPass = await encrypter.encrypt(newPass);
     const link = "https://taxizillabg.com/auth/verifyResetPassword/"+emcr+"/"+crPass+"/"+timeStamp;
@@ -60,11 +68,12 @@ export class AuthService {
       text: '',
       html: '<br>Нова парола: '+newPass+'</br><br>За да я активираш натисни </br>'+htmlcode,
     });
-    return true;
+    return "true";
+    }
   }
   else
   {
-    return false;
+    return "false";
   }
   }
   async verifyResetPassword(email:string,password:string,time:string)

@@ -43,5 +43,8 @@ export class Firm extends BaseEntity
 
   @ManyToMany(type => SupportedCity, supportedcity=>supportedcity.firms, {cascade:true, eager: true})
   supportedCities:SupportedCity[];
+
+  @Column()
+  lastChangePassword:string;
   
 }

@@ -321,6 +321,45 @@ function resetPassword()//Post zaqvka za generirane na nova parola na potrebitel
         {
             document.getElementById("modalBody").innerText="Изпратено е съобщение на имейл адреса с временна парола!";
         }
+        else if(data=="too often")
+        {
+            document.getElementById("modalBody").innerText="Може да изпращате имейл адрес с временна парола само 1 път на 1 час!";
+        }
+        else if(data=="false") {
+            document.getElementById("modalBody").innerText="Не съществува профил с такъв имейл адрес!";
+        }
+        $("#modal").modal();
+        
+    }
+    );
+    }
+}
+function resetPasswordFirm()//Post zaqvka za generirane na nova parola na firma
+{
+    if(arguments.callee.caller === null) {console.log("%c You are not permitted to use this method!!!",  'color: red'); return;}
+    var isEmail = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+    if(!isEmail.test($("#email").val()))
+    {
+        $('#email').addClass("is-invalid");
+    }
+    else
+    {
+        $('#email').removeClass("is-invalid");
+        $('#email').addClass("is-valid");
+    postRequest("/firm/resetPassword",
+    {
+        email: $("#email").val(),
+        key: algorithm()
+    }).then(data=>
+    {
+        if(data=="true") 
+        {
+            document.getElementById("modalBody").innerText="Изпратено е съобщение на имейл адреса с временна парола!";
+        }
+        else if(data=="too often")
+        {
+            document.getElementById("modalBody").innerText="Може да изпращате имейл адрес с временна парола само 1 път на 1 час!";
+        }
         else if(data=="false") {
             document.getElementById("modalBody").innerText="Не съществува профил с такъв имейл адрес";
         }

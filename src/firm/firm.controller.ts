@@ -28,6 +28,28 @@ export class FirmController {
     }
     return registered;
   }
+  @Post("/resetPassword/")
+  async resetPassword(@Body("email")email:string, @Body("key") key:string)
+  {
+    // Декодиране на ключ и валидация
+    if(!key) throw new UnauthorizedException();
+    if(key.length!=19) throw new UnauthorizedException();
+    const date = new Date();
+    const d = new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate(), date.getUTCHours(), date.getUTCMinutes(), date.getUTCSeconds()+3 ));
+    const str = this.firmService.decode(key);
+    const d2 = new Date(Date.UTC(parseInt(str.substr(0, 4)), parseInt(str.substr(6, 2))-1, parseInt(str.substr(4, 2)), parseInt(str.substr(8, 2)), parseInt(str.substr(10, 2)), parseInt(str.substr(12, 2)), 0));
+    const d3 = new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate(), date.getUTCHours(), date.getUTCMinutes(), date.getUTCSeconds()-3));
+    if(d2.toString() == "Invalid date") throw new UnauthorizedException();
+    if(d2.getTime()>d.getTime() || d3.getTime()>d2.getTime()) throw new UnauthorizedException();
+    //=====================================================
+    //Същинско регистриране и връщане на обект с данните
+    return await this.firmService.resetPassword(email);
+  }
+  @Get("/verifyResetPassword/:email/:pass/:date")
+  async verifyResetPassword(@Param("email") email:string, @Param("pass") pass:string, @Param("date") date:string)
+  {
+    return await this.firmService.verifyResetPassword(email, pass, date);
+  }
   @Get('/verifyFirm/:code')
   async verifyFirm(@Param("code")code:string)
   {

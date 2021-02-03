@@ -13,6 +13,7 @@ import { User } from 'src/auth/user.entity';
 import { session } from 'passport';
 import { Firm } from './firm.entity';
 import { SupportedCityRepository } from './cityRepository';
+import e from 'express';
 
 @Injectable()
 export class FirmService {
@@ -94,11 +95,89 @@ export class FirmService {
         }
     }
     }
-    async registerFirm(registerFirmDto:RegisterFirmDTO)
+    generateString(length)//Funkciq za generirane na niz po zadadena duljina
     {
-        return await this.firmRepository.registerFirm(registerFirmDto); 
+      var result           = '';
+      var characters       = '$%!@#^&*()-ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+      var charactersLength = characters.length;
+      for ( var i = 0; i < length; i++ )
+      {
+          result += characters.charAt(Math.floor(Math.random() * charactersLength));
+      }
+      return result;
     }
-    async sendVerifyFirm(registerFirmDto:RegisterFirmDTO)
+    async resetPassword(email:string)
+    {
+      const firm = await this.firmRepository.findOne({email});
+      if(firm)
+      {
+      const date = new Date();
+      const lastChangePassword = new Date(firm.lastChangePassword);
+      lastChangePassword.setHours(lastChangePassword.getHours() + 1);
+      if(lastChangePassword.getTime()> date.getTime())
+      {
+        return "too often";
+      }
+      else
+      {
+      const encrypter = new Cryptr("mXb35Bw^FvCz9MLN");
+      const newPass = this.generateString(10);
+      date.setHours(date.getHours() + 1);
+      const timeStamp = await encrypter.encrypt(date.toString());
+      const emcr = await encrypter.encrypt(email);
+      const crPass = await encrypter.encrypt(newPass);
+      const link = "https://taxizillabg.com/firm/verifyResetPassword/"+emcr+"/"+crPass+"/"+timeStamp;
+      const htmlcode = "<a href='" + link + "'>ТУК</a>";
+      const info = await transport.sendMail({
+        from: 'Taxi Zilla',
+        to: email,
+        subject: 'Смяна на парола',
+        text: '',
+        html: '<br>Нова парола: '+newPass+'</br><br>За да я активираш натисни </br>'+htmlcode,
+      });
+      return "true";
+      }
+    }
+    else
+    {
+      return "false";
+    }
+    }
+    async verifyResetPassword(email:string,password:string,time:string)
+    {
+      const encrypter = new Cryptr("mXb35Bw^FvCz9MLN");
+      const emaddr = await encrypter.decrypt(email);
+      const passw = await encrypter.decrypt(password);
+      const timeStr=await encrypter.decrypt(time);
+      const timeSt = new Date(timeStr);
+      const now = new Date();
+      const fs = require("fs");
+      const firm = await this.firmRepository.findOne({email: emaddr});
+      const lastChangePassword = new Date(firm.lastChangePassword);
+      lastChangePassword.setHours(lastChangePassword.getHours() + 1);
+      if(now.getTime()>timeSt.getTime())
+      {
+        return fs.readFileSync(join(__dirname, "/../../staticFiles/pages/passwordChangeExpired.html")).toString();
+      }
+      else if(lastChangePassword.getTime() > now.getTime())
+      {
+        return fs.readFileSync(join(__dirname, "/../../staticFiles/pages/passwordChangeExpired.html")).toString();
+      }
+      else
+      {
+        const bcrypt = require('bcrypt');
+        firm.lastChangePassword = now.toString();
+        firm.passHash= await bcrypt.hash(passw,firm.salt);
+        await firm.save();
+        return fs.readFileSync(join(__dirname, "/../../staticFiles/pages/passwordChanged.html")).toString();
+      }
+      
+    }
+  async registerFirm(registerFirmDto:RegisterFirmDTO)
+  {
+        return await this.firmRepository.registerFirm(registerFirmDto); 
+  }
+  async sendVerifyFirm(registerFirmDto:RegisterFirmDTO)
   {
     const encrypter = new Cryptr("mXb35Bw^FvCz9MLN");
     const link = encrypter.encrypt(registerFirmDto.eik);
