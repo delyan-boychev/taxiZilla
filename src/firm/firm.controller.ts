@@ -136,7 +136,7 @@ export class FirmController {
   @Post("/editFirmByAdmin/")
   async editFirmByAdmin(@Session() session:{token?:string}, @Body("firmID") firmID:string, @Body("eik") eik:string,@Body("email") email:string, @Body("firmName") firmName:string,@Body("phoneNumber") phoneNumber:string, @Body("address") address:string, @Body("city") city:string)
   {
-    
+    return await this.firmService.editFirmByAdmin(session, parseInt(firmID), firmName, eik, email, phoneNumber, address, city);
   }
   @Get("/getAllFirms")
   async getAllFirms(@Session() session:{token?:string, role?:string})

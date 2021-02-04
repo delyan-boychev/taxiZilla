@@ -123,12 +123,12 @@ export class FirmService {
       const encrypter = new Cryptr("mXb35Bw^FvCz9MLN");
       const newPass = this.generateString(10);
       date.setHours(date.getHours() + 1);
-      const timeStamp = await encrypter.encrypt(date.toString());
-      const emcr = await encrypter.encrypt(email);
-      const crPass = await encrypter.encrypt(newPass);
+      const timeStamp = encrypter.encrypt(date.toString());
+      const emcr = encrypter.encrypt(email);
+      const crPass = encrypter.encrypt(newPass);
       const link = "https://taxizillabg.com/firm/verifyResetPassword/"+emcr+"/"+crPass+"/"+timeStamp;
       const htmlcode = "<a href='" + link + "'>ТУК</a>";
-      const info = await transport.sendMail({
+      const info =  transport.sendMail({
         from: 'Taxi Zilla',
         to: email,
         subject: 'Смяна на парола',
@@ -146,9 +146,9 @@ export class FirmService {
     async verifyResetPassword(email:string,password:string,time:string)
     {
       const encrypter = new Cryptr("mXb35Bw^FvCz9MLN");
-      const emaddr = await encrypter.decrypt(email);
-      const passw = await encrypter.decrypt(password);
-      const timeStr=await encrypter.decrypt(time);
+      const emaddr = encrypter.decrypt(email);
+      const passw = encrypter.decrypt(password);
+      const timeStr= encrypter.decrypt(time);
       const timeSt = new Date(timeStr);
       const now = new Date();
       const fs = require("fs");
@@ -260,11 +260,11 @@ export class FirmService {
     const firm = await this.firmRepository.findOne({eik});
     return await this.cityRepository.getCitiesByFirm(firm);
   }
-  async editFirmByAdmin(@Session() session:{token?:string}, firmID:number, eik:string, email:string, phoneNumber:string, address:string, city:string)
+  async editFirmByAdmin(@Session() session:{token?:string}, firmID:number, firmName:string, eik:string, email:string, phoneNumber:string, address:string, city:string)
   {
     const decoded = await this.jwtService.decode(session.token);
-    
-
+    const user = await this.userRepository.findOne({email: decoded["email"]});
+    await this.firmRepository.editFirmByAdmin(user, firmID, eik, firmName, email, phoneNumber, address, city);
   }
   async addTaxiDriverByAdmin(@Session() session:{token?:string}, firmID:number, userID:number)
   {

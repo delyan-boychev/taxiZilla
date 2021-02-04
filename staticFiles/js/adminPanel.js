@@ -171,6 +171,27 @@ function getAllFirmsForRemoveFirmTable()//Injectvane na firmi v tablica za prema
     
 
 }
+function getAllFirmsForEditFirmTabTable()//Injectvane na firmi v tablica za redaktirane na firmi
+{
+    if(arguments.callee.caller === null) {console.log("%c You are not permitted to use this method!!!",  'color: red'); return;}
+    getRequest("/firm/getAllFirms").then(json=>
+    {
+        json.forEach(el => {
+            if(el["email"] != profileInfo["email"])
+            {
+            var verified = "";
+            if(el["verified"] == 1) verified = "Да";
+            else verified = "Не";
+            var modVerified = "";
+            if(el["moderationVerified"] == 1) modVerified = "Да";
+            else modVerified = "Не";
+            document.getElementById("bodyTable").innerHTML += `<tr><td>${el["id"]}</td><td>${el["firmName"]}</td><td>${el["eik"]}</td><td>${el["city"]}</td><td>${el["address"]}</td><td>${el["email"]}</td><td>${el["phoneNumber"]}</td><td>${verified}</td><td>${modVerified}</td><td class="text-secondary h5"><i class='far fa-edit' style='cursor: pointer;' onclick='editFirmShowModal("${el["id"]}", "${el["firmName"]}", "${el["eik"]}", "${el["city"]}", "${el["address"]}", "${el["email"]}", "${el["phoneNumber"]}");'></i></td></tr>`
+            }
+        });
+        $('#firmEditDt').DataTable(tableTextFirm);
+        $('.dataTables_length').addClass('bs-select');
+    });
+}
 function getAllFirmsForModerationVerifyFirmTable()//Injectvane na firmi v tablica za odobrqvane na firmi
 {
     if(arguments.callee.caller === null) {console.log("%c You are not permitted to use this method!!!",  'color: red'); return;}
@@ -454,6 +475,70 @@ function removeFirm(id)//Premahvane na firma po id
     );
 
 }
+function editFirm(id)//Redaktirane na firma po id
+{
+    if(arguments.callee.caller === null) {console.log("%c You are not permitted to use this method!!!",  'color: red'); return;}
+    $("input").removeClass("is-invalid");
+    var isChecked = true;
+    var isDigit = /^\d+$/;
+    var isEmail = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+    if($("#firmName").val().length < 3)
+    {
+        $('#firmName').addClass("is-invalid");
+        isChecked = false;
+    }
+    else $('#firmName').addClass("is-valid");
+    if(!check_eik($("#eik").val()))
+    {
+        $('#eik').addClass("is-invalid");
+        isChecked = false;
+    }
+    else $('#eik').addClass("is-valid");
+    if($("#city").val().length < 3)
+    {
+        $('#city').addClass("is-invalid");
+        isChecked = false;
+    }
+    else $('#city').addClass("is-valid");
+    if($("#address").val().length < 3)
+    {
+        $('#address').addClass("is-invalid");
+        isChecked = false;
+    }
+    else $('#address').addClass("is-valid");
+    if(!isEmail.test($("#email").val()))
+    {
+        $('#email').addClass("is-invalid");
+        isChecked = false;
+    }
+    else $('#email').addClass("is-valid");
+    if($("#phoneNumber").val().length < 10 || $("#phoneNumber").val().charAt(0) != '0' || !isDigit.test($("#phoneNumber").val()))
+    {
+        $('#phoneNumber').addClass("is-invalid");
+        isChecked = false;
+    }
+    else $('#phoneNumber').addClass("is-valid");
+    if(isChecked == true)
+    {
+        $("#modalAdmin").modal('hide');
+        postRequest("/firm/editFirmByAdmin",
+        {
+            firmID: id,
+            firmName: $("#firmName").val(),
+            eik: $("#eik").val(),
+            city: $("#city").val(),
+            address: $("#address").val(),
+            email: $("#email").val(),
+            phoneNumber: $("#phoneNumber").val()
+        }).then(data=>
+        {
+            document.getElementById("modalBody").innerText=`Фирма с ID-${id} е редактирана успешно!`;
+            actionOnCloseModal = firmEditTab;
+            $("#modal").modal();
+        }
+        );
+    }
+}
 function moderationVerifyFirm(id)//Odobrqvane na firma po id
 {
     if(arguments.callee.caller === null) {console.log("%c You are not permitted to use this method!!!",  'color: red'); return;}
@@ -468,6 +553,14 @@ function moderationVerifyFirm(id)//Odobrqvane na firma po id
         $("#modal").modal();
     }
     );
+}
+function editFirmShowModal(id, firmName, eik, city, address, email, phoneNumber)//Pokazvane na modal za redaktirane na firma
+{
+    if(arguments.callee.caller === null) {console.log("%c You are not permitted to use this method!!!",  'color: red'); return;}
+    document.getElementById("modalAdminLabel").innerText = `Редактиране на фирма`;
+    document.getElementById("modalAdminBody").innerHTML =  `<div class="form-group"><input type="text" class="form-control" id="firmName"  placeholder="Име на фирма" value="${firmName}"> </div> <div class="form-group"> <input type="text" class="form-control" id="eik" placeholder="ЕИК" value="${eik}"> </div> <div class="form-group"><input type="text" class="form-control" id="city" placeholder="Град седалище на фирма" value="${city}"></div><div class="form-group"><input type="text" class="form-control" id="address" placeholder="Адрес на седалището на фирма" value="${address}"></div><div class="form-group"><input type="email" class="form-control" id="email" placeholder="Имейл" value="${email}"></div> <div class="form-group"><input type="text" class="form-control" id="phoneNumber" placeholder="Телефонен номер" value="${phoneNumber}"> </div> <div class="form-group"></div>`;
+    document.getElementById("modalAdminButton").onclick = function() {editFirm(id);};
+    $("#modalAdmin").modal();
 }
 function userRemoveTab()//Tab za premahvane na potrebiteli
 {
@@ -568,6 +661,34 @@ function addDriverTab()//Tab za dobavqne na shofyori
     getRequest(window.location.protocol+'//'+ window.location.host +'/adminPanelTabs/addDriverTab.html').then(data=>{
         document.getElementById("tabContent").innerHTML = data;
         getAllUsersForAddDriverTabTable();
+    });
+}
+function firmEditTab()
+{
+    if(arguments.callee.caller === null) {console.log("%c You are not permitted to use this method!!!",  'color: red'); return;}
+    if(currentActiveTabId != "") 
+    {
+        document.getElementById(currentActiveTabId).classList.remove("active");
+    }
+    currentActiveTabId = "firmEditTab";
+    document.getElementById(currentActiveTabId).classList.add("active");
+    getRequest(window.location.protocol+'//'+ window.location.host +'/adminPanelTabs/firmEditTab.html').then(data=>{
+        document.getElementById("tabContent").innerHTML = data;
+        getAllFirmsForEditFirmTabTable();
+    });
+}
+function addRemoveSupportedCityTab()
+{
+    if(arguments.callee.caller === null) {console.log("%c You are not permitted to use this method!!!",  'color: red'); return;}
+    if(currentActiveTabId != "") 
+    {
+        document.getElementById(currentActiveTabId).classList.remove("active");
+    }
+    currentActiveTabId = "addRemoveSupportedCityTab";
+    document.getElementById(currentActiveTabId).classList.add("active");
+    getRequest(window.location.protocol+'//'+ window.location.host +'/adminPanelTabs/addRemoveSupportedCityTab.html').then(data=>{
+        document.getElementById("tabContent").innerHTML = data;
+        getAllFirmsForEditFirmTabTable();
     });
 }
 function orderListAndRemoveTab()

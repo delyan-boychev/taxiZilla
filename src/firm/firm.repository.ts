@@ -24,6 +24,7 @@ export class FirmRepository extends Repository<Firm>
       firm.eik = eik;
       firm.city = city;
       firm.firmName = firmName;
+      firm.lastChangePassword = "";
       const saltRounds=10;
       const salt = await bcrypt.genSalt(saltRounds);
       const hashed = await bcrypt.hash(password,salt);

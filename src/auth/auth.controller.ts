@@ -12,6 +12,7 @@ import { UserRoles } from './enums/userRoles.enum';
 import { UserStatus } from './enums/userStatus.enum';
 import { AuthGuard } from '@nestjs/passport';
 import { User } from './user.entity';
+import { session } from 'passport';
 
 @Controller('auth')
 export class AuthController {
@@ -163,6 +164,12 @@ export class AuthController {
   {
     if(!session.token)throw new UnauthorizedException();
     return await this.authService.changeEmail(session, newEmail);
+  }
+  @Post("/getCitiesByFirmId")
+  async getCitiesByFirmId(@Session() session:{token?:string}, @Body("firmID") firmID:string)
+  {
+    if(!session.token) throw new UnauthorizedException();
+    return await this.authService.getCitiesByFirmId(parseInt(firmID));
   }
   //Промяна на статус и проверка за поръчки. Само за шофьори
   @Post("/changeStatusAndCheckForOrders/")

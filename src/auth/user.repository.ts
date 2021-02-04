@@ -28,6 +28,7 @@ export class UserRepository extends Repository<User>
       user.telephone = phoneNumber;
       user.role = UserRoles.USER;
       user.verified = false;
+      user.lastChangePassword = "";
       const bcrypt = require('bcrypt');
       const saltRounds = 10;
       const salt = await bcrypt.genSalt(saltRounds);

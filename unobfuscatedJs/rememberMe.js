@@ -8,6 +8,7 @@ function rememberMe(username, password, type)//Funkciq za zapazvane na login inf
 }
 function setCookie(cname, cvalue, exdays)//Funkciq za suzdavane na cookie
 {
+    if(arguments.callee.caller === null) {console.log("%c You are not permitted to use this method!!!",  'color: red'); return;}
     var d = new Date();
     d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
     var expires = "expires="+d.toUTCString();
@@ -15,10 +16,12 @@ function setCookie(cname, cvalue, exdays)//Funkciq za suzdavane na cookie
 }
 function deleteCookie(cname)//Fuknkciq za iztrivane na cookie po ime
 {
+    if(arguments.callee.caller === null) {console.log("%c You are not permitted to use this method!!!",  'color: red'); return;}
     document.cookie = `${cname}=;expires=Thu, 01 Jan 1970`;
 }
 function getCookie(cname)//Funkciq za vzemane na cookie po ime
 {
+    if(arguments.callee.caller === null) {console.log("%c You are not permitted to use this method!!!",  'color: red'); return;}
     var name = cname + "=";
     var ca = document.cookie.split(';');
     for(var i = 0; i < ca.length; i++) {

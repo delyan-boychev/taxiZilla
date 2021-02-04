@@ -14,7 +14,7 @@ async function bootstrap() {
   app.useStaticAssets(join(__dirname, "/../staticFiles/"))
   app.useGlobalFilters(new HttpExceptionFilter(), new HttpExceptionFilter2())
   app.use(helmet.contentSecurityPolicy({directives:{
-    "default-src": ["'self'", "maps.google.com", "www.google.com"],
+    "default-src": ["'self'", "maps.google.com", "www.google.com", "geocode.arcgis.com"],
     "img-src": ["*", "'self'", "data:"],
     "style-src": ["'self'", "'unsafe-inline'"],
     "script-src": ["'self'", "'unsafe-inline'"],

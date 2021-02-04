@@ -7,6 +7,7 @@ import { RegisterUserDTO } from './dto/registerUser.dto';
 import { transport } from '../email.transport';
 import { JWTPayload } from './jwt-payload';
 import { User } from './user.entity';
+import { SupportedCityRepository } from "../firm/cityRepository";
 import { UserRepository } from './user.repository';
 import * as Cryptr from 'cryptr';
 import { FirmRepository } from '../firm/firm.repository';
@@ -27,6 +28,7 @@ export class AuthService {
     private firmRepository: FirmRepository,
     private jwtService:JwtService,
     private firmService:FirmService,
+    private supportedCityRespository:SupportedCityRepository
   ) { };
   generateString(length)//Funkciq za generirane na niz po zadadena duljina
   {
@@ -38,6 +40,18 @@ export class AuthService {
         result += characters.charAt(Math.floor(Math.random() * charactersLength));
     }
     return result;
+  }
+  async getCitiesByFirmId(firmID:number)
+  {
+    const firm = await this.firmRepository.findOne({id: firmID});
+    if(firm)
+    {
+    return await this.supportedCityRespository.getCitiesByFirm(firm);
+    }
+    else
+    {
+      return false;
+    }
   }
   async resetPassword(email:string)
   {

@@ -1,4 +1,5 @@
-import { EntityRepository, Repository } from "typeorm";
+import { UnauthorizedException } from "@nestjs/common";
+import { EntityRepository, Repository, Unique } from "typeorm";
 import { Firm } from "./firm.entity";
 import { FirmService } from "./firm.service";
 import { SupportedCity } from "./supportedCity.entity";
@@ -60,6 +61,7 @@ export class SupportedCityRepository extends Repository<SupportedCity>
     }
     async getCitiesByFirm(firm:Firm)
     {
+        if(!firm) throw new UnauthorizedException();
         return firm.supportedCities;
     }
     async getAllCities()
