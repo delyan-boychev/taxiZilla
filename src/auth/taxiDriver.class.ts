@@ -42,6 +42,8 @@ export class taxiDriversFindNearest
         {
             if(Drivers[i])
             {
+                if(!Requests[i])
+                {
     
                 if(!this.taxiDriversDistance[i])
                 {
@@ -51,6 +53,7 @@ export class taxiDriversFindNearest
                 }
                 this.taxiDriversDistance[i].distance = Math.sqrt(Math.pow(this.x - Drivers[i].x, 2) + Math.pow(this.y - Drivers[i].y, 2));
                 this.taxiDriversDistance[i].index=i;
+                }
             }
         }
     }
@@ -73,6 +76,7 @@ export class taxiDriversFindNearest
                 address: this.address,
                 sender:this.sender,
                 ip:this.ip,
+                notes: this.notes,
                 status:0,
                 distances:this.taxiDriversDistance,
                 curdriveridx:0,

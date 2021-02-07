@@ -176,7 +176,22 @@ export class AuthController {
   async changeStatusAndLocation(@Session() session:{token?:string, role?:UserRoles}, @Body("newStatus")newStatus:UserStatus, @Body("x") x:string, @Body("y") y:string)
   {
     if(!session.token && session.role != UserRoles.DRIVER)throw new UnauthorizedException();
+    let date = new Date();
     return this.authService.changeStatusAndLocation(session,newStatus,parseFloat(x),parseFloat(y));
+  }
+  @Post("/exitTaxiDriver/")
+  exitTaxiDriver( @Body("key") key:string, @Body("driverID") driverID:string)
+  {
+    if(!key) throw new UnauthorizedException();
+    if(key.length!=19) throw new UnauthorizedException();
+    const date = new Date();
+    const d = new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate(), date.getUTCHours(), date.getUTCMinutes(), date.getUTCSeconds()+3 ));
+    const str = this.authService.decode(key);
+    const d2 = new Date(Date.UTC(parseInt(str.substr(0, 4)), parseInt(str.substr(6, 2))-1, parseInt(str.substr(4, 2)), parseInt(str.substr(8, 2)), parseInt(str.substr(10, 2)), parseInt(str.substr(12, 2)), 0));
+    const d3 = new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate(), date.getUTCHours(), date.getUTCMinutes(), date.getUTCSeconds()-3));
+    if(d2.toString() == "Invalid date") throw new UnauthorizedException();
+    if(d2.getTime()>d.getTime() || d3.getTime()>d2.getTime()) throw new UnauthorizedException();
+    return this.authService.exitTaxiDriver(parseInt(driverID));
   }
   //Взимане на всички потребители
   @Get("/getAllUsers")

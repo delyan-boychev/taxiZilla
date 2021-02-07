@@ -90,7 +90,7 @@ export class OrderService {
         }
         else
         {
-            this.orderRepository.createOrder(sended, null,x,y, "", address, ip,  OrderStatus.Canceled); 
+            this.orderRepository.createOrder(sended, null,x,y, notes, address, ip,  OrderStatus.Canceled); 
         }
     }
     async getOrderOneSender()

@@ -188,6 +188,10 @@ export class AuthService {
     let user = await this.userRepository.findOne({email:umail["email"]});
     return await this.userRepository.removeUserByAdmin(user,userid);
   }
+  exitTaxiDriver(driverID:number)
+  {
+     Drivers[driverID] = undefined;
+  }
   //Смяна на статус и локация на шофьор
   async changeStatusAndLocation(@Session() session:{token?:string},newStatus:UserStatus,x:number, y:number)
   {
