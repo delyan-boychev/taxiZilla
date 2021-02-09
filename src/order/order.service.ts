@@ -51,7 +51,6 @@ export class OrderService {
         let user = await this.userRepository.findOne({id: senderID});
         const order = await this.orderRepository.deleteOrder(orderID);
         let a:taxiDriversFindNearest = new taxiDriversFindNearest(order.x,order.y,user ,order.notes, order.address, order.ip);
-        console.log(order);
         let k = 0;
         for(let i=0; i<Drivers.length; i++)
         {

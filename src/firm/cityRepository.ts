@@ -37,7 +37,6 @@ export class SupportedCityRepository extends Repository<SupportedCity>
             newRec.region=region;
             newRec.firms=[firm];
             await newRec.save();
-            console.log(newRec.firms);
             firm.supportedCities.push(newRec);
             await firm.save();
             return true;

@@ -42,7 +42,7 @@ export class taxiDriversFindNearest
         {
             if(Drivers[i])
             {
-                if(!Requests[i])
+                if(Requests[i] === undefined)
                 {
     
                 if(!this.taxiDriversDistance[i])
