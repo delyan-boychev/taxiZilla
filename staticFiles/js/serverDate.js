@@ -22,6 +22,7 @@ const getServerDate = async (
 ) => {
   let best = { uncertainty: Number.MAX_VALUE };
     try {
+      
       const { requestDate, responseDate, serverDate } = await fetchSample();
       const uncertainty = (responseDate - requestDate) / 2 + 500;
 
