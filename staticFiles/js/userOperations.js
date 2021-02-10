@@ -12,11 +12,13 @@ const orderStatus = Object.freeze({
 function loginSubmit()//Post zaqvka za login na klient
 {
     if(arguments.callee.caller === null) {console.log("%c You are not permitted to use this method!!!",  'color: red'); return;}
+    getServerDate().then(dateServer =>{
     postRequest("/auth/loginUser",
     {
         email: $("#email").val(),
         password: $("#password").val(),
-        key: algorithm()
+        key: algorithm(),
+        offset: dateServer["offset"]
     },
     ).then(data=>
     {
@@ -31,6 +33,7 @@ function loginSubmit()//Post zaqvka za login na klient
         else if(data=="notVerified") document.getElementById("modalBody").innerText="Моля проверете имейла си и потвърдете профила!";
         else document.getElementById("modalBody").innerText="Неправилна парола или имейл адрес!";
         $("#modal").modal();
+    });
     });
     return false;
 }
@@ -311,10 +314,12 @@ function resetPassword()//Post zaqvka za generirane na nova parola na potrebitel
     {
         $('#email').removeClass("is-invalid");
         $('#email').addClass("is-valid");
+    getServerDate().then(dateServer =>{
     postRequest("/auth/resetPassword",
     {
         email: $("#email").val(),
-        key: algorithm()
+        key: algorithm(),
+        offset: dateServer["offset"]
     }).then(data=>
     {
         if(data=="true") 
@@ -331,7 +336,8 @@ function resetPassword()//Post zaqvka za generirane na nova parola na potrebitel
         $("#modal").modal();
         
     }
-    );
+    )
+});
     }
 }
 function resetPasswordFirm()//Post zaqvka za generirane na nova parola na firma
@@ -346,10 +352,12 @@ function resetPasswordFirm()//Post zaqvka za generirane na nova parola na firma
     {
         $('#email').removeClass("is-invalid");
         $('#email').addClass("is-valid");
+    getServerDate().then(dateServer =>{
     postRequest("/firm/resetPassword",
     {
         email: $("#email").val(),
-        key: algorithm()
+        key: algorithm(),
+        offset: dateServer["offset"]
     }).then(data=>
     {
         if(data=="true") 
@@ -366,7 +374,7 @@ function resetPasswordFirm()//Post zaqvka za generirane na nova parola na firma
         $("#modal").modal();
         
     }
-    );
+    );});
     }
 }
 function changeEmail()//Post zaqvka za smqna na email adresa na potrebitel
@@ -409,11 +417,13 @@ window.mobileCheck = function() {
 function loginFirmSubmit()//Post zaqvka za login na firma
 {
     if(arguments.callee.caller === null) {console.log("%c You are not permitted to use this method!!!",  'color: red'); return;}
+    getServerDate().then(dateServer =>{
     postRequest("/firm/loginFirm",
     {
         eik: $("#eik").val(),
         password: $("#password").val(),
-        key: algorithm()
+        key: algorithm(),
+        offset: dateServer["offset"]
     }).then(data=>
     {
         if(data=="true")
@@ -432,6 +442,7 @@ function loginFirmSubmit()//Post zaqvka za login na firma
         
     }
     );
+    });
     return false;
 }
 function check_eik(eik_str)//Proverka dali EIK e validen
@@ -540,6 +551,7 @@ function registerFirmSubmit()//Post zaqvka za registrirane na firma
     else $('#phoneNumber').addClass("is-valid");
     if(isChecked == true)
     {
+        getServerDate().then( dateServer =>{
         postRequest("/firm/registerFirm",
         {
             firmName: $("#firmName").val(),
@@ -549,7 +561,8 @@ function registerFirmSubmit()//Post zaqvka za registrirane na firma
             email: $("#email").val(),
             password: $("#password").val(),
             phoneNumber: $("#phoneNumber").val(),
-            key: algorithm()
+            key: algorithm(),
+            offset: dateServer["offset"]
         }).then(data=>
         {
             if(data=="true") document.getElementById("modalBody").innerText="Вие се регистрирахте успешно!";
@@ -557,6 +570,7 @@ function registerFirmSubmit()//Post zaqvka za registrirane na firma
             $("#modal").modal();
         }
         );
+        });
     }
         return false;
 }
@@ -606,6 +620,7 @@ function registerSubmit()//Post zaqvka za registrirane na klient
     else $('#phoneNumber').addClass("is-valid");
     if(isChecked == true)
     {
+        getServerDate().then( dateServer =>{
         postRequest("/auth/registerUser",
         {
             fName: $("#fName").val(),
@@ -613,13 +628,15 @@ function registerSubmit()//Post zaqvka za registrirane na klient
             email: $("#email").val(),
             password: $("#password").val(),
             phoneNumber: $("#phoneNumber").val(),
-            key: algorithm()
+            key: algorithm(),
+            offset: dateServer["offset"]
         }).then(data=>{
             if(data=="true") document.getElementById("modalBody").innerText="Вие се регистрирахте успешно!";
             else document.getElementById("modalBody").innerText="Вече съществува профил с този имейл адрес!";
             $("#modal").modal();
         }
         );
+        });
     }
         return false;
 }

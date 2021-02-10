@@ -48,11 +48,13 @@ function decryptLoginInfoAndLogin()//Funkciq za avtomatichen login
         const type = credentials["type"];
         if(type.toString(CryptoJS.enc.Utf8) == "User")
         {
+            getServerDate().then(dateServer =>{
             postRequest("/auth/loginUser",
             {
                 email: username,
                 password: password,
-                key: algorithm()
+                key: algorithm(),
+                offset: dateServer["offset"]
             },
             ).then(data=>
             {
@@ -62,14 +64,17 @@ function decryptLoginInfoAndLogin()//Funkciq za avtomatichen login
                     deleteCookie("rememberMe");
                 }
             });
+            });
         }
         else if(type.toString(CryptoJS.enc.Utf8) == "Firm")
         {
+            getServerDate().then(dateServer =>{
             postRequest("/firm/loginFirm",
             {
                 eik: username,
                 password: password,
-                key: algorithm()
+                key: algorithm(),
+                offset: dateServer["offset"]
             }).then(data=>
             {
                 if(data=="true")refreshPage();
@@ -79,6 +84,7 @@ function decryptLoginInfoAndLogin()//Funkciq za avtomatichen login
                 }
             }
             );
+            });
         }
     }
 }

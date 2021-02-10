@@ -70,12 +70,12 @@ export class AuthService {
     const encrypter = new Cryptr("mXb35Bw^FvCz9MLN");
     const newPass = this.generateString(10);
     date.setHours(date.getHours() + 1);
-    const timeStamp = await encrypter.encrypt(date.toString());
-    const emcr = await encrypter.encrypt(email);
-    const crPass = await encrypter.encrypt(newPass);
+    const timeStamp = encrypter.encrypt(date.toString());
+    const emcr = encrypter.encrypt(email);
+    const crPass = encrypter.encrypt(newPass);
     const link = "https://taxizillabg.com/auth/verifyResetPassword/"+emcr+"/"+crPass+"/"+timeStamp;
     const htmlcode = "<a href='" + link + "'>ТУК</a>";
-    const info = await transport.sendMail({
+    const info = transport.sendMail({
       from: 'Taxi Zilla',
       to: email,
       subject: 'Смяна на парола',
