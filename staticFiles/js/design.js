@@ -7,10 +7,6 @@ function escapeQuotes(str)
 {
     return str.replace(/"/g, '\\"').replace(/'/g, "\\'");
 }
-function unescapeQuotes(str)
-{
-    return str.replace('\\"', '\\\"').replace("\\'", "\\\'");
-}
 function hideTooltips()//Izchistvane na tooltipovete
 {
     if(arguments.callee.caller === null) {console.log("%c You are not permitted to use this method!!!",  'color: red'); return;}

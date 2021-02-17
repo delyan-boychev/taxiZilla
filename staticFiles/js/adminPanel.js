@@ -117,7 +117,7 @@ function getAllUsersForEditTable()//Injectvane na potrebiteli v tablica za redka
             if(el["firmId"] != null) firmId = el["firmId"];
             if(el["verified"] == 1) verified = "Да";
             else verified = "Не";
-            document.getElementById("bodyTable").innerHTML += `<tr><td>${el["id"]}</td><td>${el["fName"]}</td><td>${el["lName"]}</td><td>${el["email"]}</td><td>${el["telephone"]}</td><td>${userRole[el["role"]]}</td><td>${firmId}</td><td>${verified}</td><td class="text-secondary h5"><i class='far fa-edit' style='cursor: pointer;' onclick='editUserShowModal("${el["id"]}", "${escapeQuotes(el["fName"])}", "${escapeQuotes(el["lName"])}", "${el["email"]}", "${el["telephone"]}");'></i></td></tr>`
+            document.getElementById("bodyTable").innerHTML += `<tr><td>${el["id"]}</td><td>${el["fName"]}</td><td>${el["lName"]}</td><td>${el["email"]}</td><td>${el["telephone"]}</td><td>${userRole[el["role"]]}</td><td>${firmId}</td><td>${verified}</td><td class="text-secondary h5"><i class='far fa-edit' style='cursor: pointer;' onclick='editUserShowModal("${el["id"]}", "${escapeQuotes(el["fName"])}", "${escapeQuotes(el["lName"])}", "${escapeQuotes(el["email"])}", "${escapeQuotes(el["telephone"])}");'></i></td></tr>`
             }
         });
         $('#userEditDt').DataTable(tableText);
@@ -185,7 +185,7 @@ function getAllFirmsForEditFirmTabTable()//Injectvane na firmi v tablica za reda
             var modVerified = "";
             if(el["moderationVerified"] == 1) modVerified = "Да";
             else modVerified = "Не";
-            document.getElementById("bodyTable").innerHTML += `<tr><td>${el["id"]}</td><td>${el["firmName"]}</td><td>${el["eik"]}</td><td>${el["city"]}</td><td>${el["address"]}</td><td>${el["email"]}</td><td>${el["phoneNumber"]}</td><td>${verified}</td><td>${modVerified}</td><td class="text-secondary h5"><i class='far fa-edit' style='cursor: pointer;' onclick='editFirmShowModal("${el["id"]}", "${escapeQuotes(el["firmName"])}", "${el["eik"]}", "${escapeQuotes(el["city"])}", "${escapeQuotes(el["address"])}", "${el["email"]}", "${el["phoneNumber"]}");'></i></td></tr>`
+            document.getElementById("bodyTable").innerHTML += `<tr><td>${el["id"]}</td><td>${el["firmName"]}</td><td>${el["eik"]}</td><td>${el["city"]}</td><td>${el["address"]}</td><td>${el["email"]}</td><td>${el["phoneNumber"]}</td><td>${verified}</td><td>${modVerified}</td><td class="text-secondary h5"><i class='far fa-edit' style='cursor: pointer;' onclick='editFirmShowModal("${el["id"]}", "${escapeQuotes(el["firmName"])}", "${el["eik"]}", "${escapeQuotes(el["city"])}", "${escapeQuotes(el["address"])}", "${escapeQuotes(el["email"])}", "${escapeQuotes(el["phoneNumber"])}");'></i></td></tr>`
             }
         });
         $('#firmEditDt').DataTable(tableTextFirm);
@@ -384,7 +384,11 @@ function editUserShowModal(id, fName, lName, email, phoneNumber)//Pokazvane na m
 {
     if(arguments.callee.caller === null) {console.log("%c You are not permitted to use this method!!!",  'color: red'); return;}
     document.getElementById("modalAdminLabel").innerText = `Редактиране на потребител`;
-    document.getElementById("modalAdminBody").innerHTML =  `<div class="form-group"><input type="text" class="form-control" id="fName"  placeholder="Име" value="${unescapeQuotes(fName)}"> </div> <div class="form-group"> <input type="text" class="form-control" id="lName" placeholder="Фамилия" value="${unescapeQuotes(lName)}"> </div> <div class="form-group"><input type="email" class="form-control" id="email" placeholder="Имейл" value="${email}"></div> <div class="form-group"><input type="text" class="form-control" id="phoneNumber" placeholder="Телефонен номер" value="${phoneNumber}"> </div> <div class="form-group"></div>`;
+    document.getElementById("modalAdminBody").innerHTML =  `<div class="form-group"><input type="text" class="form-control" id="fName"  placeholder="Име"> </div> <div class="form-group"> <input type="text" class="form-control" id="lName" placeholder="Фамилия"> </div> <div class="form-group"><input type="email" class="form-control" id="email" placeholder="Имейл"></div> <div class="form-group"><input type="text" class="form-control" id="phoneNumber" placeholder="Телефонен номер"> </div> <div class="form-group"></div>`;
+    document.getElementById("fName").value = fName;
+    document.getElementById("lName").value = lName;
+    document.getElementById("email").value = email;
+    document.getElementById("phoneNumber").value = phoneNumber;
     document.getElementById("modalAdminButton").onclick = function() {editUser(id);};
     $("#modalAdmin").modal();
 }
@@ -558,7 +562,13 @@ function editFirmShowModal(id, firmName, eik, city, address, email, phoneNumber)
 {
     if(arguments.callee.caller === null) {console.log("%c You are not permitted to use this method!!!",  'color: red'); return;}
     document.getElementById("modalAdminLabel").innerText = `Редактиране на фирма`;
-    document.getElementById("modalAdminBody").innerHTML =  `<div class="form-group"><input type="text" class="form-control" id="firmName"  placeholder="Име на фирма" value="${firmName}"> </div> <div class="form-group"> <input type="text" class="form-control" id="eik" placeholder="ЕИК" value="${eik}"> </div> <div class="form-group"><input type="text" class="form-control" id="city" placeholder="Град седалище на фирма" value="${city}"></div><div class="form-group"><input type="text" class="form-control" id="address" placeholder="Адрес на седалището на фирма" value="${address}"></div><div class="form-group"><input type="email" class="form-control" id="email" placeholder="Имейл" value="${email}"></div> <div class="form-group"><input type="text" class="form-control" id="phoneNumber" placeholder="Телефонен номер" value="${phoneNumber}"> </div> <div class="form-group"></div>`;
+    document.getElementById("modalAdminBody").innerHTML =  `<div class="form-group"><input type="text" class="form-control" id="firmName"  placeholder="Име на фирма"> </div> <div class="form-group"> <input type="text" class="form-control" id="eik" placeholder="ЕИК"> </div> <div class="form-group"><input type="text" class="form-control" id="city" placeholder="Град седалище на фирма"></div><div class="form-group"><input type="text" class="form-control" id="address" placeholder="Адрес на седалището на фирма"></div><div class="form-group"><input type="email" class="form-control" id="email" placeholder="Имейл"></div> <div class="form-group"><input type="text" class="form-control" id="phoneNumber" placeholder="Телефонен номер"> </div> <div class="form-group"></div>`;
+    document.getElementById("firmName").value = firmName;
+    document.getElementById("eik").value = eik;
+    document.getElementById("email").value = email;
+    document.getElementById("city").value = city;
+    document.getElementById("address").value = address;
+    document.getElementById("phoneNumber").value = phoneNumber;
     document.getElementById("modalAdminButton").onclick = function() {editFirm(id);};
     $("#modalAdmin").modal();
 }

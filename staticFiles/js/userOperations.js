@@ -396,7 +396,7 @@ function changeEmail()//Post zaqvka za smqna na email adresa na potrebitel
         if(data=="true") 
         {
             document.getElementById("modalBody").innerText="Имейл адресът е сменен успешно! Сега автоматчно ще излезете от профила си! Моля проверете новия си имейл адрес и го потвърдете!";
-            actionOnCloseModal = logout;
+            actionOnCloseModal = logOut;
         }
         else if(data=="emailExists") {
             document.getElementById("modalBody").innerText="Вече съществува потребител с този имейл адрес!";
@@ -882,11 +882,7 @@ function getTaxiDrivers()//Get zaqvka za vzimane na taksimetrovi shofyori
         }
       });
 }
-function logout()//Funkciq za izlizane ot profila
-{
-    if(arguments.callee.caller === null) {console.log("%c You are not permitted to use this method!!!",  'color: red'); return;}
-    window.location = "./logout";
-}
+
 //Povikvane na funkciq pri zatvarqne na modal
 $('#modal').on('hidden.bs.modal', function () {
     if(actionOnCloseModal !== undefined) actionOnCloseModal();

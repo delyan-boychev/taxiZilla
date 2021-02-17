@@ -4,7 +4,10 @@ header,
 #intro {
     height: 100%;
 }
-
+.modal-open
+{
+  overflow: hidden!important;
+}
 .top-nav-collapse {
     background-color: #24355C;
   }

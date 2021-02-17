@@ -9,18 +9,20 @@ import { FirmService } from './firm.service';
 export class FirmController {
   constructor(private firmService:FirmService){};
   @Post("/registerFirm/")
-  async registerFirm(@Body(ValidationPipe) registerFirmDto:RegisterFirmDTO, @Body("key") key:string)
+  async registerFirm(@Body(ValidationPipe) registerFirmDto:RegisterFirmDTO, @Body("key") key:string, @Body("offset") offset:string)
   {
-    if(!key) throw new UnauthorizedException();
+    // Декодиране на ключ и валидация
     if(!key) throw new UnauthorizedException();
     if(key.length!=19) throw new UnauthorizedException();
     const date = new Date();
-    const d = new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate(), date.getUTCHours(), date.getUTCMinutes(), date.getUTCSeconds()+3 ));
+    const d = new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate(), date.getUTCHours(), date.getUTCMinutes(), date.getUTCSeconds()+3, date.getUTCMilliseconds() ));
     const str = this.firmService.decode(key);
-    const d2 = new Date(Date.UTC(parseInt(str.substr(0, 4)), parseInt(str.substr(6, 2))-1, parseInt(str.substr(4, 2)), parseInt(str.substr(8, 2)), parseInt(str.substr(10, 2)), parseInt(str.substr(12, 2)), 0));
-    const d3 = new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate(), date.getUTCHours(), date.getUTCMinutes(), date.getUTCSeconds()-3));
-    if(d2.toString() == "Invalid date") throw new UnauthorizedException();
+    const d2 = new Date(Date.UTC(parseInt(str.substr(0, 4)), parseInt(str.substr(6, 2))-1, parseInt(str.substr(4, 2)), parseInt(str.substr(8, 2)), parseInt(str.substr(10, 2)), parseInt(str.substr(12, 2)) + 1, 0 + parseInt(offset)));
+    const d3 = new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate(), date.getUTCHours(), date.getUTCMinutes(), date.getUTCSeconds()-3, date.getUTCMilliseconds()));
+    if(isNaN(d2.getTime())) throw new UnauthorizedException();
     if(d2.getTime()>d.getTime() || d3.getTime()>d2.getTime()) throw new UnauthorizedException();
+    //=====================================================
+    //Същинско регистриране и връщане на обект с данните
     const registered = await this.firmService.registerFirm(registerFirmDto);
     if(registered == true)
     {
