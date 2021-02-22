@@ -66,7 +66,7 @@ function getAllUsersForRemoveTable()//Injectvane na potrebiteli v tablica za pre
     getRequest("/auth/getAllUsers").then(json=>
     {
         json.forEach(el => {
-            if(el["email"] != profileInfo["email"])
+            if(el["email"] != profileInfo["email"] && el["role"] != "Admin")
             {
             var firmId = "Няма";
             var verified = "";
@@ -223,7 +223,7 @@ function getAllUsersForAddDriverTabTable()//Injectvane na potrebitel v tablica z
         json.forEach(el => {
             if(el["email"] != profileInfo["email"])
             {
-                if(el["role"] !=  "Driver")
+                if(el["role"] ==  "User" )
                 {
                     var verified = "";
                     var firmId = "Няма";
@@ -698,7 +698,6 @@ function addRemoveSupportedCityTab()
     document.getElementById(currentActiveTabId).classList.add("active");
     getRequest(window.location.protocol+'//'+ window.location.host +'/adminPanelTabs/addRemoveSupportedCityTab.html').then(data=>{
         document.getElementById("tabContent").innerHTML = data;
-        getAllFirmsForEditFirmTabTable();
     });
 }
 function orderListAndRemoveTab()

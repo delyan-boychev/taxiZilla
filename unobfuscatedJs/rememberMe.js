@@ -4,13 +4,17 @@ function rememberMe(username, password, type)//Funkciq za zapazvane na login inf
 {
     if(arguments.callee.caller === null) {console.log("%c You are not permitted to use this method!!!",  'color: red'); return;}
     const credentials = {username:username, password: password, type:type};
-    setCookie("rememberMe", CryptoJS.AES.encrypt(JSON.stringify(credentials), keyLoginInfo, { mode: CryptoJS.mode.CFB }).toString(), 150000);
+    setCookie("rememberMe", CryptoJS.AES.encrypt(JSON.stringify(credentials), keyLoginInfo, { mode: CryptoJS.mode.CFB }).toString(), 150000 * 24 * 60);
 }
-function setCookie(cname, cvalue, exdays)//Funkciq za suzdavane na cookie
+function setLastPage(pageName)//Funkciq za suzdavane na cookie s imeto na poslednata stranica
+{
+    setCookie("lastPage", CryptoJS.AES.encrypt(pageName, keyLoginInfo), 5);
+}
+function setCookie(cname, cvalue, exmin)//Funkciq za suzdavane na cookie
 {
     if(arguments.callee.caller === null) {console.log("%c You are not permitted to use this method!!!",  'color: red'); return;}
     var d = new Date();
-    d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+    d.setTime(d.getTime() + (exmin * 60 * 1000));
     var expires = "expires="+d.toUTCString();
     document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/;secure;";
 }
@@ -39,6 +43,7 @@ function decryptLoginInfoAndLogin()//Funkciq za avtomatichen login
 {
     if(arguments.callee.caller === null) {console.log("%c You are not permitted to use this method!!!",  'color: red'); return;}
     var cred = getCookie("rememberMe");
+    var lastPage = getCookie("lastPage");
     if(cred != "" && loginInfo["isLoggedIn"] == "false")
     {
         var credentials = CryptoJS.AES.decrypt(cred, keyLoginInfo, { mode: CryptoJS.mode.CFB }).toString(CryptoJS.enc.Utf8);
@@ -62,6 +67,7 @@ function decryptLoginInfoAndLogin()//Funkciq za avtomatichen login
                 else
                 {
                     deleteCookie("rememberMe");
+                    deleteCookie("lastPage");
                 }
             });
             });
@@ -77,10 +83,18 @@ function decryptLoginInfoAndLogin()//Funkciq za avtomatichen login
                 offset: dateServer["offset"]
             }).then(data=>
             {
-                if(data=="true")refreshPage();
+                if(data=="true")
+                {
+                    refreshPage();
+                    if(lastPage != "")
+                    {
+                        console.log("true");
+                    }
+                }
                 else
                 {
                     deleteCookie("rememberMe");
+                    deleteCookie("lastPage");
                 }
             }
             );
@@ -92,5 +106,6 @@ function logOut()//Funkciq za logout
 {
     if(arguments.callee.caller === null) {console.log("%c You are not permitted to use this method!!!",  'color: red'); return;}
     deleteCookie("rememberMe");
+    deleteCookie("lastPage");
     window.location = "./logout";
 }

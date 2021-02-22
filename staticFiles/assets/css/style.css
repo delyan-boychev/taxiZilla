@@ -4,7 +4,10 @@ header,
 #intro {
     height: 100%;
 }
-
+.navbar-nav > li{
+  padding-left:5px;
+  padding-right:5px;
+}
 .modal-open
 {
   overflow: hidden!important;
