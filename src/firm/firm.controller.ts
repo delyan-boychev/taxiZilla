@@ -1,6 +1,8 @@
 import { Body, Controller, Get, Param, Post, Req, Session, UnauthorizedException, UseGuards, ValidationPipe } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
+import { get } from 'http';
 import { session } from 'passport';
+import { pairs } from 'rxjs';
 import { UserRoles } from 'src/auth/enums/userRoles.enum';
 import { RegisterFirmDTO } from './dto/registerFirm.dto';
 import { FirmService } from './firm.service';
@@ -106,11 +108,29 @@ export class FirmController {
     if(!session.token)throw new UnauthorizedException();
     return await this.firmService.addCity(city,region,session); 
   }
+  @Post("/addSupportedCityByFirmId")
+  async addCityByFirmId(@Session() session:{token?:string}, @Body("city")city:string,@Body("region")region:string, @Body("firmId") firmId:string)
+  {
+    if(!session.token)throw new UnauthorizedException();
+    return await this.firmService.addCityByFirmId(city, region, parseInt(firmId));
+  }
   @Post("/removeSupportedCity")
   async removeCity(@Session() session:{token?:string},@Body("city")city:string,@Body("region")region:string)
   {
     if(!session.token)throw new UnauthorizedException();
     return await this.firmService.removeCity(city,region,session);
+  }
+  @Post("/removeSupportedCityById")
+  async removeCityById(@Session() session:{token?:string},@Body("firmId")firmId:string,@Body("cityId")cityId:string)
+  {
+    if(!session.token)throw new UnauthorizedException();
+    return await this.firmService.removeCityById(parseInt(cityId), parseInt(firmId));
+  }
+  @Post("/getCitiesByFirmId/")
+  async getCitiesByFirmId(@Session() session:{token?:string}, @Body("firmId") firmId:string)
+  {
+    if(!session.token)throw new UnauthorizedException();
+    return await this.firmService.getCitiesByFirmId(parseInt(firmId));
   }
   @Get("/getCitiesByFirm/")
   async getCitiesByFirm(@Session() session:{token?:string})
@@ -144,7 +164,7 @@ export class FirmController {
   @Get("/getAllFirms")
   async getAllFirms(@Session() session:{token?:string, role?:string})
   {
-    if(!session.token && session.role != UserRoles.ADMIN) throw new UnauthorizedException();
+    if(!session.token && session.role != UserRoles.ADMIN && session.role != UserRoles.MODERATOR) throw new UnauthorizedException();
     return await this.firmService.getAllFirms();
   }
   @Post("/addTaxiDriverByAdmin")

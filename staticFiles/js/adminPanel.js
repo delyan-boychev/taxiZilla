@@ -60,6 +60,41 @@ const tableTextOrder = {
         }
     }
 };
+const tableTextCity = {
+    "language": {
+        "sProcessing":     "Обработка на данни...",
+        "sSearch":         "Търсене:",
+        "sLengthMenu":     "Покажи _MENU_ населени места на страница",
+        "sInfo":           "Показани са от _START_ до _END_ населено място от общо _TOTAL_ населени места",
+        "sInfoEmpty":      "Показани са 0 населени места",
+        "sInfoFiltered":   "(общ брой населени места - _MAX_)",
+        "sInfoPostFix":    "",
+        "sLoadingRecords": "Зареждане на данни...",
+        "sZeroRecords":    "Няма намерени населени места!",
+        "sEmptyTable":     "Няма населени места",
+        "oPaginate": {
+            "sPrevious":   "Предишна страница",
+            "sNext":       "Следваща страница",
+        }
+    }
+};
+function getAllCitiesByFirmForRemoveCityTable()//Injectvane na poddurjani naseleni mesta za premahvane na naseleni mesta
+{
+    if($("#removeCityDt").length)
+    {
+        document.getElementById("removeCityDt").remove();
+    }
+    postRequest("/firm/getCitiesByFirmId", {firmId: $("#firms option:selected").val()}).then(json=>
+    {
+        document.getElementById("divTableRemoveCity").innerHTML=`<h5 class="text-center" id="firmName"></h5> <table id="removeCityDt" class="table table-striped table-bordered table-responsive" cellspacing="0" width="100%"> <thead> <tr> <th class="th-sm">ID </th> <th class="th-sm">Име на населено място </th> <th class="th-sm">Име на област </th> <th class="th-sm">Премахване на населено място от фирма </th> </tr> </thead> <tbody id="bodyTable"> </tbody> <tfoot> <tr> <th>ID </th> <th>Име на населено място </th> <th>Име на област </th> <th>Премахване на населено място от фирма </th> </tr> </tfoot> </table>`;
+        document.getElementById("firmName").innerText = $("#firms option:selected").text();
+        json.forEach(el => {
+            document.getElementById("bodyTable").innerHTML += `<tr><td>${el["id"]}</td><td>${el["city"]}</td><td>${el["region"]}</td><td><h5><i class='far fa-times-circle text-danger' style='cursor: pointer;' onclick='removeSupportedCityShowModal("${$("#firms option:selected").val()}", "${el["id"]}");'></i></h5></td></tr>`
+        });
+        $('#removeCityDt').DataTable(tableTextCity);
+        $('.dataTables_length').addClass('bs-select');
+    });
+}
 function getAllUsersForRemoveTable()//Injectvane na potrebiteli v tablica za premahvane na potrebiteli
 {
     if(arguments.callee.caller === null) {console.log("%c You are not permitted to use this method!!!",  'color: red'); return;}
@@ -171,6 +206,25 @@ function getAllFirmsForRemoveFirmTable()//Injectvane na firmi v tablica za prema
     
 
 }
+function addCity()
+{
+    postRequest("/firm/addSupportedCityByFirmId", 
+    {
+        city: document.querySelector('input[name="type"]:checked').value + " " + $("#nameCity").val(),
+        region: $("#nameRegion").val(),
+        firmId: $("#firms2 option:selected").val()
+    }).then(data=>
+    {
+        if(data=="true") 
+        {
+            document.getElementById("modalBody").innerText="Населеното място е добавено успешно!";
+        }
+        else document.getElementById("modalBody").innerText="Вече сте добавили населено място с това име!";
+
+    $("#modal").modal();
+        }
+        );
+}
 function getAllFirmsForEditFirmTabTable()//Injectvane na firmi v tablica za redaktirane na firmi
 {
     if(arguments.callee.caller === null) {console.log("%c You are not permitted to use this method!!!",  'color: red'); return;}
@@ -244,8 +298,7 @@ function getAllFirmsForAddDrivers()//Injektvane na firmi v select tag za dobavqn
     getRequest("/firm/getAllFirms").then(json=>
     {
         json.forEach(el => {
-            document.getElementById("allFirmsForAddDriver").innerHTML += `<option value="${el["id"]}">${el["firmName"]}</option>`
-
+            document.getElementById("allFirmsForAddDriver").innerHTML += `<option value="${el["id"]}">${el["firmName"]}</option>`;
         });
     });
 }
@@ -267,6 +320,24 @@ function getAllOrdersForListAndRemove()//Injektvane na poruchki v tablica za pre
         $('.dataTables_length').addClass('bs-select');
     });
 
+}
+function removeSupportedCity(firmId, cityId)
+{
+    $("#modalAdmin").modal('hide');
+    postRequest("/firm/removeSupportedCityById", 
+    {
+        firmId: firmId,
+        cityId: cityId,
+    }).then(data=>
+    {
+        if(data == "true")
+        {
+        document.getElementById("modalBody").innerText = `Успешно е изтрито населено място с ID-${cityId} от фирма с ID-${firmId}!`;
+        actionOnCloseModal = getAllCitiesByFirmForRemoveCityTable;
+        $("#modal").modal();
+        }
+    }
+    );
 }
 function changeRoleUser(id)//Smqna rolq na potrebitel po id
 {
@@ -363,6 +434,14 @@ function addTaxiDriverByAdmin(id)
             $("#modal").modal();
         }
         );
+}
+function removeSupportedCityShowModal(firmId, cityId)//Pokazvane na modal za iztrivane na naseleno mqsto
+{
+    if(arguments.callee.caller === null) {console.log("%c You are not permitted to use this method!!!",  'color: red'); return;}
+    document.getElementById("modalAdminLabel").innerText = `Изтриване на населено място`;
+    document.getElementById("modalAdminBody").innerHTML =  `Сигурни ли сте, че искате да изтриете населено място с ID-${cityId} и ID на фирма-${firmId}?`;
+    document.getElementById("modalAdminButton").onclick = function() {removeSupportedCity(firmId, cityId);};
+    $("#modalAdmin").modal();
 }
 function activateUserShowModal(id)//Pokazvane na modal za aktivirane na potrebitel
 {
@@ -698,6 +777,15 @@ function addRemoveSupportedCityTab()
     document.getElementById(currentActiveTabId).classList.add("active");
     getRequest(window.location.protocol+'//'+ window.location.host +'/adminPanelTabs/addRemoveSupportedCityTab.html').then(data=>{
         document.getElementById("tabContent").innerHTML = data;
+        getRequest("/firm/getAllFirms/").then(json=>{
+            if(json.length> 0)
+            {
+            json.forEach(el => {
+                document.getElementById("firms").innerHTML += `<option value="${el["id"]}">${el["firmName"]}</option>`;
+                document.getElementById("firms2").innerHTML += `<option value="${el["id"]}">${el["firmName"]}</option>`
+            });
+            }
+        });
     });
 }
 function orderListAndRemoveTab()

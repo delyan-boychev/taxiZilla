@@ -246,12 +246,27 @@ export class FirmService {
     const firm = await this.firmRepository.findOne(firmID);
     return await this.cityRepository.addCity(city,region,firm);
   }
+  async addCityByFirmId(city:string, region:string, firmId:number)
+  {
+    const firm = await this.firmRepository.findOne({id: firmId});
+    return await this.cityRepository.addCity(city, region, firm);
+  }
+  async removeCityById(cityId:number, firmId:number)
+  {
+    const firm = await this.firmRepository.findOne({id: firmId});
+    return await this.cityRepository.removeCityById(cityId, firm);
+  }
   async removeCity(city:string,region:string, @Session() session:{token?: string})
   {
       const decoded=await this.jwtService.decode(session.token);
       const eik=decoded["eik"];
       const firm = await this.firmRepository.findOne({eik});
       return await this.cityRepository.removeCity(city,region,firm);
+  }
+  async getCitiesByFirmId(firmId:number)
+  {
+    const firm = await this.firmRepository.findOne({id:firmId});
+    return await this.cityRepository.getCitiesByFirm(firm);
   }
   async getCitiesByFirm(@Session() session:{token?: string})
   {

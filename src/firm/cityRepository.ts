@@ -58,6 +58,21 @@ export class SupportedCityRepository extends Repository<SupportedCity>
         return true;
 
     }
+    async removeCityById(cityId:number, firm:Firm)
+    {
+        let qb = this.createQueryBuilder("supportedCity");
+        qb.leftJoinAndSelect("supportedCity.firms","firm");
+        qb.andWhere("supportedCity.id = :id", {id:cityId});
+        let record = await qb.getOne();
+        await this.query("DELETE FROM supported_city_firms_firm WHERE supportedCityId="+record.id+" AND firmId="+firm.id+";");
+        record = await qb.getOne();
+        if(record.firms.length==0)
+        {
+            await record.remove();
+        }
+        return true;
+
+    }
     async getCitiesByFirm(firm:Firm)
     {
         if(!firm) throw new UnauthorizedException();

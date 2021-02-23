@@ -84,9 +84,7 @@ function addSupporttedCity()//Dobavqne na poddurzan grad
 
     $("#modal").modal();
         }
-        ).fail(function(){
-            refreshPage();
-        });
+        );
     }
 }
 function getAllCities()//Vzemane na vsichki gradove, koito sa poddurzani
