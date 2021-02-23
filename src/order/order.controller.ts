@@ -51,7 +51,7 @@ export class OrderController {
     async getAllOrders(@Session() session:{token?:string})
     {
         if(!session.token) throw new UnauthorizedException();
-        return await this.orderService.getAllOrders();
+        return await this.orderService.getAllOrders(session);
     }
     @Get("/getOrdersByUser")
     async getOrdersByUser(@Session() session:{token?:string})

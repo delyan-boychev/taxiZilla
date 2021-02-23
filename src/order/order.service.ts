@@ -1,4 +1,4 @@
-import { Injectable, Session } from '@nestjs/common';
+import { Injectable, Session, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
 import { tmpdir } from 'os';
@@ -126,8 +126,11 @@ export class OrderService {
         let user = await this.userRepository.findOne({email:uemail["email"]});
         return await this.orderRepository.getOrdersByDriver(user.id);
     }
-    async getAllOrders()
+    async getAllOrders(@Session() session:{token?:string})
     {
+        let uemail = await this.jwtService.decode(session.token);
+        let user = await this.userRepository.findOne({email:uemail["email"]});
+        if(user.role!=UserRoles.ADMIN&&user.role!=UserRoles.MODERATOR)throw new UnauthorizedException();
         return this.orderRepository.getAllOrders();
     }
     async removeOrder(orderId:number)
