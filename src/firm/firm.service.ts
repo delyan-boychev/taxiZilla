@@ -59,7 +59,7 @@ export class FirmService {
     {
       let umail = await this.jwtService.decode(session.token);
       const user = await this.userRepository.findOne({ email: umail["email"]}); 
-      if(user.role!==UserRoles.ADMIN)
+      if(user.role!==UserRoles.ADMIN&&user.role!==UserRoles.MODERATOR)
       {
         throw new UnauthorizedException();
       }
@@ -246,13 +246,25 @@ export class FirmService {
     const firm = await this.firmRepository.findOne(firmID);
     return await this.cityRepository.addCity(city,region,firm);
   }
-  async addCityByFirmId(city:string, region:string, firmId:number)
+  async addCityByFirmId(@Session()session:{token?: string},city:string, region:string, firmId:number)
   {
+    let umail = await this.jwtService.decode(session.token);
+    const user = await this.userRepository.findOne({ email: umail["email"]}); 
+    if(user.role!==UserRoles.ADMIN&&user.role!==UserRoles.MODERATOR)
+    {
+      throw new UnauthorizedException();
+    }
     const firm = await this.firmRepository.findOne({id: firmId});
     return await this.cityRepository.addCity(city, region, firm);
   }
-  async removeCityById(cityId:number, firmId:number)
+  async removeCityById(@Session()session:{token?: string},cityId:number, firmId:number)
   {
+    let umail = await this.jwtService.decode(session.token);
+    const user = await this.userRepository.findOne({ email: umail["email"]}); 
+    if(user.role!==UserRoles.ADMIN&&user.role!==UserRoles.MODERATOR)
+    {
+      throw new UnauthorizedException();
+    }
     const firm = await this.firmRepository.findOne({id: firmId});
     return await this.cityRepository.removeCityById(cityId, firm);
   }

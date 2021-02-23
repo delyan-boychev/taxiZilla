@@ -112,7 +112,7 @@ export class FirmController {
   async addCityByFirmId(@Session() session:{token?:string}, @Body("city")city:string,@Body("region")region:string, @Body("firmId") firmId:string)
   {
     if(!session.token)throw new UnauthorizedException();
-    return await this.firmService.addCityByFirmId(city, region, parseInt(firmId));
+    return await this.firmService.addCityByFirmId(session,city, region, parseInt(firmId));
   }
   @Post("/removeSupportedCity")
   async removeCity(@Session() session:{token?:string},@Body("city")city:string,@Body("region")region:string)
@@ -124,7 +124,7 @@ export class FirmController {
   async removeCityById(@Session() session:{token?:string},@Body("firmId")firmId:string,@Body("cityId")cityId:string)
   {
     if(!session.token)throw new UnauthorizedException();
-    return await this.firmService.removeCityById(parseInt(cityId), parseInt(firmId));
+    return await this.firmService.removeCityById(session,parseInt(cityId), parseInt(firmId));
   }
   @Post("/getCitiesByFirmId/")
   async getCitiesByFirmId(@Session() session:{token?:string}, @Body("firmId") firmId:string)
@@ -164,7 +164,7 @@ export class FirmController {
   @Get("/getAllFirms")
   async getAllFirms(@Session() session:{token?:string, role?:string})
   {
-    if(!session.token && session.role != UserRoles.ADMIN && session.role != UserRoles.MODERATOR) throw new UnauthorizedException();
+    if(!session.token || (session.role != UserRoles.ADMIN && session.role != UserRoles.MODERATOR)) throw new UnauthorizedException();
     return await this.firmService.getAllFirms();
   }
   @Post("/addTaxiDriverByAdmin")
