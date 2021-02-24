@@ -275,6 +275,10 @@ export class FirmService {
     {
       throw new UnauthorizedException();
     }
+    if(user.role==UserRoles.MODERATOR)
+    {
+      this.modRepository.createNewLogItem(user.email,"премахна населено място с ID -  " + cityId + " от поддържаните населени места на фирма с ID - "+firmId);
+    }
     const firm = await this.firmRepository.findOne({id: firmId});
     return await this.cityRepository.removeCityById(cityId, firm);
   }
