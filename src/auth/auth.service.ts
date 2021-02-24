@@ -17,6 +17,7 @@ import { Drivers, Statuses, x, y, Requests } from 'src/coordsAndStatus.array';
 import { taxiDriver } from './taxiDriver.class';
 import { FirmService } from 'src/firm/firm.service';
 import { use } from 'passport';
+import {ModeratorOperation} from './modOperation.entity';
 
 @Injectable()
 export class AuthService {
@@ -381,5 +382,16 @@ export class AuthService {
     let userJSON = await this.jwtService.decode(session.token);
     return await this.userRepository.editUser(userJSON["email"], fName, lName, phoneNumber);
 
+  }
+
+  //======MOD LOGS=======
+  async createNewLogItem(modEmail:string,action:string)
+  {
+      let operation = new ModeratorOperation();
+      operation.moderatorEmail=modEmail;
+      operation.action=action;
+      let dateTime = new Date();
+      operation.timeStamp=dateTime.toUTCString();
+      await operation.save();
   }
 }
