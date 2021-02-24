@@ -9,12 +9,13 @@ import { JwtStrategy } from './jwt-strategy';
 import { UserRepository } from './user.repository';
 import { FirmModule } from 'src/firm/firm.module';
 import { SupportedCityRepository } from 'src/firm/cityRepository';
+import { ModOperationRepository } from './modOperation.repository';
 
 @Module({
   imports: [
     FirmModule,
     PassportModule.register({defaultStrategy:'jwt'}),
-    TypeOrmModule.forFeature([UserRepository, FirmRepository, SupportedCityRepository]),
+    TypeOrmModule.forFeature([UserRepository, FirmRepository, SupportedCityRepository,ModOperationRepository]),
     JwtModule.register({
       secret: 'UJ=AMG59_%PaT#NqzQ7ZKr%U^QbH*S=CPmNzwrMQtmpXexAr@zmu?5vvKysTxCsa',
       signOptions: {

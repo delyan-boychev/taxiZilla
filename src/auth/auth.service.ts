@@ -160,15 +160,11 @@ export class AuthService {
   {
     let umail = await this.jwtService.decode(session.token);
     let user = await this.userRepository.findOne({email:umail["email"]});
-<<<<<<< HEAD
     if(user.role==UserRoles.MODERATOR)
     {
       await this.modRepository.createNewLogItem(user.email,"потвърди потребител с ID - "+userid);
     }
-    return this.userRepository.activateUserByAdmin(user,userid);
-=======
     return this.userRepository.activateUserById(user,userid);
->>>>>>> c16f80404e0bed375777aa820ef42c49672e6654
   }
   //Смяна на роля на потребител
   async changeUserRoleAdmin(@Session() session:{token?:string},userid:number,role:UserRoles)

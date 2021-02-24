@@ -8,11 +8,12 @@ import { JwtModule } from '@nestjs/jwt';
 import { FirmRepository } from './firm.repository';
 import { UserRepository } from 'src/auth/user.repository';
 import { SupportedCityRepository } from './cityRepository';
+import { ModOperationRepository } from 'src/auth/modOperation.repository';
 
 @Module({
   imports: [
     PassportModule.register({defaultStrategy:'jwt'}),
-    TypeOrmModule.forFeature([UserRepository,FirmRepository,SupportedCityRepository]),
+    TypeOrmModule.forFeature([UserRepository,FirmRepository,SupportedCityRepository,ModOperationRepository]),
     JwtModule.register({
       secret: 'UJ=AMG59_%PaT#NqzQ7ZKr%U^QbH*S=CPmNzwrMQtmpXexAr@zmu?5vvKysTxCsa',
       signOptions: {

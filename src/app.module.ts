@@ -12,6 +12,7 @@ import { SupportedCity } from './firm/supportedCity.entity';
 import { FirmModule } from './firm/firm.module';
 import { OrderModule } from './order/order.module';
 import { taxiOrder } from './order/order.entity';
+import { ModeratorOperation } from './auth/modOperation.entity';
 
 @Module({
   imports: [
@@ -21,7 +22,7 @@ import { taxiOrder } from './order/order.entity';
       username: 'taxiZilla',
       password: 'VhCNrHnMEB3sE?9_',
       database: 'taxiZilla',
-      entities:[User,Firm,taxiOrder, SupportedCity],
+      entities:[User,Firm,taxiOrder, SupportedCity, ModeratorOperation],
       synchronize:true,
     })
     
