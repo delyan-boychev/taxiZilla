@@ -311,6 +311,10 @@ export class AuthService {
       return await this.userRepository.checkPassword(userJSON["email"], password);
     }
   }
+  async getModeratorOperations()
+  {
+    return await this.modRepository.find();
+  }
   //Смяна на парола
   async changePassword(@Session() session: { token?: string , type?:string, role:UserRoles}, oldPass: string, newPass: string)
   {

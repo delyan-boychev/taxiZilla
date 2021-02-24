@@ -72,6 +72,18 @@ const tableTextCity = {
         }
     }
 };
+function getAllOperationsForTable()//Injectvane na operacii na potrebiteli v tablica za pokazvane na operacii na potrebiteli
+{
+    if(arguments.callee.caller === null) {console.log("%c You are not permitted to use this method!!!",  'color: red'); return;}
+    getRequest("/auth/getModeratorOperations").then(json=>
+    {
+        json.forEach(el => {
+            document.getElementById("bodyTable").innerHTML += `<tr><td>${el["id"]}</td><td>${el["moderatorEmail"]}</td><td>${el["action"]}</td><td>${el["date"]}</td></tr>`
+        });
+        $('#moderatorOperationsDt').DataTable(tableTextCity);
+        $('.dataTables_length').addClass('bs-select');
+    });
+}
 function getAllCitiesByFirmForRemoveCityTable()//Injectvane na poddurjani naseleni mesta za premahvane na naseleni mesta
 {
     if(arguments.callee.caller === null) {console.log("%c You are not permitted to use this method!!!",  'color: red'); return;}
@@ -805,5 +817,19 @@ function orderListAndRemoveTab()//Tab za pregled i iztrivane na poruchki
     getRequest(window.location.protocol+'//'+ window.location.host +'/adminPanelTabs/orderListAndRemoveTab.html').then(data=>{
         document.getElementById("tabContent").innerHTML = data;
         getAllOrdersForListAndRemove();
+    });
+}
+function moderatorOperationsTab()//Tab za pregled i na operacii na moderatori
+{
+    if(arguments.callee.caller === null) {console.log("%c You are not permitted to use this method!!!",  'color: red'); return;}
+    if(currentActiveTabId != "") 
+    {
+        document.getElementById(currentActiveTabId).classList.remove("active");
+    }
+    currentActiveTabId = "moderatorOperationsTab";
+    document.getElementById(currentActiveTabId).classList.add("active");
+    getRequest(window.location.protocol+'//'+ window.location.host +'/adminPanelTabs/moderatorOperationsTab.html').then(data=>{
+        document.getElementById("tabContent").innerHTML = data;
+        getAllOperationsForTable();
     });
 }

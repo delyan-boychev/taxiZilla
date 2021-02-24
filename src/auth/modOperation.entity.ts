@@ -13,5 +13,5 @@ export class ModeratorOperation extends BaseEntity
     action:string;
 
     @Column()
-    timeStamp:string;
+    date:string;
 }

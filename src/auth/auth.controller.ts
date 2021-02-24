@@ -45,6 +45,12 @@ export class AuthController {
   {
     return await this.authService.verifyResetPassword(email, pass, date);
   }
+  @Get("/getModeratorOperations")
+  async getModeratorOperations(@Session() session:{token?:string, role?:string})
+  {
+    if(!session.token || session.role!=UserRoles.ADMIN )throw new UnauthorizedException();
+    return await this.authService.getModeratorOperations();
+  }
   @Post("/registerUser/")
   async registerUser(@Body(ValidationPipe) registerUserDto:RegisterUserDTO, @Body("key") key:string, @Body("offset") offset:string)
   {
