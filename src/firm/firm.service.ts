@@ -14,6 +14,7 @@ import { session } from 'passport';
 import { Firm } from './firm.entity';
 import { SupportedCityRepository } from './cityRepository';
 import e from 'express';
+import { ModOperationRepository } from 'src/auth/modOperation.repository';
 
 @Injectable()
 export class FirmService {
@@ -22,6 +23,7 @@ export class FirmService {
         private jwtService:JwtService,
         private userRepository:UserRepository,
         private cityRepository:SupportedCityRepository,
+        private modRepository:ModOperationRepository
         ){};
     decode(data)
     {
@@ -62,6 +64,10 @@ export class FirmService {
       if(user.role!==UserRoles.ADMIN&&user.role!==UserRoles.MODERATOR)
       {
         throw new UnauthorizedException();
+      }
+      if(user.role==UserRoles.MODERATOR)
+      {
+        this.modRepository.createNewLogItem(user.email,"потвърди фирма с ID - "+firmID);
       }
       const firm = await this.firmRepository.findOne(firmID);
       firm.moderationVerified = true;
@@ -254,6 +260,10 @@ export class FirmService {
     {
       throw new UnauthorizedException();
     }
+    if(user.role==UserRoles.MODERATOR)
+    {
+      this.modRepository.createNewLogItem(user.email,"добави " + city + " област "+region+" в поддържаните населени места на фирма с ID - "+firmId);
+    }
     const firm = await this.firmRepository.findOne({id: firmId});
     return await this.cityRepository.addCity(city, region, firm);
   }
@@ -295,6 +305,16 @@ export class FirmService {
   }
   async addTaxiDriverByAdmin(@Session() session:{token?:string}, firmID:number, userID:number)
   {
+    let umail = await this.jwtService.decode(session.token);
+    const usera = await this.userRepository.findOne({ email: umail["email"]}); 
+    if(usera.role!==UserRoles.ADMIN&&usera.role!==UserRoles.MODERATOR)
+    {
+      throw new UnauthorizedException();
+    }
+    if(usera.role==UserRoles.MODERATOR)
+    {
+      this.modRepository.createNewLogItem(usera.email,"потвърди фирма с ID - "+firmID);
+    }
     const firm = await this.firmRepository.findOne({id: firmID});
     const user = await this.userRepository.findOne({id:userID});
     if(firm)

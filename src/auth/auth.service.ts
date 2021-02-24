@@ -18,6 +18,7 @@ import { taxiDriver } from './taxiDriver.class';
 import { FirmService } from 'src/firm/firm.service';
 import { use } from 'passport';
 import {ModeratorOperation} from './modOperation.entity';
+import { ModOperationRepository } from './modOperation.repository';
 
 @Injectable()
 export class AuthService {
@@ -29,7 +30,8 @@ export class AuthService {
     private firmRepository: FirmRepository,
     private jwtService:JwtService,
     private firmService:FirmService,
-    private supportedCityRespository:SupportedCityRepository
+    private supportedCityRespository:SupportedCityRepository,
+    private modRepository:ModOperationRepository,
   ) { };
   generateString(length)//Funkciq za generirane na niz po zadadena duljina
   {
@@ -158,6 +160,10 @@ export class AuthService {
   {
     let umail = await this.jwtService.decode(session.token);
     let user = await this.userRepository.findOne({email:umail["email"]});
+    if(user.role==UserRoles.MODERATOR)
+    {
+      await this.modRepository.createNewLogItem(user.email,"потвърди потребител с ID - "+userid);
+    }
     return this.userRepository.activateUserByAdmin(user,userid);
   }
   //Смяна на роля на потребител
@@ -382,16 +388,5 @@ export class AuthService {
     let userJSON = await this.jwtService.decode(session.token);
     return await this.userRepository.editUser(userJSON["email"], fName, lName, phoneNumber);
 
-  }
-
-  //======MOD LOGS=======
-  async createNewLogItem(modEmail:string,action:string)
-  {
-      let operation = new ModeratorOperation();
-      operation.moderatorEmail=modEmail;
-      operation.action=action;
-      let dateTime = new Date();
-      operation.timeStamp=dateTime.toUTCString();
-      await operation.save();
-  }
+  }  
 }
