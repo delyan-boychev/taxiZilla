@@ -70,9 +70,9 @@ export class UserRepository extends Repository<User>
     await user.save();
   }
   //Активация на потребител от админ
-  async activateUserByAdmin(sender:User,userid:number)
+  async activateUserById(sender:User,userid:number)
   {
-    if(sender.role===UserRoles.ADMIN)
+    if(sender.role===UserRoles.ADMIN || sender.role===UserRoles.MODERATOR)
     {
       //Ако е админ променяме verified на true което потвърждава потребителя и записва в базата данни
       const user = await this.findOne(userid);

@@ -1,5 +1,11 @@
 
 //Deklarirane na promenlivi i konstanti
+const userRole = Object.freeze({
+    Admin: "Администратор",
+    Moderator: "Модератор",
+    Driver: "Шофьор",
+    User: "Потребител",
+    });
 eval = function () {console.log("%c You are not permitted to use this method!!!",  'color: red');}
 var actionOnCloseModal = undefined;
 const loginInfo = {};
@@ -200,10 +206,34 @@ function setProfileInfoUser()//Zadavene na informaciq profil na potrebitel
                 });
                 if(loginInfo["Role"] == "Admin")
                 {
+                    var exists = false;
+                    var scripts = document.getElementsByTagName('script');
+                    for (var i = scripts.length; i--;) {
+                            if (scripts[i].src == window.location.href + "js/adminPanel.js") exists = true;
+                    }
+                    if(!exists)
+                    {
+                    var script = document.createElement('script');
+                    script.setAttribute('src', "./js/adminPanel.js");
+                    script.setAttribute('type', 'text/javascript');
+                    document.getElementsByTagName('head')[0].appendChild(script);
+                    }
                     nav.innerHTML += '<li class="nav-item"><a class="nav-link text-secondary waves-effect waves-light" onclick="adminPanelPage()">Администраторски панел</a></li><li class="nav-item"><a class="nav-link text-secondary waves-effect waves-light" onclick="profilePage()">Моят профил (<i class="fas fa-user-cog"></i><span id="fullNameNav">'+ profileInfo["fName"] + " " + profileInfo["lName"] +'</span>)</a></li><li class="nav-item"><a class="nav-link text-secondary waves-effect waves-light" onclick="logOut()">Излизане</a></li>';
                 }
                 else if(loginInfo["Role"] == "Moderator")
                 {
+                    var exists = false;
+                    var scripts = document.getElementsByTagName('script');
+                    for (var i = scripts.length; i--;) {
+                            if (scripts[i].src == window.location.href + "js/modPanel.js") exists = true;
+                    }
+                    if(!exists)
+                    {
+                    var script = document.createElement('script');
+                    script.setAttribute('src', "./js/modPanel.js");
+                    script.setAttribute('type', 'text/javascript');
+                    document.getElementsByTagName('head')[0].appendChild(script);
+                    }
                     nav.innerHTML += '<li class="nav-item"><a class="nav-link text-secondary waves-effect waves-light" onclick="modPanelPage()">Модераторски панел</a></li><li class="nav-item"><a class="nav-link text-secondary waves-effect waves-light" onclick="profilePage()">Моят профил (<i class="fas fa-user-shield"></i><span id="fullNameNav">'+ profileInfo["fName"] + " " + profileInfo["lName"] +'</span>)</a></li><li class="nav-item"><a class="nav-link text-secondary waves-effect waves-light" onclick="logOut()">Излизане</a></li>';
                 }
                 else if(loginInfo["Role"] == "User")

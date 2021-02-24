@@ -128,9 +128,6 @@ export class OrderService {
     }
     async getAllOrders(@Session() session:{token?:string})
     {
-        let uemail = await this.jwtService.decode(session.token);
-        let user = await this.userRepository.findOne({email:uemail["email"]});
-        if(user.role!=UserRoles.ADMIN&&user.role!=UserRoles.MODERATOR)throw new UnauthorizedException();
         return this.orderRepository.getAllOrders();
     }
     async removeOrder(orderId:number)

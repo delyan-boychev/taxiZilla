@@ -117,7 +117,7 @@ export class FirmRepository extends Repository<Firm>
   async addTaxiDriver(eik:string, driver:User)
   {
     let firm:Firm = await this.findOne({eik});
-    if(!firm.verified)
+    if(!firm.moderationVerified || !firm.verified)
     {
       return false;
     }

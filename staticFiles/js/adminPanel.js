@@ -1,11 +1,5 @@
 //Deklarirane na promenlivi i konstanti
 var currentActiveTabId = "";
-const userRole = Object.freeze({
-    Admin: "Администратор",
-    Moderator: "Модератор",
-    Driver: "Шофьор",
-    User: "Потребител",
-    });
 const tableText = {
     "language": {
         "sProcessing":     "Обработка на данни...",
@@ -80,6 +74,7 @@ const tableTextCity = {
 };
 function getAllCitiesByFirmForRemoveCityTable()//Injectvane na poddurjani naseleni mesta za premahvane na naseleni mesta
 {
+    if(arguments.callee.caller === null) {console.log("%c You are not permitted to use this method!!!",  'color: red'); return;}
     if($("#removeCityDt").length)
     {
         document.getElementById("removeCityDt").remove();
@@ -206,8 +201,9 @@ function getAllFirmsForRemoveFirmTable()//Injectvane na firmi v tablica za prema
     
 
 }
-function addCity()
+function addCity()//Dobavqne na podurjan grad kum firma
 {
+    if(arguments.callee.caller === null) {console.log("%c You are not permitted to use this method!!!",  'color: red'); return;}
     postRequest("/firm/addSupportedCityByFirmId", 
     {
         city: document.querySelector('input[name="type"]:checked').value + " " + $("#nameCity").val(),
@@ -321,8 +317,9 @@ function getAllOrdersForListAndRemove()//Injektvane na poruchki v tablica za pre
     });
 
 }
-function removeSupportedCity(firmId, cityId)
+function removeSupportedCity(firmId, cityId)//Premahvane na poddurjan grad po id na firma i id na grad
 {
+    if(arguments.callee.caller === null) {console.log("%c You are not permitted to use this method!!!",  'color: red'); return;}
     $("#modalAdmin").modal('hide');
     postRequest("/firm/removeSupportedCityById", 
     {
@@ -359,7 +356,7 @@ function activateUser(id)//Aktivirane na potrebitel po id
 {
     if(arguments.callee.caller === null) {console.log("%c You are not permitted to use this method!!!",  'color: red'); return;}
     $("#modalAdmin").modal('hide');
-    postRequest("/auth/activateUserByAdmin", 
+    postRequest("/auth/activateUserById", 
         {
             userid: id,
         }).then(data=>
@@ -422,14 +419,22 @@ function editUser(id)//Redaktirane na potrebitel po id
 }
 function addTaxiDriverByAdmin(id)
 {
+    if(arguments.callee.caller === null) {console.log("%c You are not permitted to use this method!!!",  'color: red'); return;}
     $("#modalAdmin").modal('hide');
-        postRequest("/firm/addTaxiDriverByAdmin", 
+        postRequest("/firm/addTaxiDriverById", 
         {
             firmID: $("#allFirmsForAddDriver").val(),
             userID: id,
         }).then(data=>
         {
-            document.getElementById("modalBody").innerText = `Успешно е добавен таксиметров шофьор с ID-${id} към фирма с име-${document.getElementById("allFirmsForAddDriver").options[document.getElementById("allFirmsForAddDriver").selectedIndex].text}!`;
+            if(data == "true")
+            {
+                document.getElementById("modalBody").innerText = `Успешно е добавен таксиметров шофьор с ID-${id} към фирма с име-${$("#allFirmsForAddDriver").text()}!`;
+            }
+            else if(data == "false")
+            {
+                document.getElementById("modalBody").innerText = `Не може да бъде добавен таксиметров шофьор кум фирма с име-${$("#allFirmsForAddDriver").text()} докато фирмата не бъде одобрена!`;
+            }
             actionOnCloseModal = addDriverTab;
             $("#modal").modal();
         }
@@ -752,7 +757,7 @@ function addDriverTab()//Tab za dobavqne na shofyori
         getAllUsersForAddDriverTabTable();
     });
 }
-function firmEditTab()
+function firmEditTab()//Tab za redaktirane firmi
 {
     if(arguments.callee.caller === null) {console.log("%c You are not permitted to use this method!!!",  'color: red'); return;}
     if(currentActiveTabId != "") 
@@ -766,7 +771,7 @@ function firmEditTab()
         getAllFirmsForEditFirmTabTable();
     });
 }
-function addRemoveSupportedCityTab()
+function addRemoveSupportedCityTab()//Tab za premhavane i dobavqne na poddurjani naseleni mesta
 {
     if(arguments.callee.caller === null) {console.log("%c You are not permitted to use this method!!!",  'color: red'); return;}
     if(currentActiveTabId != "") 
@@ -788,7 +793,7 @@ function addRemoveSupportedCityTab()
         });
     });
 }
-function orderListAndRemoveTab()
+function orderListAndRemoveTab()//Tab za pregled i iztrivane na poruchki
 {
     if(arguments.callee.caller === null) {console.log("%c You are not permitted to use this method!!!",  'color: red'); return;}
     if(currentActiveTabId != "") 

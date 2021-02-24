@@ -10,7 +10,7 @@ header,
 }
 .modal-open
 {
-  overflow: hidden!important;
+  overflow-x: hidden!important;
 }
 .top-nav-collapse {
     background-color: #24355C;

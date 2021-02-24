@@ -303,7 +303,7 @@ export class FirmService {
     const user = await this.userRepository.findOne({email: decoded["email"]});
     await this.firmRepository.editFirmByAdmin(user, firmID, eik, firmName, email, phoneNumber, address, city);
   }
-  async addTaxiDriverByAdmin(@Session() session:{token?:string}, firmID:number, userID:number)
+  async addTaxiDriverById(@Session() session:{token?:string}, firmID:number, userID:number)
   {
     let umail = await this.jwtService.decode(session.token);
     const usera = await this.userRepository.findOne({ email: umail["email"]}); 

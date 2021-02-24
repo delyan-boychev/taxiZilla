@@ -2,6 +2,7 @@ import { Body, Controller, Get, Post, Request, Session, UnauthorizedException, U
 import { AuthGuard } from '@nestjs/passport';
 import { session } from 'passport';
 import { parse } from 'path';
+import { UserRoles } from 'src/auth/enums/userRoles.enum';
 import { User } from 'src/auth/user.entity';
 import { taxiOrder } from './order.entity';
 import { OrderService } from './order.service';
@@ -48,9 +49,9 @@ export class OrderController {
         this.orderService.finishOrder(Number(id));
     }
     @Get("/getAllOrders")
-    async getAllOrders(@Session() session:{token?:string})
+    async getAllOrders(@Session() session:{token?:string, role?:string})
     {
-        if(!session.token) throw new UnauthorizedException();
+        if(!session.token || (session.role!=UserRoles.ADMIN&&session.role!=UserRoles.MODERATOR)) throw new UnauthorizedException();
         return await this.orderService.getAllOrders(session);
     }
     @Get("/getOrdersByUser")
