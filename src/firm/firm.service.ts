@@ -293,7 +293,7 @@ export class FirmService {
     const user = await this.userRepository.findOne({email: decoded["email"]});
     await this.firmRepository.editFirmByAdmin(user, firmID, eik, firmName, email, phoneNumber, address, city);
   }
-  async addTaxiDriverByAdmin(@Session() session:{token?:string}, firmID:number, userID:number)
+  async addTaxiDriverById(@Session() session:{token?:string}, firmID:number, userID:number)
   {
     const firm = await this.firmRepository.findOne({id: firmID});
     const user = await this.userRepository.findOne({id:userID});

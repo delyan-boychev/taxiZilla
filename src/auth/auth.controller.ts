@@ -69,10 +69,10 @@ export class AuthController {
   }
 
   //Заявка за активиране на потребител
-  @Post("/activateUserByAdmin")
-  async activateUserByAdmin(@Session()session:{token?:string}, @Body("userid") userid:number)
+  @Post("/activateUserById")
+  async activateUserById(@Session()session:{token?:string}, @Body("userid") userid:number)
   {
-    return this.authService.activaterUserByAdmin(session,userid); 
+    return this.authService.activaterUserById(session,userid); 
   }
   //Логин на потребител
   @Post("/loginUser/")
@@ -199,7 +199,7 @@ export class AuthController {
   @Get("/getAllUsers")
   async getAllUsers(@Session() session:{token?:string, role?:UserRoles, type?:string})
   {
-    if(!session.token && session.role != UserRoles.ADMIN)throw new UnauthorizedException();
+    if(!session.token ||(session.role != UserRoles.MODERATOR && session.role != UserRoles.ADMIN))throw new UnauthorizedException();
     return await this.authService.getAllUsers();
   }
   @Post("/editUser/")

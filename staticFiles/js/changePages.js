@@ -48,9 +48,11 @@ function adminPanelPage()//Smqna na stranica za administratorski panel
 {
         if(arguments.callee.caller === null) {console.log("%c You are not permitted to use this method!!!",  'color: red'); return;}
         $(".navbar-collapse").collapse('hide');
+        var exists = false;
         getRequest(window.location.protocol+'//'+ window.location.host +'/pages/adminPanel.html').then(data=>{
         document.getElementById("pageContent").innerHTML = data;
         userRemoveTab();
+        
 });
 
 }
@@ -60,6 +62,7 @@ function modPanelPage()//Smqna na stranica za moderatorski panel
         $(".navbar-collapse").collapse('hide');
         getRequest(window.location.protocol+'//'+ window.location.host +'/pages/modPanel.html').then(data=>{
         document.getElementById("pageContent").innerHTML = data;
+        showAllUsersTab();
 });
 
 }

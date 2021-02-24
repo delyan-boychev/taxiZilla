@@ -153,11 +153,11 @@ export class AuthService {
     }
   }
   // Активация на потребител. Взимаме потребителя по email-а кодиран в тоукена и го активираме
-  async activaterUserByAdmin(@Session()session:{token?:string},userid:number)
+  async activaterUserById(@Session()session:{token?:string},userid:number)
   {
     let umail = await this.jwtService.decode(session.token);
     let user = await this.userRepository.findOne({email:umail["email"]});
-    return this.userRepository.activateUserByAdmin(user,userid);
+    return this.userRepository.activateUserById(user,userid);
   }
   //Смяна на роля на потребител
   async changeUserRoleAdmin(@Session() session:{token?:string},userid:number,role:UserRoles)

@@ -127,9 +127,9 @@ export class FirmController {
     return await this.firmService.removeCityById(session,parseInt(cityId), parseInt(firmId));
   }
   @Post("/getCitiesByFirmId/")
-  async getCitiesByFirmId(@Session() session:{token?:string}, @Body("firmId") firmId:string)
+  async getCitiesByFirmId(@Session() session:{token?:string, role?:string}, @Body("firmId") firmId:string)
   {
-    if(!session.token)throw new UnauthorizedException();
+    if(!session.token || (session.role!=UserRoles.ADMIN && session.role!=UserRoles.MODERATOR))throw new UnauthorizedException();
     return await this.firmService.getCitiesByFirmId(parseInt(firmId));
   }
   @Get("/getCitiesByFirm/")
@@ -167,11 +167,11 @@ export class FirmController {
     if(!session.token || (session.role != UserRoles.ADMIN && session.role != UserRoles.MODERATOR)) throw new UnauthorizedException();
     return await this.firmService.getAllFirms();
   }
-  @Post("/addTaxiDriverByAdmin")
-  async addTaxiDriverByAdmin(@Session() session:{token?:string, role?:string}, @Body("firmID") firmID:string, @Body("userID") userID:string)
+  @Post("/addTaxiDriverById")
+  async addTaxiDriverById(@Session() session:{token?:string, role?:string}, @Body("firmID") firmID:string, @Body("userID") userID:string)
   {
-    if(!session.token && session.role != UserRoles.ADMIN) throw new UnauthorizedException();
-    await this.firmService.addTaxiDriverByAdmin(session, parseInt(firmID), parseInt(userID));
+    if(!session.token || ( session.role != UserRoles.MODERATOR && session.role != UserRoles.ADMIN)) throw new UnauthorizedException();
+    await this.firmService.addTaxiDriverById(session, parseInt(firmID), parseInt(userID));
   }
   @Post("/changePassword/")
   async changePassword(@Session() session:{token:string}, @Body("oldPass") oldPass:string, @Body("newPass") newPass:string)
