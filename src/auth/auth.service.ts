@@ -377,7 +377,7 @@ export class AuthService {
   {
     const encrypter = new Cryptr("mXb35Bw^FvCz9MLN");
     const link = encrypter.encrypt(username);
-    const htmlcode = "<a href='https://taxizilla.cheapsoftbg.com/auth/verify/" + link + "'>ТУК</a>"
+    const htmlcode = "<a href='https://taxizillabg.com/auth/verify/" + link + "'>ТУК</a>"
     const info = await transport.sendMail({
       from: 'Taxi Zilla',
       to: username,
