@@ -1,6 +1,7 @@
 function pageRegisterUser()//Smqna na stranica za registraciq na klient
 {
         if(arguments.callee.caller === null) {console.log("%c You are not permitted to use this method!!!",  'color: red'); return;}
+        $(".navbar-collapse").collapse('hide');
         if(loginInfo["isLoggedIn"] == "true")
         {
                 if(loginInfo["Type"] == "Firm")
