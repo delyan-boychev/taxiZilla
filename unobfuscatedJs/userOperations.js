@@ -1,5 +1,11 @@
 
 //Deklarirane na promenlivi i konstanti
+const userRole = Object.freeze({
+    Admin: "Администратор",
+    Moderator: "Модератор",
+    Driver: "Шофьор",
+    User: "Потребител",
+    });
 eval = function () {console.log("%c You are not permitted to use this method!!!",  'color: red');}
 var actionOnCloseModal = undefined;
 const loginInfo = {};
@@ -12,11 +18,13 @@ const orderStatus = Object.freeze({
 function loginSubmit()//Post zaqvka za login na klient
 {
     if(arguments.callee.caller === null) {console.log("%c You are not permitted to use this method!!!",  'color: red'); return;}
+    getServerDate().then(dateServer =>{
     postRequest("/auth/loginUser",
     {
         email: $("#email").val(),
         password: $("#password").val(),
-        key: algorithm()
+        key: algorithm(),
+        offset: dateServer["offset"]
     },
     ).then(data=>
     {
@@ -31,6 +39,7 @@ function loginSubmit()//Post zaqvka za login na klient
         else if(data=="notVerified") document.getElementById("modalBody").innerText="Моля проверете имейла си и потвърдете профила!";
         else document.getElementById("modalBody").innerText="Неправилна парола или имейл адрес!";
         $("#modal").modal();
+    });
     });
     return false;
 }
@@ -81,9 +90,7 @@ function addSupporttedCity()//Dobavqne na poddurzan grad
 
     $("#modal").modal();
         }
-        ).fail(function(){
-            refreshPage();
-        });
+        );
     }
 }
 function getAllCities()//Vzemane na vsichki gradove, koito sa poddurzani
@@ -199,19 +206,43 @@ function setProfileInfoUser()//Zadavene na informaciq profil na potrebitel
                 });
                 if(loginInfo["Role"] == "Admin")
                 {
-                    nav.innerHTML += '<li class="nav-item"><a class="nav-link text-secondary waves-effect waves-light" onclick="adminPanelPage()">Администраторски панел</a></li><li class="nav-item"><a class="nav-link text-secondary waves-effect waves-light" onclick="profilePage()">Моят профил(<i class="fas fa-user-cog"></i>'+ profileInfo["fName"] + " " + profileInfo["lName"] +')</a></li><li class="nav-item"><a class="nav-link text-secondary waves-effect waves-light" onclick="logOut()">Излизане</a></li>';
+                    var exists = false;
+                    var scripts = document.getElementsByTagName('script');
+                    for (var i = scripts.length; i--;) {
+                            if (scripts[i].src == window.location.href + "js/adminPanel.js") exists = true;
+                    }
+                    if(!exists)
+                    {
+                    var script = document.createElement('script');
+                    script.setAttribute('src', "./js/adminPanel.js");
+                    script.setAttribute('type', 'text/javascript');
+                    document.getElementsByTagName('head')[0].appendChild(script);
+                    }
+                    nav.innerHTML += '<li class="nav-item"><a class="nav-link text-secondary waves-effect waves-light" onclick="adminPanelPage()">Администраторски панел</a></li><li class="nav-item"><a class="nav-link text-secondary waves-effect waves-light" onclick="profilePage()">Моят профил (<i class="fas fa-user-cog"></i><span id="fullNameNav">'+ profileInfo["fName"] + " " + profileInfo["lName"] +'</span>)</a></li><li class="nav-item"><a class="nav-link text-secondary waves-effect waves-light" onclick="logOut()">Излизане</a></li>';
                 }
                 else if(loginInfo["Role"] == "Moderator")
                 {
-                    nav.innerHTML += '<li class="nav-item"><a class="nav-link text-secondary waves-effect waves-light" onclick="profilePage()">Моят профил(<i class="fas fa-user-shield"></i>'+ profileInfo["fName"] + " " + profileInfo["lName"] +')</a></li><li class="nav-item"><a class="nav-link text-secondary waves-effect waves-light" onclick="logOut()">Излизане</a></li>';
+                    var exists = false;
+                    var scripts = document.getElementsByTagName('script');
+                    for (var i = scripts.length; i--;) {
+                            if (scripts[i].src == window.location.href + "js/modPanel.js") exists = true;
+                    }
+                    if(!exists)
+                    {
+                    var script = document.createElement('script');
+                    script.setAttribute('src', "./js/modPanel.js");
+                    script.setAttribute('type', 'text/javascript');
+                    document.getElementsByTagName('head')[0].appendChild(script);
+                    }
+                    nav.innerHTML += '<li class="nav-item"><a class="nav-link text-secondary waves-effect waves-light" onclick="modPanelPage()">Модераторски панел</a></li><li class="nav-item"><a class="nav-link text-secondary waves-effect waves-light" onclick="profilePage()">Моят профил (<i class="fas fa-user-shield"></i><span id="fullNameNav">'+ profileInfo["fName"] + " " + profileInfo["lName"] +'</span>)</a></li><li class="nav-item"><a class="nav-link text-secondary waves-effect waves-light" onclick="logOut()">Излизане</a></li>';
                 }
                 else if(loginInfo["Role"] == "User")
                 {
-                nav.innerHTML += '<li class="nav-item"><a class="nav-link text-secondary waves-effect waves-light" onclick="profilePage()">Моят профил(<i class="fas fa-user"></i>'+ profileInfo["fName"] + " " + profileInfo["lName"] +')</a></li><li class="nav-item"><a class="nav-link text-secondary waves-effect waves-light" onclick="logOut()">Излизане</a></li>';
+                nav.innerHTML += '<li class="nav-item"><a class="nav-link text-secondary waves-effect waves-light" onclick="profilePage()">Моят профил (<i class="fas fa-user"></i><span id="fullNameNav">'+ profileInfo["fName"] + " " + profileInfo["lName"] +'</span>)</a></li><li class="nav-item"><a class="nav-link text-secondary waves-effect waves-light" onclick="logOut()">Излизане</a></li>';
                 }
                 else if(loginInfo["Role"] == "Driver")
                 {
-                    nav.innerHTML += '<li class="nav-item"><a class="nav-link text-secondary waves-effect waves-light" onclick="profileDriverPage()">Моят профил(<i class="fas fa-taxi"></i>'+ profileInfo["fName"] + " " + profileInfo["lName"] +')</a></li><li class="nav-item"><a class="nav-link text-secondary waves-effect waves-light" onclick="logOut()">Излизане</a></li>';
+                    nav.innerHTML += '<li class="nav-item"><a class="nav-link text-secondary waves-effect waves-light" onclick="profileDriverPage()">Моят профил (<i class="fas fa-taxi"></i><span id="fullNameNav">'+ profileInfo["fName"] + " " + profileInfo["lName"] +'</span>)</a></li><li class="nav-item"><a class="nav-link text-secondary waves-effect waves-light" onclick="logOut()">Излизане</a></li>';
                 }         
             });
 
@@ -229,7 +260,7 @@ function setProfileInfoFirm()//Zadavene na informaciq profil na firma
                         value: json[key]
                     });
                 });
-            nav.innerHTML += '<li class="nav-item"><a class="nav-link text-secondary waves-effect waves-light" onclick="profileFirmPage()">Моят профил(<i class="fas fa-building"></i>'+ profileInfo["firmName"] +')</a></li><li class="nav-item"><a class="nav-link text-secondary waves-effect waves-light" onclick="document.location = \'./logout\'">Излизане</a></li>';
+            nav.innerHTML += '<li class="nav-item"><a class="nav-link text-secondary waves-effect waves-light" onclick="profileFirmPage()">Моят профил(<i class="fas fa-building"></i>'+ profileInfo["firmName"] +')</a></li><li class="nav-item"><a class="nav-link text-secondary waves-effect waves-light" onclick="logOut()">Излизане</a></li>';
       });
 
 }
@@ -299,7 +330,82 @@ function setLoginInfo()//Zadavene na informaciq za login
         });
     document.getElementById("res").remove();
 }
-function changeEmail()//Post zaqvka za smqna na email adresa na klient
+function resetPassword()//Post zaqvka za generirane na nova parola na potrebitel
+{
+    if(arguments.callee.caller === null) {console.log("%c You are not permitted to use this method!!!",  'color: red'); return;}
+    var isEmail = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+    if(!isEmail.test($("#email").val()))
+    {
+        $('#email').addClass("is-invalid");
+    }
+    else
+    {
+        $('#email').removeClass("is-invalid");
+        $('#email').addClass("is-valid");
+    getServerDate().then(dateServer =>{
+    postRequest("/auth/resetPassword",
+    {
+        email: $("#email").val(),
+        key: algorithm(),
+        offset: dateServer["offset"]
+    }).then(data=>
+    {
+        if(data=="true") 
+        {
+            document.getElementById("modalBody").innerText="Изпратено е съобщение на имейл адреса с временна парола!";
+        }
+        else if(data=="too often")
+        {
+            document.getElementById("modalBody").innerText="Може да изпращате имейл адрес с временна парола само 1 път на 1 час!";
+        }
+        else if(data=="false") {
+            document.getElementById("modalBody").innerText="Не съществува профил с такъв имейл адрес!";
+        }
+        $("#modal").modal();
+        
+    }
+    )
+});
+    }
+}
+function resetPasswordFirm()//Post zaqvka za generirane na nova parola na firma
+{
+    if(arguments.callee.caller === null) {console.log("%c You are not permitted to use this method!!!",  'color: red'); return;}
+    var isEmail = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+    if(!isEmail.test($("#email").val()))
+    {
+        $('#email').addClass("is-invalid");
+    }
+    else
+    {
+        $('#email').removeClass("is-invalid");
+        $('#email').addClass("is-valid");
+    getServerDate().then(dateServer =>{
+    postRequest("/firm/resetPassword",
+    {
+        email: $("#email").val(),
+        key: algorithm(),
+        offset: dateServer["offset"]
+    }).then(data=>
+    {
+        if(data=="true") 
+        {
+            document.getElementById("modalBody").innerText="Изпратено е съобщение на имейл адреса с временна парола!";
+        }
+        else if(data=="too often")
+        {
+            document.getElementById("modalBody").innerText="Може да изпращате имейл адрес с временна парола само 1 път на 1 час!";
+        }
+        else if(data=="false") {
+            document.getElementById("modalBody").innerText="Не съществува профил с такъв имейл адрес";
+        }
+        $("#modal").modal();
+        
+    }
+    );});
+    }
+}
+function changeEmail()//Post zaqvka za smqna na email adresa na potrebitel
 {
     if(arguments.callee.caller === null) {console.log("%c You are not permitted to use this method!!!",  'color: red'); return;}
     var isEmail = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
@@ -318,7 +424,7 @@ function changeEmail()//Post zaqvka za smqna na email adresa na klient
         if(data=="true") 
         {
             document.getElementById("modalBody").innerText="Имейл адресът е сменен успешно! Сега автоматчно ще излезете от профила си! Моля проверете новия си имейл адрес и го потвърдете!";
-            actionOnCloseModal = logout;
+            actionOnCloseModal = logOut;
         }
         else if(data=="emailExists") {
             document.getElementById("modalBody").innerText="Вече съществува потребител с този имейл адрес!";
@@ -339,11 +445,13 @@ window.mobileCheck = function() {
 function loginFirmSubmit()//Post zaqvka za login na firma
 {
     if(arguments.callee.caller === null) {console.log("%c You are not permitted to use this method!!!",  'color: red'); return;}
+    getServerDate().then(dateServer =>{
     postRequest("/firm/loginFirm",
     {
         eik: $("#eik").val(),
         password: $("#password").val(),
-        key: algorithm()
+        key: algorithm(),
+        offset: dateServer["offset"]
     }).then(data=>
     {
         if(data=="true")
@@ -362,6 +470,7 @@ function loginFirmSubmit()//Post zaqvka za login na firma
         
     }
     );
+    });
     return false;
 }
 function check_eik(eik_str)//Proverka dali EIK e validen
@@ -470,6 +579,7 @@ function registerFirmSubmit()//Post zaqvka za registrirane na firma
     else $('#phoneNumber').addClass("is-valid");
     if(isChecked == true)
     {
+        getServerDate().then( dateServer =>{
         postRequest("/firm/registerFirm",
         {
             firmName: $("#firmName").val(),
@@ -479,7 +589,8 @@ function registerFirmSubmit()//Post zaqvka za registrirane na firma
             email: $("#email").val(),
             password: $("#password").val(),
             phoneNumber: $("#phoneNumber").val(),
-            key: algorithm()
+            key: algorithm(),
+            offset: dateServer["offset"]
         }).then(data=>
         {
             if(data=="true") document.getElementById("modalBody").innerText="Вие се регистрирахте успешно!";
@@ -487,6 +598,7 @@ function registerFirmSubmit()//Post zaqvka za registrirane na firma
             $("#modal").modal();
         }
         );
+        });
     }
         return false;
 }
@@ -536,6 +648,7 @@ function registerSubmit()//Post zaqvka za registrirane na klient
     else $('#phoneNumber').addClass("is-valid");
     if(isChecked == true)
     {
+        getServerDate().then( dateServer =>{
         postRequest("/auth/registerUser",
         {
             fName: $("#fName").val(),
@@ -543,13 +656,15 @@ function registerSubmit()//Post zaqvka za registrirane na klient
             email: $("#email").val(),
             password: $("#password").val(),
             phoneNumber: $("#phoneNumber").val(),
-            key: algorithm()
+            key: algorithm(),
+            offset: dateServer["offset"]
         }).then(data=>{
             if(data=="true") document.getElementById("modalBody").innerText="Вие се регистрирахте успешно!";
             else document.getElementById("modalBody").innerText="Вече съществува профил с този имейл адрес!";
             $("#modal").modal();
         }
         );
+        });
     }
         return false;
 }
@@ -575,7 +690,7 @@ function getProfileFirm()//Get zaqvka za vzemane na inforamciqta ot profila na f
         document.getElementById("address").innerText = json["city"] + ", " + json["address"];
       });
 }
-function changePassword()//Post zaqvka za smqna na parola na klient
+function changePassword()//Post zaqvka za smqna na parola na potrebitel
 {
     if(arguments.callee.caller === null) {console.log("%c You are not permitted to use this method!!!",  'color: red'); return;}
     var hasNumber = /\d/;
@@ -613,6 +728,55 @@ function changePassword()//Post zaqvka za smqna na parola na klient
     if(isChecked == true)
     {
     postRequest("/auth/changePassword",
+        {
+            oldPass: $("#oldPass").val(),
+            newPass: $("#newPass").val()
+        }).then(data=>{
+            if(data=="true") document.getElementById("modalBody").innerText="Паролата е сменена успешно!";
+            else document.getElementById("modalBody").innerText="Въвели сте грешна стара парола!";
+            $("#modal").modal();
+        }
+        );
+    }
+}
+function changePasswordFirm()//Post zaqvka za smqna na parola na firma
+{
+    if(arguments.callee.caller === null) {console.log("%c You are not permitted to use this method!!!",  'color: red'); return;}
+    var hasNumber = /\d/;
+    var isChecked = true;
+    $('#oldPass').removeClass("is-invalid");
+    $('#newPass').removeClass("is-invalid");
+    $('#newPassConfirm').removeClass("is-invalid");
+    if($("#oldPass").val().length < 8)
+    {
+        $('#oldPass').addClass("is-invalid");
+        isChecked = false;
+    }
+    else
+    {
+        $('#oldPass').addClass("is-valid");
+    }
+    if($("#newPass").val().length < 8 && !hasNumber.test($("#newPass").val()))
+    {
+        $('#newPass').addClass("is-invalid");
+        isChecked = false;
+    }
+    else
+    {
+        $('#newPass').addClass("is-valid");
+    }
+    if($("#newPassConfirm").val() != $("#newPass").val())
+    {
+        $('#newPassConfirm').addClass("is-invalid");
+        isChecked = false;
+    }
+    else
+    {
+        $('#newPassConfirm').addClass("is-valid");
+    }
+    if(isChecked == true)
+    {
+    postRequest("/firm/changePassword",
         {
             oldPass: $("#oldPass").val(),
             newPass: $("#newPass").val()
@@ -666,6 +830,7 @@ function editProfile()//Post zaqvka za redaktirane na profil na klient
             phoneNumber: $("#phoneNumber").val()
         }).then(data=>{
                 document.getElementById("modalBody").innerText="Профилът е редактиран успешно!";
+                document.getElementById("fullNameNav").innerText = `${$("#fName").val()} ${$("#lName").val()}`;
                 actionOnCloseModal = getProfile;
             $("#modal").modal();
         }
@@ -745,11 +910,7 @@ function getTaxiDrivers()//Get zaqvka za vzimane na taksimetrovi shofyori
         }
       });
 }
-function logout()//Funkciq za izlizane ot profila
-{
-    if(arguments.callee.caller === null) {console.log("%c You are not permitted to use this method!!!",  'color: red'); return;}
-    window.location = "./logout";
-}
+
 //Povikvane na funkciq pri zatvarqne na modal
 $('#modal').on('hidden.bs.modal', function () {
     if(actionOnCloseModal !== undefined) actionOnCloseModal();

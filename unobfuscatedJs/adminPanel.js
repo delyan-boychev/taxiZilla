@@ -1,11 +1,5 @@
 //Deklarirane na promenlivi i konstanti
 var currentActiveTabId = "";
-const userRole = Object.freeze({
-    Admin: "Администратор",
-    Moderator: "Модератор",
-    Driver: "Шофьор",
-    User: "Потребител",
-    });
 const tableText = {
     "language": {
         "sProcessing":     "Обработка на данни...",
@@ -60,19 +54,67 @@ const tableTextOrder = {
         }
     }
 };
+const tableTextCity = {
+    "language": {
+        "sProcessing":     "Обработка на данни...",
+        "sSearch":         "Търсене:",
+        "sLengthMenu":     "Покажи _MENU_ населени места на страница",
+        "sInfo":           "Показани са от _START_ до _END_ населено място от общо _TOTAL_ населени места",
+        "sInfoEmpty":      "Показани са 0 населени места",
+        "sInfoFiltered":   "(общ брой населени места - _MAX_)",
+        "sInfoPostFix":    "",
+        "sLoadingRecords": "Зареждане на данни...",
+        "sZeroRecords":    "Няма намерени населени места!",
+        "sEmptyTable":     "Няма населени места",
+        "oPaginate": {
+            "sPrevious":   "Предишна страница",
+            "sNext":       "Следваща страница",
+        }
+    }
+};
+function getAllOperationsForTable()//Injectvane na operacii na potrebiteli v tablica za pokazvane na operacii na potrebiteli
+{
+    if(arguments.callee.caller === null) {console.log("%c You are not permitted to use this method!!!",  'color: red'); return;}
+    getRequest("/auth/getModeratorOperations").then(json=>
+    {
+        json.forEach(el => {
+            document.getElementById("bodyTable").innerHTML += `<tr><td>${el["id"]}</td><td>${el["moderatorEmail"]}</td><td>${el["action"]}</td><td>${el["date"]}</td></tr>`
+        });
+        $('#moderatorOperationsDt').DataTable(tableTextCity);
+        $('.dataTables_length').addClass('bs-select');
+    });
+}
+function getAllCitiesByFirmForRemoveCityTable()//Injectvane na poddurjani naseleni mesta za premahvane na naseleni mesta
+{
+    if(arguments.callee.caller === null) {console.log("%c You are not permitted to use this method!!!",  'color: red'); return;}
+    if($("#removeCityDt").length)
+    {
+        document.getElementById("removeCityDt").remove();
+    }
+    postRequest("/firm/getCitiesByFirmId", {firmId: $("#firms option:selected").val()}).then(json=>
+    {
+        document.getElementById("divTableRemoveCity").innerHTML=`<h5 class="text-center" id="firmName"></h5> <table id="removeCityDt" class="table table-striped table-bordered table-responsive" cellspacing="0" width="100%"> <thead> <tr> <th class="th-sm">ID </th> <th class="th-sm">Име на населено място </th> <th class="th-sm">Име на област </th> <th class="th-sm">Премахване на населено място от фирма </th> </tr> </thead> <tbody id="bodyTable"> </tbody> <tfoot> <tr> <th>ID </th> <th>Име на населено място </th> <th>Име на област </th> <th>Премахване на населено място от фирма </th> </tr> </tfoot> </table>`;
+        document.getElementById("firmName").innerText = $("#firms option:selected").text();
+        json.forEach(el => {
+            document.getElementById("bodyTable").innerHTML += `<tr><td>${el["id"]}</td><td>${el["city"]}</td><td>${el["region"]}</td><td><h5><i class='far fa-times-circle text-danger' style='cursor: pointer;' onclick='removeSupportedCityShowModal("${$("#firms option:selected").val()}", "${el["id"]}");'></i></h5></td></tr>`
+        });
+        $('#removeCityDt').DataTable(tableTextCity);
+        $('.dataTables_length').addClass('bs-select');
+    });
+}
 function getAllUsersForRemoveTable()//Injectvane na potrebiteli v tablica za premahvane na potrebiteli
 {
     if(arguments.callee.caller === null) {console.log("%c You are not permitted to use this method!!!",  'color: red'); return;}
     getRequest("/auth/getAllUsers").then(json=>
     {
         json.forEach(el => {
-            if(el["email"] != profileInfo["email"])
+            if(el["email"] != profileInfo["email"] && el["role"] != "Admin")
             {
             var firmId = "Няма";
             var verified = "";
             if(el["verified"] == 1) verified = "Да";
-            if(el["firmId"] != null) firmId = el["firmId"];
             else verified = "Не";
+            if(el["firmId"] != null) firmId = el["firmId"];
             document.getElementById("bodyTable").innerHTML += `<tr><td>${el["id"]}</td><td>${el["fName"]}</td><td>${el["lName"]}</td><td>${el["email"]}</td><td>${el["telephone"]}</td><td>${userRole[el["role"]]}</td><td>${firmId}</td><td>${verified}</td><td class="text-danger h5"><i class='far fa-times-circle' style='cursor: pointer;' onclick='removeUserShowModal("${el["id"]}");'></i></td></tr>`
             }
         });
@@ -117,7 +159,7 @@ function getAllUsersForEditTable()//Injectvane na potrebiteli v tablica za redka
             if(el["firmId"] != null) firmId = el["firmId"];
             if(el["verified"] == 1) verified = "Да";
             else verified = "Не";
-            document.getElementById("bodyTable").innerHTML += `<tr><td>${el["id"]}</td><td>${el["fName"]}</td><td>${el["lName"]}</td><td>${el["email"]}</td><td>${el["telephone"]}</td><td>${userRole[el["role"]]}</td><td>${firmId}</td><td>${verified}</td><td class="text-secondary h5"><i class='far fa-edit' style='cursor: pointer;' onclick='editUserShowModal("${el["id"]}", "${el["fName"]}", "${el["lName"]}", "${el["email"]}", "${el["telephone"]}");'></i></td></tr>`
+            document.getElementById("bodyTable").innerHTML += `<tr><td>${el["id"]}</td><td>${el["fName"]}</td><td>${el["lName"]}</td><td>${el["email"]}</td><td>${el["telephone"]}</td><td>${userRole[el["role"]]}</td><td>${firmId}</td><td>${verified}</td><td class="text-secondary h5"><i class='far fa-edit' style='cursor: pointer;' onclick='editUserShowModal("${el["id"]}", "${escapeQuotes(el["fName"])}", "${escapeQuotes(el["lName"])}", "${escapeQuotes(el["email"])}", "${escapeQuotes(el["telephone"])}");'></i></td></tr>`
             }
         });
         $('#userEditDt').DataTable(tableText);
@@ -171,6 +213,47 @@ function getAllFirmsForRemoveFirmTable()//Injectvane na firmi v tablica za prema
     
 
 }
+function addCity()//Dobavqne na podurjan grad kum firma
+{
+    if(arguments.callee.caller === null) {console.log("%c You are not permitted to use this method!!!",  'color: red'); return;}
+    postRequest("/firm/addSupportedCityByFirmId", 
+    {
+        city: document.querySelector('input[name="type"]:checked').value + " " + $("#nameCity").val(),
+        region: $("#nameRegion").val(),
+        firmId: $("#firms2 option:selected").val()
+    }).then(data=>
+    {
+        if(data=="true") 
+        {
+            document.getElementById("modalBody").innerText="Населеното място е добавено успешно!";
+        }
+        else document.getElementById("modalBody").innerText="Вече сте добавили населено място с това име!";
+
+    $("#modal").modal();
+        }
+        );
+}
+function getAllFirmsForEditFirmTabTable()//Injectvane na firmi v tablica za redaktirane na firmi
+{
+    if(arguments.callee.caller === null) {console.log("%c You are not permitted to use this method!!!",  'color: red'); return;}
+    getRequest("/firm/getAllFirms").then(json=>
+    {
+        json.forEach(el => {
+            if(el["email"] != profileInfo["email"])
+            {
+            var verified = "";
+            if(el["verified"] == 1) verified = "Да";
+            else verified = "Не";
+            var modVerified = "";
+            if(el["moderationVerified"] == 1) modVerified = "Да";
+            else modVerified = "Не";
+            document.getElementById("bodyTable").innerHTML += `<tr><td>${el["id"]}</td><td>${el["firmName"]}</td><td>${el["eik"]}</td><td>${el["city"]}</td><td>${el["address"]}</td><td>${el["email"]}</td><td>${el["phoneNumber"]}</td><td>${verified}</td><td>${modVerified}</td><td class="text-secondary h5"><i class='far fa-edit' style='cursor: pointer;' onclick='editFirmShowModal("${el["id"]}", "${escapeQuotes(el["firmName"])}", "${el["eik"]}", "${escapeQuotes(el["city"])}", "${escapeQuotes(el["address"])}", "${escapeQuotes(el["email"])}", "${escapeQuotes(el["phoneNumber"])}");'></i></td></tr>`
+            }
+        });
+        $('#firmEditDt').DataTable(tableTextFirm);
+        $('.dataTables_length').addClass('bs-select');
+    });
+}
 function getAllFirmsForModerationVerifyFirmTable()//Injectvane na firmi v tablica za odobrqvane na firmi
 {
     if(arguments.callee.caller === null) {console.log("%c You are not permitted to use this method!!!",  'color: red'); return;}
@@ -202,14 +285,14 @@ function getAllUsersForAddDriverTabTable()//Injectvane na potrebitel v tablica z
         json.forEach(el => {
             if(el["email"] != profileInfo["email"])
             {
-                if(el["role"] !=  "Driver")
+                if(el["role"] ==  "User" )
                 {
                     var verified = "";
                     var firmId = "Няма";
                     if(el["firmId"] != null) firmId = el["firmId"];
                     if(el["verified"] == 1) verified = "Да";
                     else verified = "Не";
-                    document.getElementById("bodyTable").innerHTML += `<tr><td>${el["id"]}</td><td>${el["fName"]}</td><td>${el["lName"]}</td><td>${el["email"]}</td><td>${el["telephone"]}</td><td>${firmId}</td><td>${userRole[el["role"]]}</td><td>${verified}</td><td class="text-secondary h5"><i class='fas fa-plus text-success' style='cursor: pointer;' onclick='addTaxiDriverShowModal("${el["id"]}");'></i></td></tr>`
+                    document.getElementById("bodyTable").innerHTML += `<tr><td>${el["id"]}</td><td>${el["fName"]}</td><td>${el["lName"]}</td><td>${el["email"]}</td><td>${el["telephone"]}</td><td>${userRole[el["role"]]}</td><td>${firmId}</td><td>${verified}</td><td class="text-secondary h5"><i class='fas fa-plus text-success' style='cursor: pointer;' onclick='addTaxiDriverShowModal("${el["id"]}");'></i></td></tr>`
                 }
             }
         });
@@ -223,8 +306,7 @@ function getAllFirmsForAddDrivers()//Injektvane na firmi v select tag za dobavqn
     getRequest("/firm/getAllFirms").then(json=>
     {
         json.forEach(el => {
-            document.getElementById("allFirmsForAddDriver").innerHTML += `<option value="${el["id"]}">${el["firmName"]}</option>`
-
+            document.getElementById("allFirmsForAddDriver").innerHTML += `<option value="${el["id"]}">${el["firmName"]}</option>`;
         });
     });
 }
@@ -238,14 +320,33 @@ function getAllOrdersForListAndRemove()//Injektvane na poruchki v tablica za pre
             var listOrder = "Няма";
             var notes = "Няма";
             if(order["driverId"] != null) driverId = order["driverId"];
-            if(order["notes"] != "") driverId = order["notes"];
-            if(order["items"] != "") driverId = order["items"];
+            if(order["notes"] != "") notes = order["notes"];
+            if(order["items"] != "") listOrder = order["items"];
             document.getElementById("bodyTable").innerHTML += `<tr><td>${order["id"]}</td><td>${order["address"]}</td><td>${order["y"]}</td><td>${order["x"]}</td><td>${driverId}</td><td>${order["userId"]}</td><td>${listOrder}</td><td>${notes}</td><td>${order["date"]}</td><td>${order["ip"]}</td><td>${orderStatus[order["orderStatus"]]}</td><td class="text-danger h5"><i class='far fa-times-circle' style='cursor: pointer;' onclick='removeOrderShowModal("${order["id"]}");'></i></td></tr>`;
         });
         $('#allOrdersDt').DataTable(tableTextOrder);
         $('.dataTables_length').addClass('bs-select');
     });
 
+}
+function removeSupportedCity(firmId, cityId)//Premahvane na poddurjan grad po id na firma i id na grad
+{
+    if(arguments.callee.caller === null) {console.log("%c You are not permitted to use this method!!!",  'color: red'); return;}
+    $("#modalAdmin").modal('hide');
+    postRequest("/firm/removeSupportedCityById", 
+    {
+        firmId: firmId,
+        cityId: cityId,
+    }).then(data=>
+    {
+        if(data == "true")
+        {
+        document.getElementById("modalBody").innerText = `Успешно е изтрито населено място с ID-${cityId} от фирма с ID-${firmId}!`;
+        actionOnCloseModal = getAllCitiesByFirmForRemoveCityTable;
+        $("#modal").modal();
+        }
+    }
+    );
 }
 function changeRoleUser(id)//Smqna rolq na potrebitel po id
 {
@@ -267,7 +368,7 @@ function activateUser(id)//Aktivirane na potrebitel po id
 {
     if(arguments.callee.caller === null) {console.log("%c You are not permitted to use this method!!!",  'color: red'); return;}
     $("#modalAdmin").modal('hide');
-    postRequest("/auth/activateUserByAdmin", 
+    postRequest("/auth/activateUserById", 
         {
             userid: id,
         }).then(data=>
@@ -328,20 +429,36 @@ function editUser(id)//Redaktirane na potrebitel po id
         );
     }
 }
-function addTaxiDriver(id)
+function addTaxiDriverByAdmin(id)
 {
+    if(arguments.callee.caller === null) {console.log("%c You are not permitted to use this method!!!",  'color: red'); return;}
     $("#modalAdmin").modal('hide');
-        postRequest("/firm/addTaxiDriverByAdmin", 
+        postRequest("/firm/addTaxiDriverById", 
         {
             firmID: $("#allFirmsForAddDriver").val(),
             userID: id,
         }).then(data=>
         {
-            document.getElementById("modalBody").innerText = `Успешно е добавен таксиметров шофьор с ID-${id} към фирма с име-${document.getElementById("allFirmsForAddDriver").options[document.getElementById("allFirmsForAddDriver").selectedIndex].text}!`;
+            if(data == "true")
+            {
+                document.getElementById("modalBody").innerText = `Успешно е добавен таксиметров шофьор с ID-${id} към фирма с име-${$("#allFirmsForAddDriver").text()}!`;
+            }
+            else if(data == "false")
+            {
+                document.getElementById("modalBody").innerText = `Не може да бъде добавен таксиметров шофьор кум фирма с име-${$("#allFirmsForAddDriver").text()} докато фирмата не бъде одобрена!`;
+            }
             actionOnCloseModal = addDriverTab;
             $("#modal").modal();
         }
         );
+}
+function removeSupportedCityShowModal(firmId, cityId)//Pokazvane na modal za iztrivane na naseleno mqsto
+{
+    if(arguments.callee.caller === null) {console.log("%c You are not permitted to use this method!!!",  'color: red'); return;}
+    document.getElementById("modalAdminLabel").innerText = `Изтриване на населено място`;
+    document.getElementById("modalAdminBody").innerHTML =  `Сигурни ли сте, че искате да изтриете населено място с ID-${cityId} и ID на фирма-${firmId}?`;
+    document.getElementById("modalAdminButton").onclick = function() {removeSupportedCity(firmId, cityId);};
+    $("#modalAdmin").modal();
 }
 function activateUserShowModal(id)//Pokazvane na modal za aktivirane na potrebitel
 {
@@ -363,7 +480,11 @@ function editUserShowModal(id, fName, lName, email, phoneNumber)//Pokazvane na m
 {
     if(arguments.callee.caller === null) {console.log("%c You are not permitted to use this method!!!",  'color: red'); return;}
     document.getElementById("modalAdminLabel").innerText = `Редактиране на потребител`;
-    document.getElementById("modalAdminBody").innerHTML =  `<div class="form-group"><input type="text" class="form-control" id="fName"  placeholder="Име" value="${fName}"> </div> <div class="form-group"> <input type="text" class="form-control" id="lName" placeholder="Фамилия" value="${lName}"> </div> <div class="form-group"><input type="email" class="form-control" id="email" placeholder="Имейл" value="${email}"></div> <div class="form-group"><input type="text" class="form-control" id="phoneNumber" placeholder="Телефонен номер" value="${phoneNumber}"> </div> <div class="form-group"></div>`;
+    document.getElementById("modalAdminBody").innerHTML =  `<div class="form-group"><input type="text" class="form-control" id="fName"  placeholder="Име"> </div> <div class="form-group"> <input type="text" class="form-control" id="lName" placeholder="Фамилия"> </div> <div class="form-group"><input type="email" class="form-control" id="email" placeholder="Имейл"></div> <div class="form-group"><input type="text" class="form-control" id="phoneNumber" placeholder="Телефонен номер"> </div> <div class="form-group"></div>`;
+    document.getElementById("fName").value = fName;
+    document.getElementById("lName").value = lName;
+    document.getElementById("email").value = email;
+    document.getElementById("phoneNumber").value = phoneNumber;
     document.getElementById("modalAdminButton").onclick = function() {editUser(id);};
     $("#modalAdmin").modal();
 }
@@ -397,7 +518,7 @@ function addTaxiDriverShowModal(id)//Pokazvane na modal za dobavqne na shofyori
     document.getElementById("modalAdminLabel").innerText = `Добавяне на шофьор`;
     document.getElementById("modalAdminBody").innerHTML = `<p class="text-center">Към коя фирма искате да добавите шофьор с ID-${id}?</p><select id="allFirmsForAddDriver" class="form-control"></select>`;
     getAllFirmsForAddDrivers();
-    document.getElementById("modalAdminButton").onclick = function() {addTaxiDriver(id);};
+    document.getElementById("modalAdminButton").onclick = function() {addTaxiDriverByAdmin(id);};
     $("#modalAdmin").modal()
 }
 function removeOrderShowModal(id)//Pokazvane na modal za iztrivane na poruchka
@@ -454,6 +575,70 @@ function removeFirm(id)//Premahvane na firma po id
     );
 
 }
+function editFirm(id)//Redaktirane na firma po id
+{
+    if(arguments.callee.caller === null) {console.log("%c You are not permitted to use this method!!!",  'color: red'); return;}
+    $("input").removeClass("is-invalid");
+    var isChecked = true;
+    var isDigit = /^\d+$/;
+    var isEmail = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+    if($("#firmName").val().length < 3)
+    {
+        $('#firmName').addClass("is-invalid");
+        isChecked = false;
+    }
+    else $('#firmName').addClass("is-valid");
+    if(!check_eik($("#eik").val()))
+    {
+        $('#eik').addClass("is-invalid");
+        isChecked = false;
+    }
+    else $('#eik').addClass("is-valid");
+    if($("#city").val().length < 3)
+    {
+        $('#city').addClass("is-invalid");
+        isChecked = false;
+    }
+    else $('#city').addClass("is-valid");
+    if($("#address").val().length < 3)
+    {
+        $('#address').addClass("is-invalid");
+        isChecked = false;
+    }
+    else $('#address').addClass("is-valid");
+    if(!isEmail.test($("#email").val()))
+    {
+        $('#email').addClass("is-invalid");
+        isChecked = false;
+    }
+    else $('#email').addClass("is-valid");
+    if($("#phoneNumber").val().length < 10 || $("#phoneNumber").val().charAt(0) != '0' || !isDigit.test($("#phoneNumber").val()))
+    {
+        $('#phoneNumber').addClass("is-invalid");
+        isChecked = false;
+    }
+    else $('#phoneNumber').addClass("is-valid");
+    if(isChecked == true)
+    {
+        $("#modalAdmin").modal('hide');
+        postRequest("/firm/editFirmByAdmin",
+        {
+            firmID: id,
+            firmName: $("#firmName").val(),
+            eik: $("#eik").val(),
+            city: $("#city").val(),
+            address: $("#address").val(),
+            email: $("#email").val(),
+            phoneNumber: $("#phoneNumber").val()
+        }).then(data=>
+        {
+            document.getElementById("modalBody").innerText=`Фирма с ID-${id} е редактирана успешно!`;
+            actionOnCloseModal = firmEditTab;
+            $("#modal").modal();
+        }
+        );
+    }
+}
 function moderationVerifyFirm(id)//Odobrqvane na firma po id
 {
     if(arguments.callee.caller === null) {console.log("%c You are not permitted to use this method!!!",  'color: red'); return;}
@@ -468,6 +653,20 @@ function moderationVerifyFirm(id)//Odobrqvane na firma po id
         $("#modal").modal();
     }
     );
+}
+function editFirmShowModal(id, firmName, eik, city, address, email, phoneNumber)//Pokazvane na modal za redaktirane na firma
+{
+    if(arguments.callee.caller === null) {console.log("%c You are not permitted to use this method!!!",  'color: red'); return;}
+    document.getElementById("modalAdminLabel").innerText = `Редактиране на фирма`;
+    document.getElementById("modalAdminBody").innerHTML =  `<div class="form-group"><input type="text" class="form-control" id="firmName"  placeholder="Име на фирма"> </div> <div class="form-group"> <input type="text" class="form-control" id="eik" placeholder="ЕИК"> </div> <div class="form-group"><input type="text" class="form-control" id="city" placeholder="Град седалище на фирма"></div><div class="form-group"><input type="text" class="form-control" id="address" placeholder="Адрес на седалището на фирма"></div><div class="form-group"><input type="email" class="form-control" id="email" placeholder="Имейл"></div> <div class="form-group"><input type="text" class="form-control" id="phoneNumber" placeholder="Телефонен номер"> </div> <div class="form-group"></div>`;
+    document.getElementById("firmName").value = firmName;
+    document.getElementById("eik").value = eik;
+    document.getElementById("email").value = email;
+    document.getElementById("city").value = city;
+    document.getElementById("address").value = address;
+    document.getElementById("phoneNumber").value = phoneNumber;
+    document.getElementById("modalAdminButton").onclick = function() {editFirm(id);};
+    $("#modalAdmin").modal();
 }
 function userRemoveTab()//Tab za premahvane na potrebiteli
 {
@@ -570,7 +769,43 @@ function addDriverTab()//Tab za dobavqne na shofyori
         getAllUsersForAddDriverTabTable();
     });
 }
-function orderListAndRemoveTab()
+function firmEditTab()//Tab za redaktirane firmi
+{
+    if(arguments.callee.caller === null) {console.log("%c You are not permitted to use this method!!!",  'color: red'); return;}
+    if(currentActiveTabId != "") 
+    {
+        document.getElementById(currentActiveTabId).classList.remove("active");
+    }
+    currentActiveTabId = "firmEditTab";
+    document.getElementById(currentActiveTabId).classList.add("active");
+    getRequest(window.location.protocol+'//'+ window.location.host +'/adminPanelTabs/firmEditTab.html').then(data=>{
+        document.getElementById("tabContent").innerHTML = data;
+        getAllFirmsForEditFirmTabTable();
+    });
+}
+function addRemoveSupportedCityTab()//Tab za premhavane i dobavqne na poddurjani naseleni mesta
+{
+    if(arguments.callee.caller === null) {console.log("%c You are not permitted to use this method!!!",  'color: red'); return;}
+    if(currentActiveTabId != "") 
+    {
+        document.getElementById(currentActiveTabId).classList.remove("active");
+    }
+    currentActiveTabId = "addRemoveSupportedCityTab";
+    document.getElementById(currentActiveTabId).classList.add("active");
+    getRequest(window.location.protocol+'//'+ window.location.host +'/adminPanelTabs/addRemoveSupportedCityTab.html').then(data=>{
+        document.getElementById("tabContent").innerHTML = data;
+        getRequest("/firm/getAllFirms/").then(json=>{
+            if(json.length> 0)
+            {
+            json.forEach(el => {
+                document.getElementById("firms").innerHTML += `<option value="${el["id"]}">${el["firmName"]}</option>`;
+                document.getElementById("firms2").innerHTML += `<option value="${el["id"]}">${el["firmName"]}</option>`
+            });
+            }
+        });
+    });
+}
+function orderListAndRemoveTab()//Tab za pregled i iztrivane na poruchki
 {
     if(arguments.callee.caller === null) {console.log("%c You are not permitted to use this method!!!",  'color: red'); return;}
     if(currentActiveTabId != "") 
@@ -582,5 +817,19 @@ function orderListAndRemoveTab()
     getRequest(window.location.protocol+'//'+ window.location.host +'/adminPanelTabs/orderListAndRemoveTab.html').then(data=>{
         document.getElementById("tabContent").innerHTML = data;
         getAllOrdersForListAndRemove();
+    });
+}
+function moderatorOperationsTab()//Tab za pregled i na operacii na moderatori
+{
+    if(arguments.callee.caller === null) {console.log("%c You are not permitted to use this method!!!",  'color: red'); return;}
+    if(currentActiveTabId != "") 
+    {
+        document.getElementById(currentActiveTabId).classList.remove("active");
+    }
+    currentActiveTabId = "moderatorOperationsTab";
+    document.getElementById(currentActiveTabId).classList.add("active");
+    getRequest(window.location.protocol+'//'+ window.location.host +'/adminPanelTabs/moderatorOperationsTab.html').then(data=>{
+        document.getElementById("tabContent").innerHTML = data;
+        getAllOperationsForTable();
     });
 }
