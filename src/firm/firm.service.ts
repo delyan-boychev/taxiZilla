@@ -323,7 +323,7 @@ export class FirmService {
     const user = await this.userRepository.findOne({id:userID});
     if(firm)
     {
-      this.firmRepository.addTaxiDriver(firm.eik, user);
+      return this.firmRepository.addTaxiDriver(firm.eik, user);
     }
   }
   async getAllCities()

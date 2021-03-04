@@ -429,10 +429,11 @@ function editUser(id)//Redaktirane na potrebitel po id
         );
     }
 }
-function addTaxiDriverByAdmin(id)
+function addTaxiDriverByAdmin(id)//Funkciq za dobavqne na taksimetrov shofyor kato admin
 {
     if(arguments.callee.caller === null) {console.log("%c You are not permitted to use this method!!!",  'color: red'); return;}
     $("#modalAdmin").modal('hide');
+    console.log($("#allFirmsForAddDriver").val());
         postRequest("/firm/addTaxiDriverById", 
         {
             firmID: $("#allFirmsForAddDriver").val(),
@@ -441,11 +442,11 @@ function addTaxiDriverByAdmin(id)
         {
             if(data == "true")
             {
-                document.getElementById("modalBody").innerText = `Успешно е добавен таксиметров шофьор с ID-${id} към фирма с име-${$("#allFirmsForAddDriver").text()}!`;
+                document.getElementById("modalBody").innerText = `Успешно е добавен таксиметров шофьор с ID-${id} към фирма с име-${$("#allFirmsForAddDriver option:selected").text()}!`;
             }
             else if(data == "false")
             {
-                document.getElementById("modalBody").innerText = `Не може да бъде добавен таксиметров шофьор кум фирма с име-${$("#allFirmsForAddDriver").text()} докато фирмата не бъде одобрена!`;
+                document.getElementById("modalBody").innerText = `Не може да бъде добавен таксиметров шофьор към фирма с име-${$("#allFirmsForAddDriver option:selected").text()} докато фирмата не бъде одобрена!`;
             }
             actionOnCloseModal = addDriverTab;
             $("#modal").modal();

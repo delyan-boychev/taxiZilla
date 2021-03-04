@@ -171,7 +171,7 @@ export class FirmController {
   async addTaxiDriverById(@Session() session:{token?:string, role?:string}, @Body("firmID") firmID:string, @Body("userID") userID:string)
   {
     if(!session.token || ( session.role != UserRoles.MODERATOR && session.role != UserRoles.ADMIN)) throw new UnauthorizedException();
-    await this.firmService.addTaxiDriverById(session, parseInt(firmID), parseInt(userID));
+    return await this.firmService.addTaxiDriverById(session, parseInt(firmID), parseInt(userID));
   }
   @Post("/changePassword/")
   async changePassword(@Session() session:{token:string}, @Body("oldPass") oldPass:string, @Body("newPass") newPass:string)

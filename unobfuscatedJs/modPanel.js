@@ -301,13 +301,14 @@ function addTaxiDriverByModerator(id)//Dobavqne na shofyor po id kato moderator
             firmID: $("#allFirmsForAddDriver").val(),
             userID: id,
         }).then(data=>
-        {   if(data == "true")
+        {   
+            if(data == "true")
             {
-                document.getElementById("modalBody").innerText = `Успешно е добавен таксиметров шофьор с ID-${id} към фирма с име-${$("#allFirmsForAddDriver").text()}!`;
+                document.getElementById("modalBody").innerText = `Успешно е добавен таксиметров шофьор с ID-${id} към фирма с име-${$("#allFirmsForAddDriver option:selected").text()}!`;
             }
             else if(data == "false")
             {
-                document.getElementById("modalBody").innerText = `Не може да бъде добавен таксиметров шофьор кум фирма с име-${$("#allFirmsForAddDriver").text()} докато фирмата не бъде одобрена!`;
+                document.getElementById("modalBody").innerText = `Не може да бъде добавен таксиметров шофьор към фирма с име-${$("#allFirmsForAddDriver option:selected").text()} докато фирмата не бъде одобрена!`;
             }
             actionOnCloseModal = addDriverTab;
             $("#modal").modal();
