@@ -72,6 +72,24 @@ const tableTextCity = {
         }
     }
 };
+const tableTextModOperations = {
+    "language": {
+        "sProcessing":     "Обработка на данни...",
+        "sSearch":         "Търсене:",
+        "sLengthMenu":     "Покажи _MENU_ модераторски операции на страница",
+        "sInfo":           "Показани са от _START_ до _END_ модераторска операция от общо _TOTAL_ модераторски операции",
+        "sInfoEmpty":      "Показани са 0 модераторски операции",
+        "sInfoFiltered":   "(общ брой модераторски операции - _MAX_)",
+        "sInfoPostFix":    "",
+        "sLoadingRecords": "Зареждане на данни...",
+        "sZeroRecords":    "Няма намерени модераторски операции!",
+        "sEmptyTable":     "Няма модераторски операции",
+        "oPaginate": {
+            "sPrevious":   "Предишна страница",
+            "sNext":       "Следваща страница",
+        }
+    }
+};
 function getAllOperationsForTable()//Injectvane na operacii na potrebiteli v tablica za pokazvane na operacii na potrebiteli
 {
     if(arguments.callee.caller === null) {console.log("%c You are not permitted to use this method!!!",  'color: red'); return;}
@@ -80,7 +98,7 @@ function getAllOperationsForTable()//Injectvane na operacii na potrebiteli v tab
         json.forEach(el => {
             document.getElementById("bodyTable").innerHTML += `<tr><td>${el["id"]}</td><td>${el["moderatorEmail"]}</td><td>${el["action"]}</td><td>${el["date"]}</td></tr>`
         });
-        $('#moderatorOperationsDt').DataTable(tableTextCity);
+        $('#moderatorOperationsDt').DataTable(tableTextModOperations);
         $('.dataTables_length').addClass('bs-select');
     });
 }
