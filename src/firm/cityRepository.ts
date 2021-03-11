@@ -1,5 +1,5 @@
 import { UnauthorizedException } from "@nestjs/common";
-import { EntityRepository, Repository, Unique } from "typeorm";
+import { EntityRepository, getManager, Repository, Unique } from "typeorm";
 import { Firm } from "./firm.entity";
 import { FirmService } from "./firm.service";
 import { SupportedCity } from "./supportedCity.entity";
@@ -81,5 +81,15 @@ export class SupportedCityRepository extends Repository<SupportedCity>
     async getAllCities()
     {
         return await this.find();
+    }
+    async getAllCitiesInBG()
+    {
+        const entityManager = getManager();
+        return await entityManager.query("SELECT * FROM city;");
+    }
+    async getCitiesInBGByRegion(region:string)
+    {
+        const entityManager = getManager();
+        return await entityManager.query('SELECT * FROM city WHERE municipality LIKE "%'+ region +'%"'); 
     }
 }

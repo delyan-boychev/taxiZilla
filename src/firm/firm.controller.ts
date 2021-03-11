@@ -63,7 +63,7 @@ export class FirmController {
   @Get('/profile/')
   async getProfile(@Session() session:{token?:string, type?:string,role?:UserRoles})
   {
-    if(!session.token)throw new UnauthorizedException();
+    if(!session.token || session.type != "Firm")throw new UnauthorizedException();
     return this.firmService.getProfile(session);
   }
 
@@ -87,43 +87,43 @@ export class FirmController {
   @Post("/addTaxiDriver/")
   async addTaxiDriver(@Session() session:{token?:string, type?:string,role?:UserRoles},@Body("email") email:string)
   {
-    if(!session.token)throw new UnauthorizedException();
+    if(!session.token || session.type != "Firm")throw new UnauthorizedException();
     return await this.firmService.addTaxiDriver(session,email); 
   }
   @Get("/getTaxiDrivers/")
-  async getTaxiDrivers(@Session() session:{token?: string})
+  async getTaxiDrivers(@Session() session:{token?: string, type?:string})
   {
-    if(!session.token)throw new UnauthorizedException();
+    if(!session.token || session.type != "Firm")throw new UnauthorizedException();
     return await this.firmService.getTaxiDrivers(session);
   }
   @Post("/removeTaxiDriver/")
-  async removeTaxiDriver(@Session() session:{token?: string}, @Body("email") email:string)
+  async removeTaxiDriver(@Session() session:{token?: string, type?:string}, @Body("email") email:string)
   {
-    if(!session.token)throw new UnauthorizedException();
+    if(!session.token || session.type != "Firm")throw new UnauthorizedException();
     return await this.firmService.removeTaxiDriver(session, email);
   }
   @Post("/addSupportedCity/")
-  async addCity(@Session() session:{token?:string},@Body("city")city:string,@Body("region")region:string)
+  async addCity(@Session() session:{token?:string, type?:string},@Body("city")city:string,@Body("region")region:string)
   {
-    if(!session.token)throw new UnauthorizedException();
+    if(!session.token || session.type != "Firm")throw new UnauthorizedException();
     return await this.firmService.addCity(city,region,session); 
   }
   @Post("/addSupportedCityByFirmId")
-  async addCityByFirmId(@Session() session:{token?:string}, @Body("city")city:string,@Body("region")region:string, @Body("firmId") firmId:string)
+  async addCityByFirmId(@Session() session:{token?:string, role:string}, @Body("city")city:string,@Body("region")region:string, @Body("firmId") firmId:string)
   {
-    if(!session.token)throw new UnauthorizedException();
+    if(!session.token || (session.role!=UserRoles.ADMIN && session.role!=UserRoles.MODERATOR))throw new UnauthorizedException();
     return await this.firmService.addCityByFirmId(session,city, region, parseInt(firmId));
   }
   @Post("/removeSupportedCity")
-  async removeCity(@Session() session:{token?:string},@Body("city")city:string,@Body("region")region:string)
+  async removeCity(@Session() session:{token?:string, type?:string},@Body("city")city:string,@Body("region")region:string)
   {
-    if(!session.token)throw new UnauthorizedException();
+    if(!session.token || session.type != "Firm")throw new UnauthorizedException();
     return await this.firmService.removeCity(city,region,session);
   }
   @Post("/removeSupportedCityById")
-  async removeCityById(@Session() session:{token?:string},@Body("firmId")firmId:string,@Body("cityId")cityId:string)
+  async removeCityById(@Session() session:{token?:string, role?:string},@Body("firmId")firmId:string,@Body("cityId")cityId:string)
   {
-    if(!session.token)throw new UnauthorizedException();
+    if(!session.token || (session.role!=UserRoles.ADMIN && session.role!=UserRoles.MODERATOR))throw new UnauthorizedException();
     return await this.firmService.removeCityById(session,parseInt(cityId), parseInt(firmId));
   }
   @Post("/getCitiesByFirmId/")
@@ -133,9 +133,9 @@ export class FirmController {
     return await this.firmService.getCitiesByFirmId(parseInt(firmId));
   }
   @Get("/getCitiesByFirm/")
-  async getCitiesByFirm(@Session() session:{token?:string})
+  async getCitiesByFirm(@Session() session:{token?:string, type?:string})
   {
-    if(!session.token) throw new UnauthorizedException();
+    if(!session.token || session.type != "Firm") throw new UnauthorizedException();
     return await this.firmService.getCitiesByFirm(session);
   }
   @Get("/getAllCities")
@@ -147,18 +147,19 @@ export class FirmController {
   @Post("/moderationVerifyFirm/")
   async moderationVerifyFirm(@Session() session:{token?:string, role?:string}, @Body("firmID")firmID:string)
   {
-    if(!session.token) throw new UnauthorizedException();
+    if(!session.token || session.role != UserRoles.ADMIN) throw new UnauthorizedException();
     return await this.firmService.moderationVerifyFirm(session,parseInt(firmID));
   }
   @Post("/removeFirmByAdmin/")
-  async removeFirmByAdmin(@Session() session:{token?:string},@Body("firmID")firmID:string)
+  async removeFirmByAdmin(@Session() session:{token?:string, role?:string},@Body("firmID")firmID:string)
   {
-    if(!session.token) throw new UnauthorizedException();
+    if(!session.token || session.role != UserRoles.ADMIN) throw new UnauthorizedException();
     return await this.firmService.removeFirmByAdmin(session,parseInt(firmID));
   }
   @Post("/editFirmByAdmin/")
-  async editFirmByAdmin(@Session() session:{token?:string}, @Body("firmID") firmID:string, @Body("eik") eik:string,@Body("email") email:string, @Body("firmName") firmName:string,@Body("phoneNumber") phoneNumber:string, @Body("address") address:string, @Body("city") city:string)
+  async editFirmByAdmin(@Session() session:{token?:string, role?:string}, @Body("firmID") firmID:string, @Body("eik") eik:string,@Body("email") email:string, @Body("firmName") firmName:string,@Body("phoneNumber") phoneNumber:string, @Body("address") address:string, @Body("city") city:string)
   {
+    if(!session.token || session.role != UserRoles.ADMIN) throw new UnauthorizedException();
     return await this.firmService.editFirmByAdmin(session, parseInt(firmID), firmName, eik, email, phoneNumber, address, city);
   }
   @Get("/getAllFirms")
@@ -174,9 +175,9 @@ export class FirmController {
     return await this.firmService.addTaxiDriverById(session, parseInt(firmID), parseInt(userID));
   }
   @Post("/changePassword/")
-  async changePassword(@Session() session:{token:string}, @Body("oldPass") oldPass:string, @Body("newPass") newPass:string)
+  async changePassword(@Session() session:{token:string, type:string}, @Body("oldPass") oldPass:string, @Body("newPass") newPass:string)
   {
-    if(!session.token) throw new UnauthorizedException();
+    if(!session.token || session.type != "Firm") throw new UnauthorizedException();
     return await this.firmService.changePassword(session, oldPass, newPass);
   }
 }

@@ -90,6 +90,24 @@ const tableTextModOperations = {
         }
     }
 };
+function printElem(elem)//Funkciq za printirane
+{
+    var mywindow = window.open('', 'PRINT', 'height=400,width=600');
+
+    mywindow.document.write('<html><head><title>' + document.title  + '</title><style>table{width:100%;border-collapse:collapse;text-align:center;border:1px solid #00F;font-size:12px;}</style>');
+    mywindow.document.write('</head><body >');
+    mywindow.document.write('<h1>' + document.title  + '</h1>');
+    mywindow.document.write(document.getElementById(elem).innerHTML);
+    mywindow.document.write('</body></html>');
+
+    mywindow.document.close();
+    mywindow.focus();
+
+    mywindow.print();
+    mywindow.close();
+
+    return true;
+}
 function getAllOperationsForTable()//Injectvane na operacii na potrebiteli v tablica za pokazvane na operacii na potrebiteli
 {
     if(arguments.callee.caller === null) {console.log("%c You are not permitted to use this method!!!",  'color: red'); return;}

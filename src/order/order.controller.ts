@@ -13,14 +13,10 @@ export class OrderController {
         private orderService:OrderService,
 
     ){};
-    @Get("/getOrderOneSender")
-    async getOrderOneSender()
-    {
-        return await this.orderService.getOrderOneSender();
-    }
     @Post('/rejectOrderAfterAccept')
-    async rejectOrderAfterAccept(@Session() session: {token?: string}, @Body("orderID") orderID:string, @Body("senderID") senderID:string)
+    async rejectOrderAfterAccept(@Session() session: {token?: string, role?:string}, @Body("orderID") orderID:string, @Body("senderID") senderID:string)
     {
+        if(!session.token || session.role != UserRoles.DRIVER) throw new UnauthorizedException();
         this.orderService.rejectAfterAccept(session, parseInt(orderID), parseInt(senderID));
     }
     @Post('/createOrder')
@@ -31,21 +27,21 @@ export class OrderController {
         return this.orderService.createOrder(x,y,notes, session, address, ip);
     }
     @Post("/acceptOrder/")
-    async acceptOrder(@Session() session:{token?:string})
+    async acceptOrder(@Session() session:{token?:string, role?:string})
     {
-        if(!session.token)throw new UnauthorizedException();
+        if(!session.token || session.role != UserRoles.DRIVER)throw new UnauthorizedException();
         return this.orderService.acceptRequest(session);
     }
     @Post("/rejectOrder/")
-    async rejectOrder(@Session() session:{token?:string})
+    async rejectOrder(@Session() session:{token?:string, role?:string})
     {
-        if(!session.token)throw new UnauthorizedException();
+        if(!session.token || session.role != UserRoles.DRIVER)throw new UnauthorizedException();
         return this.orderService.rejectRequest(session);
     }
     @Post("/finishOrder/")
-    async finishOrder(@Session() session:{token?:string}, @Body('id') id:string)
+    async finishOrder(@Session() session:{token?:string, role?:string}, @Body('id') id:string)
     {
-        if(!session.token) throw new UnauthorizedException();
+        if(!session.token || session.role != UserRoles.DRIVER) throw new UnauthorizedException();
         this.orderService.finishOrder(Number(id));
     }
     @Get("/getAllOrders")
@@ -61,15 +57,15 @@ export class OrderController {
         return await this.orderService.getOrdersByUser(session);
     }
     @Get("/getOrdersByDriver")
-    async getOrdersByDriver(@Session() session:{token?:string})
+    async getOrdersByDriver(@Session() session:{token?:string, role?:string})
     {
-        if(!session.token) throw new UnauthorizedException();
+        if(!session.token || session.role != UserRoles.DRIVER) throw new UnauthorizedException();
         return await this.orderService.getOrdersByDriver(session);
     }
     @Post("/removeOrder")
-    async removeOrder(@Session() session:{token?:string}, @Body("orderId") orderId:string)
+    async removeOrder(@Session() session:{token?:string, role?:string}, @Body("orderId") orderId:string)
     {
-        if(!session.token) throw new UnauthorizedException();
+        if(!session.token ||session.role != UserRoles.ADMIN)throw new UnauthorizedException();
         return await this.orderService.removeOrder(parseInt(orderId));
     }
 

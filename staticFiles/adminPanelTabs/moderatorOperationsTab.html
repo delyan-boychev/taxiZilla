@@ -1,7 +1,9 @@
 <div class="tab-pane mt-4">
     <h5 class="font-weight-bold">Операции с модератори</h5>
     <hr>
-    <table id="moderatorOperationsDt" class="table table-striped table-bordered table-responsive" cellspacing="0" width="100%">
+    <button class="btn btn-primary text-secondary" onclick="printElem('table')">Принтиране на таблица</button>
+    <div id="table" hidden>
+      <table>
         <thead>
           <tr>
             <th class="th-sm">ID</th>
@@ -11,6 +13,20 @@
           </tr>
         </thead>
         <tbody id="bodyTable">
+          
+        </tbody>
+      </table>
+    </div>
+    <table id="moderatorOperationsDt" class="table table-striped table-bordered table-responsive" cellspacing="0" width="100%">
+        <thead>
+          <tr>
+            <th class="th-sm">ID</th>
+            <th class="th-sm">Имейл на модератор</th>
+            <th class="th-sm">Извършена операция</th>
+            <th class="th-sm">Дата и час</th>
+          </tr>
+        </thead>
+        <tbody id="bodyTable2">
           
         </tbody>
         <tfoot>

@@ -76,8 +76,9 @@ export class AuthController {
 
   //Заявка за активиране на потребител
   @Post("/activateUserById")
-  async activateUserById(@Session()session:{token?:string}, @Body("userid") userid:number)
+  async activateUserById(@Session()session:{token?:string, role?:string}, @Body("userid") userid:number)
   {
+    if(!session.token ||(session.role != UserRoles.MODERATOR && session.role != UserRoles.ADMIN))throw new UnauthorizedException();
     return this.authService.activaterUserById(session,userid); 
   }
   //Логин на потребител
@@ -101,21 +102,23 @@ export class AuthController {
   }
   //Смяна на ролята
   @Post("/changeUserRoleByAdmin")
-  async changeUserRoleByAdmin(@Session()session:{token?:string},@Body("userid")userid:number,@Body("role")role:UserRoles)
+  async changeUserRoleByAdmin(@Session()session:{token?:string, role?:string},@Body("userid")userid:number,@Body("role")role:UserRoles)
   {
-    if(!session.token)throw new UnauthorizedException();
+    if(!session.token ||session.role != UserRoles.ADMIN)throw new UnauthorizedException();
     return await this.authService.changeUserRoleAdmin(session,userid,role);
   }
   //Изтриване на потребител
   @Post("/removeUserByAdmin")
-  async removeUserByAdmin(@Session()session:{token?:string},@Body("userid")userid:number)
+  async removeUserByAdmin(@Session()session:{token?:string, role?:string},@Body("userid")userid:number)
   {
+    if(!session.token ||session.role != UserRoles.ADMIN)throw new UnauthorizedException();
     return await this.authService.removeUserByAdmin(session,Number(userid));
   }
   //Редакция на потребител
   @Post("/editUserByAdmin")
   async editUserByAdmin(@Session() session:{token?:string, role?:string },@Body("userid")userid:number,@Body("fName")fname:string,@Body("lName")lname:string,@Body("email")email:string,@Body("phoneNumber")phoneNumber:string)
   {
+    if(!session.token || session.role != UserRoles.ADMIN)throw new UnauthorizedException();
     return await this.authService.editUserByAdmin(session,userid,fname,lname,phoneNumber,email);
   }
   //Влизане като шофьор
@@ -140,7 +143,7 @@ export class AuthController {
   @Get("/profile/")
   async getProfile(@Session() session: { token?: string , type?:string,role:UserRoles})
   {
-    if(!session.token)throw new UnauthorizedException();
+    if(!session.token || session.type != "User")throw new UnauthorizedException();
     return await this.authService.getProfile(session);
   }
   //Потвърждение на потребител
@@ -155,27 +158,27 @@ export class AuthController {
   @Post("/checkUser/")
   async checkUser(@Session() session: { token?: string , type?:string,role:UserRoles}, @Body("password") password: string)
   {
-    if(!session.token)throw new UnauthorizedException();
+    if(!session.token || session.type != "User")throw new UnauthorizedException();
     return this.authService.checkUser(session, password);
   }
   //Смяна на паролата
   @Post("/changePassword/")
   async changePassword(@Session() session: { token?: string , type?:string,role:UserRoles}, @Body("oldPass") oldPass: string, @Body("newPass") newPass: string)
   {
-    if(!session.token)throw new UnauthorizedException();
+    if(!session.token || session.type != "User")throw new UnauthorizedException();
     return await this.authService.changePassword(session, oldPass, newPass);
   }
   //Смяна на Email адрес
   @Post("/changeEmail/")
-  async changeEmail(@Session() session: { token?: string }, @Body("newEmail") newEmail: string)
+  async changeEmail(@Session() session: { token?: string, type?: string}, @Body("newEmail") newEmail: string)
   {
-    if(!session.token)throw new UnauthorizedException();
+    if(!session.token || session.type != "User")throw new UnauthorizedException();
     return await this.authService.changeEmail(session, newEmail);
   }
   @Post("/getCitiesByFirmId")
-  async getCitiesByFirmId(@Session() session:{token?:string}, @Body("firmID") firmID:string)
+  async getCitiesByFirmId(@Session() session:{token?:string, type?:string}, @Body("firmID") firmID:string)
   {
-    if(!session.token) throw new UnauthorizedException();
+    if(!session.token || session.type != "User") throw new UnauthorizedException();
     return await this.authService.getCitiesByFirmId(parseInt(firmID));
   }
   //Промяна на статус и проверка за поръчки. Само за шофьори
@@ -211,7 +214,7 @@ export class AuthController {
   @Post("/editUser/")
   async editUser(@Session() session:{token?:string, role?:UserRoles, type?:string}, @Body("fName") fName:string, @Body("lName") lName:string, @Body("phoneNumber") phoneNumber:string)
   {
-    if(!session.token)throw new UnauthorizedException();
+    if(!session.token || session.type != "User")throw new UnauthorizedException();
     return await this.authService.editUser(session, fName, lName, phoneNumber);
   }
 
