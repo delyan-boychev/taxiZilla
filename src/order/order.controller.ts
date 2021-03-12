@@ -12,7 +12,9 @@ export class OrderController {
     constructor(
         private orderService:OrderService,
 
-    ){};
+    ){
+        setInterval(this.orderService.intervalCode,20000);
+    };
     @Post('/rejectOrderAfterAccept')
     async rejectOrderAfterAccept(@Session() session: {token?: string, role?:string}, @Body("orderID") orderID:string, @Body("senderID") senderID:string)
     {

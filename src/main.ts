@@ -5,6 +5,7 @@ import { join } from 'path';
 import * as helmet from 'helmet';
 import { AppModule } from './app.module';
 import { HttpExceptionFilter, HttpExceptionFilter2 } from './http-exception.filter';
+import { OrderService } from './order/order.service';
 
 async function bootstrap() {
   const fs = require('fs');

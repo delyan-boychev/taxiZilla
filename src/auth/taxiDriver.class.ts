@@ -1,5 +1,6 @@
 import { Drivers, Requests, Statuses } from "src/coordsAndStatus.array";
 import { UserStatus } from "./enums/userStatus.enum";
+import { RequestsTimestamps } from "./timestamps.exports";
 import { User } from "./user.entity";
 
 //Тук се случва намирането на най-близък шофьор
@@ -81,5 +82,6 @@ export class taxiDriversFindNearest
                 distances:this.taxiDriversDistance,
                 curdriveridx:0,
         };
+        RequestsTimestamps[Drivers[this.taxiDriversDistance[i].index].driver.id] = new Date();
     }
 }

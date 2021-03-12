@@ -6,6 +6,7 @@ import { session } from 'passport';
 import { UserRoles } from 'src/auth/enums/userRoles.enum';
 import { UserStatus } from 'src/auth/enums/userStatus.enum';
 import { taxiDriver, taxiDriversFindNearest } from 'src/auth/taxiDriver.class';
+import { RequestsTimestamps } from 'src/auth/timestamps.exports';
 import { User } from 'src/auth/user.entity';
 import { UserRepository } from 'src/auth/user.repository';
 import { Statuses, Drivers,x,y, Requests } from 'src/coordsAndStatus.array';
@@ -22,6 +23,42 @@ export class OrderService {
         private jwtService:JwtService,
             
     ){};
+    async intervalCode()
+    {
+        let timeStamp = new Date();
+        console.log("Kurec");
+        for(let i = 0; i < RequestsTimestamps.length; i++)
+        {
+            if(timeStamp.getTime()-RequestsTimestamps[i].getTime()>23000)
+            {
+                this.rejectRequestById(i);
+            }
+        }
+    }
+    async rejectRequestById(id:number)
+    {
+        let user = await this.userRepository.findOne({id});
+        if(Requests[user.id])
+        {
+            if(Requests[user.id]["curdriveridx"]<Requests[user.id]["distances"].length)
+            {
+                Requests[user.id]["status"]=0;
+                if(Requests[user.id]["distances"][Requests[user.id]["curdriveridx"]+1])
+                {
+                Requests[Requests[user.id]["distances"][Requests[user.id]["curdriveridx"]+1]["index"]]=Requests[user.id];
+                RequestsTimestamps[Requests[user.id]["distances"][Requests[user.id]["curdriveridx"]+1]["index"]]=RequestsTimestamps[user.id];
+                }
+                else
+                {
+                    this.orderRepository.createOrder(Requests[user.id]["sender"],null,Requests[user.id]["x"],Requests[user.id]["y"], Requests[user.id]["notes"], Requests[user.id]["address"],Requests[user.id]["ip"], OrderStatus.Canceled); 
+                }
+                Requests[user.id]=undefined;
+                RequestsTimestamps[user.id]=undefined;
+            }
+            
+
+        }
+    }
     async rejectRequest(@Session() session:{token?:string})
     {
         let uemail = await this.jwtService.decode(session.token);
@@ -34,12 +71,14 @@ export class OrderService {
                 if(Requests[user.id]["distances"][Requests[user.id]["curdriveridx"]+1])
                 {
                 Requests[Requests[user.id]["distances"][Requests[user.id]["curdriveridx"]+1]["index"]]=Requests[user.id];
+                RequestsTimestamps[Requests[user.id]["distances"][Requests[user.id]["curdriveridx"]+1]["index"]]=RequestsTimestamps[user.id];
                 }
                 else
                 {
                     this.orderRepository.createOrder(Requests[user.id]["sender"],null,Requests[user.id]["x"],Requests[user.id]["y"], Requests[user.id]["notes"], Requests[user.id]["address"],Requests[user.id]["ip"], OrderStatus.Canceled); 
                 }
                 Requests[user.id]=undefined;
+                RequestsTimestamps[user.id]=undefined;
             }
             
 
@@ -110,6 +149,7 @@ export class OrderService {
             Requests[user.id]["status"]=1;
             let idOrder = await this.orderRepository.createOrder(Requests[user.id]["sender"],user.id,Requests[user.id]["x"],Requests[user.id]["y"], Requests[user.id]["notes"], Requests[user.id]["address"], Requests[user.id]["ip"], OrderStatus.Open); 
             Requests[user.id] = undefined;
+            RequestsTimestamps[user.id] = undefined;
             return idOrder;
         }
     }
