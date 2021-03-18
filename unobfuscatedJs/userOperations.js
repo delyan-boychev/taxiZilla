@@ -68,17 +68,10 @@ function getSupportedCitiesByFirm()//Vzemane na poddurzani gradove kato firma
 function addSupporttedCity()//Dobavqne na poddurzan grad
 {
     if(arguments.callee.caller === null) {console.log("%c You are not permitted to use this method!!!",  'color: red'); return;}
-    $('#nameCity').addClass("is-valid");
-    if($("#nameCity").val().length < 4)
-    {
-        $('#nameCity').addClass("is-invalid");
-    }
-    else
-    {
     postRequest("/firm/addSupportedCity", 
     {
-        city: document.querySelector('input[name="type"]:checked').value + " " + $("#nameCity").val(),
-        region: $("#nameRegion").val()
+        city: $("#nameCity option:selected").text(),
+        region: $("#nameRegion option:selected").text()
     }).then(data=>
     {
         if(data=="true") 
@@ -91,7 +84,6 @@ function addSupporttedCity()//Dobavqne na poddurzan grad
     $("#modal").modal();
         }
         );
-    }
 }
 function getAllCities()//Vzemane na vsichki gradove, koito sa poddurzani
 {
@@ -100,8 +92,9 @@ function getAllCities()//Vzemane na vsichki gradove, koito sa poddurzani
     {
         var json = data;
         json.forEach(el => {
-            document.getElementById("city").innerHTML += "<option>"+ el["city"]+", "+ el["region"] +"</option>"
+            document.getElementById("city").innerHTML += "<option value='"+ el["city"]+", "+ el["region"] +"'>"+ el["city"]+", "+ el["region"] +"</option>"
         });
+        $("#city").selectpicker();
     });
 }
 function makeOrderTaxiAddress()//Suzdavane na poruchka ot adres
@@ -541,12 +534,6 @@ function registerFirmSubmit()//Post zaqvka za registrirane na firma
         isChecked = false;
     }
     else $('#eik').addClass("is-valid");
-    if($("#city").val().length < 3)
-    {
-        $('#city').addClass("is-invalid");
-        isChecked = false;
-    }
-    else $('#city').addClass("is-valid");
     if($("#address").val().length < 3)
     {
         $('#address').addClass("is-invalid");
@@ -584,7 +571,7 @@ function registerFirmSubmit()//Post zaqvka za registrirane na firma
         {
             firmName: $("#firmName").val(),
             eik: $("#eik").val(),
-            city: $("#city").val(),
+            city: $("#nameCity option:selected").text() + ", " + $("#nameRegion option:selected").text(),
             address: $("#address").val(),
             email: $("#email").val(),
             password: $("#password").val(),
@@ -841,15 +828,35 @@ function addTaxiDriver()//Post zaqvka za dobavqne na taksimetrovi shofyori
 {
     if(arguments.callee.caller === null) {console.log("%c You are not permitted to use this method!!!",  'color: red'); return;}
     var isEmail = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+    var isLicensePlate = /^(Е|А|В|ВТ|ВН|ВР|ЕВ|ТХ|К|КН|ОВ|М|РА|РК|ЕН|РВ|РР|Р|СС|СН|СМ|СО|СА|С|СВ|СТ|Т|Х|Н|У)[0-9][0-9][0-9][0-9][А-Я][А-Я]$/;
+    var isChecked = true;
+    $('#emailDriver').removeClass("is-invalid");
+    $('#licensePlate').removeClass("is-invalid");
     if(!isEmail.test($("#emailDriver").val()))
     {
         $('#emailDriver').addClass("is-invalid");
+        isChecked = false;
     }
     else
     {
+        $('#emailDriver').addClass("is-valid");
+    }
+    if(!isLicensePlate.test($("#licensePlate").val()))
+    {
+        $('#licensePlate').addClass("is-invalid");
+        isChecked = false;
+    }
+    else
+    {
+        $('#licensePlate').addClass("is-valid");
+    }
+    if(isChecked)
+    {
     postRequest("/firm/addTaxiDriver",
         {
-            email: $("#emailDriver").val()
+            email: $("#emailDriver").val(),
+            licensePlate: $("#licensePlate").val()
+
         }).then(data=>{
             if(data=="true")
             { 
@@ -905,10 +912,23 @@ function getTaxiDrivers()//Get zaqvka za vzimane na taksimetrovi shofyori
             document.getElementById("noDrivers").style = "display: none;";
             document.getElementById("addedTaxiDrivers").innerHTML = "";
             json.forEach(a => {
-                document.getElementById("addedTaxiDrivers").innerHTML += "<tr><td>"+ a["fName"] +"</td><td>"+ a["lName"]  +"</td><td>"+ a["email"]  +"</td><td>"+ a["telephone"]  +"</td><td><i class='far fa-times-circle text-danger h5' style='cursor: pointer;' onclick='removeTaxiDriver(\""+ a["email"] +"\");'></i></td></tr>";
+                document.getElementById("addedTaxiDrivers").innerHTML += "<tr><td>"+ a["fName"] +"</td><td>"+ a["lName"]  +"</td><td>"+ a["email"]  +"</td><td>"+ a["telephone"]  +"</td><td>"+ a["licensePlate"]  +"</td><td><i class='far fa-times-circle text-danger h5' style='cursor: pointer;' onclick='removeTaxiDriver(\""+ a["email"] +"\");'></i></td></tr>";
             });
         }
       });
+}
+function getCitiesByRegCode(sel)//Zaqvka za vzimane na naseleni mesta po kod na oblastta
+{
+    if(arguments.callee.caller === null) {console.log("%c You are not permitted to use this method!!!",  'color: red'); return;}
+    postRequest("/firm/getCitiesByRegCode", {
+        regCode: sel.value
+    }).then(data=>{
+        document.getElementById("nameCity").innerHTML = "";
+        data.forEach(city => {
+            document.getElementById("nameCity").innerHTML += `<option>${city["type"]} ${city["name"]}</option>`;
+        });
+        $("#nameCity").selectpicker('refresh');
+    });
 }
 
 //Povikvane na funkciq pri zatvarqne na modal

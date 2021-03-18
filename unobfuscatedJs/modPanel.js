@@ -83,8 +83,10 @@ function getAllUsersForActivateUserTable()//Injectvane na potrebiteli v tablica 
                 if(el["verified"] == 0)
                 {
                 var firmId = "Няма";
+                var licensePlate = "Няма";
                 if(el["firmId"] != null) firmId = el["firmId"];
-                document.getElementById("bodyTable").innerHTML += `<tr><td>${el["id"]}</td><td>${el["fName"]}</td><td>${el["lName"]}</td><td>${el["email"]}</td><td>${el["telephone"]}</td><td>${userRole[el["role"]]}</td><td>${firmId}</td><td>Не</td><td class="text-danger h5"><i class='far fa-check-square text-success' style='cursor: pointer;' onclick='activateUserShowModal("${el["id"]}");'></i></td></tr>`
+                if(el["licensePlate"] != "") licensePlate = el["licensePlate"];
+                document.getElementById("bodyTable").innerHTML += `<tr><td>${el["id"]}</td><td>${el["fName"]}</td><td>${el["lName"]}</td><td>${el["email"]}</td><td>${el["telephone"]}</td><td>${userRole[el["role"]]}</td><td>${firmId}</td><td>${licensePlate}</td><td>Не</td><td class="text-danger h5"><i class='far fa-check-square text-success' style='cursor: pointer;' onclick='activateUserShowModal("${el["id"]}");'></i></td></tr>`
                 }
             }
         });
@@ -102,10 +104,12 @@ function getAllUsersForShowUsersTable()//Injectvane na potrebiteli v tablica za 
         json.forEach(el => {
             var firmId = "Няма";
             var verified = "";
+            var licensePlate = "Няма";
             if(el["verified"] == 1) verified = "Да";
             else verified = "Не";
             if(el["firmId"] != null) firmId = el["firmId"];
-            document.getElementById("bodyTable").innerHTML += `<tr><td>${el["id"]}</td><td>${el["fName"]}</td><td>${el["lName"]}</td><td>${el["email"]}</td><td>${el["telephone"]}</td><td>${userRole[el["role"]]}</td><td>${firmId}</td><td>${verified}</td></tr>`;
+            if(el["licensePlate"] != "") licensePlate = el["licensePlate"];
+            document.getElementById("bodyTable").innerHTML += `<tr><td>${el["id"]}</td><td>${el["fName"]}</td><td>${el["lName"]}</td><td>${el["email"]}</td><td>${el["telephone"]}</td><td>${userRole[el["role"]]}</td><td>${firmId}</td><td>${licensePlate}</td><td>${verified}</td></tr>`;
         });
         $('#showAllUsersDt').DataTable(tableText);
         $('.dataTables_length').addClass('bs-select');
@@ -117,8 +121,6 @@ function getAllFirmsForShowFirmsTable()//Injectvane na firmi v tablica za pregle
     getRequest("/firm/getAllFirms").then(json=>
     {
         json.forEach(el => {
-            if(el["email"] != profileInfo["email"])
-            {
             var verified = "";
             if(el["verified"] == 1) verified = "Да";
             else verified = "Не";
@@ -126,7 +128,6 @@ function getAllFirmsForShowFirmsTable()//Injectvane na firmi v tablica za pregle
             if(el["moderationVerified"] == 1) modVerified = "Да";
             else modVerified = "Не";
             document.getElementById("bodyTable").innerHTML += `<tr><td>${el["id"]}</td><td>${el["firmName"]}</td><td>${el["eik"]}</td><td>${el["city"]}</td><td>${el["address"]}</td><td>${el["email"]}</td><td>${el["phoneNumber"]}</td><td>${verified}</td><td>${modVerified}</td></tr>`
-            }
         });
         $('#showFirmsDt').DataTable(tableTextFirm);
         $('.dataTables_length').addClass('bs-select');
@@ -140,16 +141,13 @@ function getAllFirmsForModerationVerifyFirmTable()//Injectvane na firmi v tablic
     getRequest("/firm/getAllFirms").then(json=>
     {
         json.forEach(el => {
-            if(el["email"] != profileInfo["email"])
+            if(el["moderationVerified"] == 0)
             {
-                if(el["moderationVerified"] == 0)
-                {
             var verified = "";
             if(el["verified"] == 1) verified = "Да";
             else verified = "Не";
             document.getElementById("bodyTable").innerHTML += `<tr><td>${el["id"]}</td><td>${el["firmName"]}</td><td>${el["eik"]}</td><td>${el["city"]}</td><td>${el["address"]}</td><td>${el["email"]}</td><td>${el["phoneNumber"]}</td><td>${verified}</td><td>Не</td><td class="text-secondary h5"><i class='far fa-check-square text-success' style='cursor: pointer;' onclick='firmModerationVerifyShowModal("${el["id"]}");'></i></td></tr>`
             }
-        }
         });
         $('#firmModerationVerifyDt').DataTable(tableTextFirm);
         $('.dataTables_length').addClass('bs-select');
@@ -247,7 +245,7 @@ function addTaxiDriverShowModal(id)//Pokazvane na modal za dobavqne na shofyori
 {
     if(arguments.callee.caller === null) {console.log("%c You are not permitted to use this method!!!",  'color: red'); return;}
     document.getElementById("modalModLabel").innerText = `Добавяне на шофьор`;
-    document.getElementById("modalModBody").innerHTML = `<p class="text-center">Към коя фирма искате да добавите шофьор с ID-${id}?</p><select id="allFirmsForAddDriver" class="form-control"></select>`;
+    document.getElementById("modalModBody").innerHTML = `<p class="text-center">Към коя фирма искате да добавите шофьор с ID-${id}?</p><select id="allFirmsForAddDriver" class="form-control"></select><input type="email" class="form-control mt-4" id="licensePlate" placeholder="Регистрационен номер на колата"> <div class="invalid-feedback">Въвели сте невалиден регистрационен номер! Пример: ВТ1212АР. Регистрационният номер трябва да бъде на кирилица!</div>`;
     getAllFirmsForAddDrivers();
     document.getElementById("modalModButton").onclick = function() {addTaxiDriverByModerator(id);};
     $("#modalMod").modal()
@@ -295,16 +293,27 @@ function moderationVerifyFirm(id)//Odobrqvane na firma po id
 function addTaxiDriverByModerator(id)//Dobavqne na shofyor po id kato moderator
 {
     if(arguments.callee.caller === null) {console.log("%c You are not permitted to use this method!!!",  'color: red'); return;}
-    $("#modalMod").modal('hide');
+    var isLicensePlate = /^(Е|А|В|ВТ|ВН|ВР|ЕВ|ТХ|К|КН|ОВ|М|РА|РК|ЕН|РВ|РР|Р|СС|СН|СМ|СО|СА|С|СВ|СТ|Т|Х|Н|У)[0-9][0-9][0-9][0-9][А-Я][А-Я]$/;
+    $('#licensePlate').removeClass("is-invalid");
+    if(!isLicensePlate.test($("#licensePlate").val()))
+    {
+        $('#licensePlate').addClass("is-invalid");
+    }
+    else
+    {
+        $("#modalMod").modal('hide');
+        $('#licensePlate').addClass("is-valid");
+    
         postRequest("/firm/addTaxiDriverById", 
         {
             firmID: $("#allFirmsForAddDriver").val(),
             userID: id,
+            licensePlate: $("#licensePlate").val()
         }).then(data=>
-        {   
+        {
             if(data == "true")
             {
-                document.getElementById("modalBody").innerText = `Успешно е добавен таксиметров шофьор с ID-${id} към фирма с име-${$("#allFirmsForAddDriver option:selected").text()}!`;
+                document.getElementById("modalBody").innerText = `Успешно е добавен таксиметров шофьор с ID-${id} и регистрационен номер-${$("#licensePlate").val()} към фирма с име-${$("#allFirmsForAddDriver option:selected").text()}!`;
             }
             else if(data == "false")
             {
@@ -314,14 +323,15 @@ function addTaxiDriverByModerator(id)//Dobavqne na shofyor po id kato moderator
             $("#modal").modal();
         }
         );
+    }
 }
 function addCity()//Dobavqne na podurjan grad kum firma
 {
     if(arguments.callee.caller === null) {console.log("%c You are not permitted to use this method!!!",  'color: red'); return;}
     postRequest("/firm/addSupportedCityByFirmId", 
     {
-        city: document.querySelector('input[name="type"]:checked').value + " " + $("#nameCity").val(),
-        region: $("#nameRegion").val(),
+        city: $("#nameCity option:selected").text(),
+        region: $("#nameRegion option:selected").text(),
         firmId: $("#firms2 option:selected").val()
     }).then(data=>
     {
@@ -420,7 +430,7 @@ function addDriverTab()//Tab za dobavqne na shofyori
     }
     currentActiveTabId = "addDriverTab";
     document.getElementById(currentActiveTabId).classList.add("active");
-    getRequest(window.location.protocol+'//'+ window.location.host +'/adminPanelTabs/addDriverTab.html').then(data=>{
+    getRequest(window.location.protocol+'//'+ window.location.host +'/modPanelTabs/addDriverTab.html').then(data=>{
         document.getElementById("tabContent").innerHTML = data;
         getAllUsersForAddDriverTabTable();
     });
@@ -434,7 +444,7 @@ function addRemoveSupportedCityTab()//Tab za premhavane i dobavqne na poddurjani
     }
     currentActiveTabId = "addRemoveSupportedCityTab";
     document.getElementById(currentActiveTabId).classList.add("active");
-    getRequest(window.location.protocol+'//'+ window.location.host +'/adminPanelTabs/addRemoveSupportedCityTab.html').then(data=>{
+    getRequest(window.location.protocol+'//'+ window.location.host +'/modPanelTabs/addRemoveSupportedCityTab.html').then(data=>{
         document.getElementById("tabContent").innerHTML = data;
         getRequest("/firm/getAllFirms/").then(json=>{
             if(json.length> 0)
@@ -443,8 +453,13 @@ function addRemoveSupportedCityTab()//Tab za premhavane i dobavqne na poddurjani
                 document.getElementById("firms").innerHTML += `<option value="${el["id"]}">${el["firmName"]}</option>`;
                 document.getElementById("firms2").innerHTML += `<option value="${el["id"]}">${el["firmName"]}</option>`
             });
+            $("#firms").selectpicker();
+            $("#firms2").selectpicker();
             }
         });
+        $('#nameRegion').selectpicker();
+        $('#nameCity').selectpicker();
+        setTimeout(function() {getCitiesByRegCode(document.getElementById("nameRegion"));}, 500);
     });
 }
 function orderListTab()//Tab za pregled na poruchki

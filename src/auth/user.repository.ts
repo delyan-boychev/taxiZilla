@@ -28,6 +28,7 @@ export class UserRepository extends Repository<User>
       user.telephone = phoneNumber;
       user.role = UserRoles.USER;
       user.verified = false;
+      user.licensePlate = "";
       user.lastChangePassword = "";
       const bcrypt = require('bcrypt');
       const saltRounds = 10;

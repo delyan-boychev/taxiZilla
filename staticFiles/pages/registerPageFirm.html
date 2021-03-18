@@ -10,10 +10,40 @@
     <input type="text" id="eik" class="form-control mt-4" placeholder="ЕИК" required>
     <div class="invalid-feedback">Невалиден ЕИК!</div>
     </div>
-    <div class="input-group">
-    <input type="text" id="city" class="form-control mt-4" placeholder="Град седалище на фирмата" required>
-    <div class="invalid-feedback">Не сте въвели град!</div>
-    </div>
+        <label class="text-center mt-3">Област: </label><br>
+        <select class="form-control show-tick" data-style="btn-link border border-secondary" data-dropup-auto="false" onchange="getCitiesByRegCode(this)" id="nameRegion">
+            <option value="BLG">Благоевград</option>
+            <option value="BGS">Бургас</option>
+            <option value="VAR">Варна</option>
+            <option value="VTR">Велико Търново</option>
+            <option value="VID">Видин</option>
+            <option value="VRC">Враца</option>
+            <option value="GAB">Габрово</option>
+            <option value="DOB">Добрич</option>
+            <option value="KRZ">Кърджали</option>
+            <option value="KNL">Кюстендил</option>
+            <option value="LOV">Ловеч</option>
+            <option value="MON">Монтана</option>
+            <option value="PAZ">Пазарджик</option>
+            <option value="PER">Перник</option>
+            <option value="PVN">Плевен</option>
+            <option value="PVD">Пловдив</option>
+            <option value="RAZ">Разград</option>
+            <option value="RSE">Русе</option>
+            <option value="SLS">Силистра</option>
+            <option value="SLV">Сливен</option>
+            <option value="SML">Смолян</option>
+            <option value="SFO">Софийска област</option>
+            <option value="SOF">София</option>
+            <option value="SZR">Стара Загора</option>
+            <option value="TGV">Търговище</option>
+            <option value="HKV">Хасково</option>
+            <option value="SHU">Шумен</option>
+            <option value="JAM">Ямбол</option>
+          </select>
+    <label class="text-center mt-3">Населено място: </label><br>
+    <select class="form-control show-tick" data-none-results-text="Няма намерени фирми" data-dropup-auto="false" data-style="btn-link border border-secondary" data-live-search="true" id="nameCity">
+    </select>
     <div class="input-group">
     <input type="text" id="address" class="form-control mt-4" placeholder="Адрес на седалището на фирмата" required>
     <div class="invalid-feedback">Не сте въвели адрес!</div>

@@ -85,10 +85,10 @@ export class FirmController {
     return await this.firmService.loginFirm(eik,password,session);
   }
   @Post("/addTaxiDriver/")
-  async addTaxiDriver(@Session() session:{token?:string, type?:string,role?:UserRoles},@Body("email") email:string)
+  async addTaxiDriver(@Session() session:{token?:string, type?:string,role?:UserRoles},@Body("email") email:string, @Body("licensePlate") licensePlate:string)
   {
     if(!session.token || session.type != "Firm")throw new UnauthorizedException();
-    return await this.firmService.addTaxiDriver(session,email); 
+    return await this.firmService.addTaxiDriver(session,email, licensePlate); 
   }
   @Get("/getTaxiDrivers/")
   async getTaxiDrivers(@Session() session:{token?: string, type?:string})
@@ -138,6 +138,16 @@ export class FirmController {
     if(!session.token || session.type != "Firm") throw new UnauthorizedException();
     return await this.firmService.getCitiesByFirm(session);
   }
+  @Get("/getAllCitiesInBG")
+  async getAllCitiesInBG()
+  {
+    return await this.firmService.getAllCitiesInBG();
+  }
+  @Post("/getCitiesByRegCode")
+  async getAllCitiesByRegCode(@Session() session:{token?:string, type?:string}, @Body("regCode") regCode:string)
+  {
+    return await this.firmService.getCitiesByRegCode(regCode);
+  }
   @Get("/getAllCities")
   async getAllCities(@Session() session:{token?:string})
   {
@@ -169,10 +179,10 @@ export class FirmController {
     return await this.firmService.getAllFirms();
   }
   @Post("/addTaxiDriverById")
-  async addTaxiDriverById(@Session() session:{token?:string, role?:string}, @Body("firmID") firmID:string, @Body("userID") userID:string)
+  async addTaxiDriverById(@Session() session:{token?:string, role?:string}, @Body("firmID") firmID:string, @Body("userID") userID:string, @Body("licensePlate")licensePlate:string)
   {
     if(!session.token || ( session.role != UserRoles.MODERATOR && session.role != UserRoles.ADMIN)) throw new UnauthorizedException();
-    return await this.firmService.addTaxiDriverById(session, parseInt(firmID), parseInt(userID));
+    return await this.firmService.addTaxiDriverById(session, parseInt(firmID), parseInt(userID), licensePlate);
   }
   @Post("/changePassword/")
   async changePassword(@Session() session:{token:string, type:string}, @Body("oldPass") oldPass:string, @Body("newPass") newPass:string)

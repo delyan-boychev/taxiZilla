@@ -15,10 +15,10 @@
               <a href="#security" data-toggle="tab" class="nav-item nav-link has-icon nav-link-faded text-secondary"  onclick="hideTooltips()">
                 <i class="fas fa-shield-alt"></i> Сигурност
               </a>
-              <a href="#supportedCities" data-toggle="tab" class="nav-item nav-link has-icon nav-link-faded text-secondary"  onclick="hideTooltips()">
+              <a href="#supportedCities" data-toggle="tab" class="nav-item nav-link has-icon nav-link-faded text-secondary" onclick='setTimeout(function() {getCitiesByRegCode(document.getElementById("nameRegion"));}, 500);'>
                 <i class="fas fa-city"></i> Поддържани населени места
               </a>
-              <a href="#taxiDrivers" data-toggle="tab" class="nav-item nav-link has-icon nav-link-faded text-secondary"  onclick="hideTooltips()">
+              <a href="#taxiDrivers" data-toggle="tab" class="nav-item nav-link has-icon nav-link-faded text-secondary">
                 <i class="fas fa-taxi"></i> Таксиметрови шофьори
               </a>
             </nav>
@@ -39,7 +39,7 @@
                 <a href="#security" data-toggle="tab" class="nav-link has-icon text-secondary"><i class="fas fa-shield-alt"></i></a>
               </li>
               <li class="nav-item">
-                <a href="#supportedCities" data-toggle="tab" class="nav-link has-icon text-secondary"><i class="fas fa-city"></i></a>
+                <a href="#supportedCities" data-toggle="tab" class="nav-link has-icon text-secondary" onclick='setTimeout(function() {getCitiesByRegCode(document.getElementById("nameRegion"));}, 500);'><i class="fas fa-city"></i></a>
               </li>
               <li class="nav-item">
               <a href="#taxiDrivers" data-toggle="tab" class="nav-link has-icon text-secondary">
@@ -92,52 +92,40 @@
               <hr>
               <h6 class="font-weight-bold">Добавяне на поддържано населено място</h6>
               <label class="text-center mt-3">Област: </label><br>
-              <select class="form-control" id="nameRegion">
-                <option>Благоевград</option>
-                <option>Бургас</option>
-                <option>Варна</option>
-                <option>Велико Търново</option>
-                <option>Видин</option>
-                <option>Враца</option>
-                <option>Габрово</option>
-                <option>Добрич</option>
-                <option>Кърджали</option>
-                <option>Кюстендил</option>
-                <option>Ловеч</option>
-                <option>Монтана</option>
-                <option>Пазарджик</option>
-                <option>Перник</option>
-                <option>Плевен</option>
-                <option>Пловдив</option>
-                <option>Разград</option>
-                <option>Русе</option>
-                <option>Силистра</option>
-                <option>Сливен</option>
-                <option>Смолян</option>
-                <option>Софийска област</option>
-                <option>София</option>
-                <option>Стара Загора</option>
-                <option>Търговище</option>
-                <option>Хасково</option>
-                <option>Шумен</option>
-                <option>Ямбол</option>
+              <select class="form-control show-tick" data-style="btn-link border border-secondary" data-dropup-auto="false" onchange="getCitiesByRegCode(this)" id="nameRegion">
+                <option value="BLG">Благоевград</option>
+                <option value="BGS">Бургас</option>
+                <option value="VAR">Варна</option>
+                <option value="VTR">Велико Търново</option>
+                <option value="VID">Видин</option>
+                <option value="VRC">Враца</option>
+                <option value="GAB">Габрово</option>
+                <option value="DOB">Добрич</option>
+                <option value="KRZ">Кърджали</option>
+                <option value="KNL">Кюстендил</option>
+                <option value="LOV">Ловеч</option>
+                <option value="MON">Монтана</option>
+                <option value="PAZ">Пазарджик</option>
+                <option value="PER">Перник</option>
+                <option value="PVN">Плевен</option>
+                <option value="PVD">Пловдив</option>
+                <option value="RAZ">Разград</option>
+                <option value="RSE">Русе</option>
+                <option value="SLS">Силистра</option>
+                <option value="SLV">Сливен</option>
+                <option value="SML">Смолян</option>
+                <option value="SFO">Софийска област</option>
+                <option value="SOF">София</option>
+                <option value="SZR">Стара Загора</option>
+                <option value="TGV">Търговище</option>
+                <option value="HKV">Хасково</option>
+                <option value="SHU">Шумен</option>
+                <option value="JAM">Ямбол</option>
               </select>
-              <label class="text-center mt-3">Тип населено място: </label><br>
-            <div class="custom-control custom-radio custom-control-inline">
-                <input class="custom-control-input"  type="radio" name="type" id="city" value="град" checked>
-                <label class="custom-control-label" for="city">
-                  Град
-                </label>
-              </div><br>
-              <div class="custom-control custom-radio custom-control-inline">
-                <input class="custom-control-input" type="radio" name="type" id="town" value="село">
-                <label class="custom-control-label" for="town">
-                  Село
-                </label>
-              </div>
+              <label class="text-center mt-3">Населено място: </label>
               <div class="d-flex justify-content-between ">
-                <input type="text" class="form-control mt-3" id="nameCity" placeholder="Име на населено място">
-                <div class="invalid-feedback">Името на населеното място трябва да е по-дълго 2 символа</div>
+                <select class="form-control show-tick" data-none-results-text="Няма намерени фирми" data-dropup-auto="false" data-style="btn-link border border-secondary" data-live-search="true" id="nameCity">
+                </select>
                 <i class="fas fa-plus mt-3 pt-2 ml-3" style="cursor: pointer;" onclick="addSupporttedCity()"></i>
               </div>
               <hr>
@@ -161,8 +149,13 @@
               <h5 class="font-weight-bold">Таксиметрови шофьори</h5>
               <hr>
               <h6 class="font-weight-bold">Добавяне на таксиметрови шофьори</h6>
+              <input type="email" class="form-control mt-4" id="licensePlate" placeholder="Регистрационен номер на колата">
+              <div class="invalid-feedback">Въвели сте невалиден регистрационен номер! Пример: ВТ1212АР. Регистрационният номер трябва да бъде на кирилица!</div>
               <div class="d-flex justify-content-between ">
+                <div class="w-100"> 
                 <input type="email" class="form-control mt-4" id="emailDriver" placeholder="Имейл адрес на шофьора">
+                <div class="invalid-feedback">Въвели сте невалиден имейл адрес!</div>
+                </div>
                 <i class="fas fa-user-plus mt-4 pt-2 ml-3" style="cursor: pointer;" onclick="addTaxiDriver();"></i>
               </div>
               <hr>
@@ -175,6 +168,7 @@
                     <th>Фамилия</th>
                     <th>Имейл адрес</th>
                     <th>Телефонен номер</th>
+                    <th>Регистрационен номер</th>
                   </tr>
                 </thead>
                 <tbody id="addedTaxiDrivers">

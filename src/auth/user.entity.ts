@@ -37,6 +37,9 @@ export class User extends BaseEntity
   @OneToMany(type => taxiOrder, order => order.userOrdered, { cascade:true, onDelete:'CASCADE', eager:true})
   orders:taxiOrder[];
 
+  @Column()
+  licensePlate:string;
+
   @RelationId((user: User) => user.firm)
   firmId: number;
 

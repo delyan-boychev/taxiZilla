@@ -19,7 +19,6 @@ import { FirmService } from 'src/firm/firm.service';
 import { use } from 'passport';
 import {ModeratorOperation} from './modOperation.entity';
 import { ModOperationRepository } from './modOperation.repository';
-import { DriverTimestamps } from './timestamps.exports';
 
 @Injectable()
 export class AuthService {
@@ -207,7 +206,6 @@ export class AuthService {
     let umail = await this.jwtService.decode(session.token);
     let user = await this.userRepository.findOne({email:umail["email"]});
     Statuses[user.id]=newStatus;
-    DriverTimestamps[user.id]=date;
     if(newStatus == UserStatus.Busy)
     {
       Drivers[user.id] = undefined;

@@ -94,17 +94,17 @@ function printElem(elem)//Funkciq za printirane
 {
     var mywindow = window.open('', 'PRINT', 'height=400,width=600');
 
-    mywindow.document.write('<html><head><title>' + document.title  + '</title><style>table{width:100%;border-collapse:collapse;text-align:center;border:1px solid #00F;font-size:12px;}</style>');
+    mywindow.document.write('<html><head><title>' + document.title  + '</title><style>table { font-family: arial, sans-serif; border-collapse: collapse; width: 100%; } td, th { border: 1px solid #dddddd; text-align: left; padding: 8px; } tr:nth-child(even) { background-color: #dddddd; }</style>');
     mywindow.document.write('</head><body >');
-    mywindow.document.write('<h1>' + document.title  + '</h1>');
+    mywindow.document.write('<h1>Операции с модератори</h1>');
     mywindow.document.write(document.getElementById(elem).innerHTML);
     mywindow.document.write('</body></html>');
 
     mywindow.document.close();
-    mywindow.focus();
-
-    mywindow.print();
-    mywindow.close();
+    
+    
+    setTimeout(function () { mywindow.print(); }, 500);
+    mywindow.onfocus = function () { setTimeout(function () { mywindow.close(); }, 500); }
 
     return true;
 }
@@ -114,7 +114,8 @@ function getAllOperationsForTable()//Injectvane na operacii na potrebiteli v tab
     getRequest("/auth/getModeratorOperations").then(json=>
     {
         json.forEach(el => {
-            document.getElementById("bodyTable").innerHTML += `<tr><td>${el["id"]}</td><td>${el["moderatorEmail"]}</td><td>${el["action"]}</td><td>${el["date"]}</td></tr>`
+            document.getElementById("bodyTable").innerHTML += `<tr><td>${el["id"]}</td><td>${el["moderatorEmail"]}</td><td>${el["action"]}</td><td>${el["date"]}</td></tr>`;
+            document.getElementById("bodyTable2").innerHTML += `<tr><td>${el["id"]}</td><td>${el["moderatorEmail"]}</td><td>${el["action"]}</td><td>${el["date"]}</td></tr>`;
         });
         $('#moderatorOperationsDt').DataTable(tableTextModOperations);
         $('.dataTables_length').addClass('bs-select');
@@ -148,10 +149,12 @@ function getAllUsersForRemoveTable()//Injectvane na potrebiteli v tablica za pre
             {
             var firmId = "Няма";
             var verified = "";
+            var licensePlate = "Няма";
             if(el["verified"] == 1) verified = "Да";
             else verified = "Не";
             if(el["firmId"] != null) firmId = el["firmId"];
-            document.getElementById("bodyTable").innerHTML += `<tr><td>${el["id"]}</td><td>${el["fName"]}</td><td>${el["lName"]}</td><td>${el["email"]}</td><td>${el["telephone"]}</td><td>${userRole[el["role"]]}</td><td>${firmId}</td><td>${verified}</td><td class="text-danger h5"><i class='far fa-times-circle' style='cursor: pointer;' onclick='removeUserShowModal("${el["id"]}");'></i></td></tr>`
+            if(el["licensePlate"] != "") licensePlate = el["licensePlate"];
+            document.getElementById("bodyTable").innerHTML += `<tr><td>${el["id"]}</td><td>${el["fName"]}</td><td>${el["lName"]}</td><td>${el["email"]}</td><td>${el["telephone"]}</td><td>${userRole[el["role"]]}</td><td>${firmId}</td><td>${licensePlate}</td><td>${verified}</td><td class="text-danger h5"><i class='far fa-times-circle' style='cursor: pointer;' onclick='removeUserShowModal("${el["id"]}");'></i></td></tr>`
             }
         });
         $('#userRemoveDt').DataTable(tableText);
@@ -170,9 +173,11 @@ function getAllUsersForActivateUserTable()//Injectvane na potrebiteli v tablica 
             {
                 if(el["verified"] == 0)
                 {
+                var licensePlate = "Няма";
                 var firmId = "Няма";
                 if(el["firmId"] != null) firmId = el["firmId"];
-                document.getElementById("bodyTable").innerHTML += `<tr><td>${el["id"]}</td><td>${el["fName"]}</td><td>${el["lName"]}</td><td>${el["email"]}</td><td>${el["telephone"]}</td><td>${userRole[el["role"]]}</td><td>${firmId}</td><td>Не</td><td class="text-danger h5"><i class='far fa-check-square text-success' style='cursor: pointer;' onclick='activateUserShowModal("${el["id"]}");'></i></td></tr>`
+                if(el["licensePlate"] != "") licensePlate = el["licensePlate"];
+                document.getElementById("bodyTable").innerHTML += `<tr><td>${el["id"]}</td><td>${el["fName"]}</td><td>${el["lName"]}</td><td>${el["email"]}</td><td>${el["telephone"]}</td><td>${userRole[el["role"]]}</td><td>${firmId}</td><td>${licensePlate}</td><td>Не</td><td class="text-danger h5"><i class='far fa-check-square text-success' style='cursor: pointer;' onclick='activateUserShowModal("${el["id"]}");'></i></td></tr>`
                 }
             }
         });
@@ -190,12 +195,14 @@ function getAllUsersForEditTable()//Injectvane na potrebiteli v tablica za redka
         json.forEach(el => {
             if(el["email"] != profileInfo["email"])
             {
+            var licensePlate = "Няма";
             var verified = "";
             var firmId = "Няма";
             if(el["firmId"] != null) firmId = el["firmId"];
             if(el["verified"] == 1) verified = "Да";
             else verified = "Не";
-            document.getElementById("bodyTable").innerHTML += `<tr><td>${el["id"]}</td><td>${el["fName"]}</td><td>${el["lName"]}</td><td>${el["email"]}</td><td>${el["telephone"]}</td><td>${userRole[el["role"]]}</td><td>${firmId}</td><td>${verified}</td><td class="text-secondary h5"><i class='far fa-edit' style='cursor: pointer;' onclick='editUserShowModal("${el["id"]}", "${escapeQuotes(el["fName"])}", "${escapeQuotes(el["lName"])}", "${escapeQuotes(el["email"])}", "${escapeQuotes(el["telephone"])}");'></i></td></tr>`
+            if(el["licensePlate"] != "") licensePlate = el["licensePlate"];
+            document.getElementById("bodyTable").innerHTML += `<tr><td>${el["id"]}</td><td>${el["fName"]}</td><td>${el["lName"]}</td><td>${el["email"]}</td><td>${el["telephone"]}</td><td>${userRole[el["role"]]}</td><td>${firmId}</td><td>${licensePlate}</td><td>${verified}</td><td class="text-secondary h5"><i class='far fa-edit' style='cursor: pointer;' onclick='editUserShowModal("${el["id"]}", "${escapeQuotes(el["fName"])}", "${escapeQuotes(el["lName"])}", "${escapeQuotes(el["email"])}", "${escapeQuotes(el["telephone"])}");'></i></td></tr>`
             }
         });
         $('#userEditDt').DataTable(tableText);
@@ -212,12 +219,14 @@ function getAllUsersForChangeRoleTable()//Injectvane na potrebiteli v tablica za
         json.forEach(el => {
             if(el["email"] != profileInfo["email"])
             {
+            var licensePlate = "Няма";
             var verified = "";
             var firmId = "Няма";
             if(el["firmId"] != null) firmId = el["firmId"];
             if(el["verified"] == 1) verified = "Да";
             else verified = "Не";
-            document.getElementById("bodyTable").innerHTML += `<tr><td>${el["id"]}</td><td>${el["fName"]}</td><td>${el["lName"]}</td><td>${el["email"]}</td><td>${el["telephone"]}</td><td>${userRole[el["role"]]}</td><td>${firmId}</td><td>${verified}</td><td class="text-secondary h5"><i class='fas fa-tag' style='cursor: pointer;' onclick='changeUserRoleShowModal("${el["id"]}");'></i></td></tr>`
+            if(el["licensePlate"] != "") licensePlate = el["licensePlate"];
+            document.getElementById("bodyTable").innerHTML += `<tr><td>${el["id"]}</td><td>${el["fName"]}</td><td>${el["lName"]}</td><td>${el["email"]}</td><td>${el["telephone"]}</td><td>${userRole[el["role"]]}</td><td>${firmId}</td><td>${licensePlate}</td><td>${verified}</td><td class="text-secondary h5"><i class='fas fa-tag' style='cursor: pointer;' onclick='changeUserRoleShowModal("${el["id"]}");'></i></td></tr>`
             }
         });
         $('#userChangeRoleDt').DataTable(tableText);
@@ -232,16 +241,13 @@ function getAllFirmsForRemoveFirmTable()//Injectvane na firmi v tablica za prema
     getRequest("/firm/getAllFirms").then(json=>
     {
         json.forEach(el => {
-            if(el["email"] != profileInfo["email"])
-            {
             var verified = "";
             if(el["verified"] == 1) verified = "Да";
             else verified = "Не";
             var modVerified = "";
             if(el["moderationVerified"] == 1) modVerified = "Да";
             else modVerified = "Не";
-            document.getElementById("bodyTable").innerHTML += `<tr><td>${el["id"]}</td><td>${el["firmName"]}</td><td>${el["eik"]}</td><td>${el["city"]}</td><td>${el["address"]}</td><td>${el["email"]}</td><td>${el["phoneNumber"]}</td><td>${verified}</td><td>${modVerified}</td><td class="text-secondary h5"><i class='far fa-times-circle text-danger' style='cursor: pointer;' onclick='removeFirmShowModal("${el["id"]}");'></i></td></tr>`
-            }
+            document.getElementById("bodyTable").innerHTML += `<tr><td>${el["id"]}</td><td>${el["firmName"]}</td><td>${el["eik"]}</td><td>${el["city"]}</td><td>${el["address"]}</td><td>${el["email"]}</td><td>${el["phoneNumber"]}</td><td>${verified}</td><td>${modVerified}</td><td class="text-secondary h5"><i class='far fa-times-circle text-danger' style='cursor: pointer;' onclick='removeFirmShowModal("${el["id"]}");'></i></td></tr>`;
         });
         $('#firmRemoveDt').DataTable(tableTextFirm);
         $('.dataTables_length').addClass('bs-select');
@@ -254,8 +260,8 @@ function addCity()//Dobavqne na podurjan grad kum firma
     if(arguments.callee.caller === null) {console.log("%c You are not permitted to use this method!!!",  'color: red'); return;}
     postRequest("/firm/addSupportedCityByFirmId", 
     {
-        city: document.querySelector('input[name="type"]:checked').value + " " + $("#nameCity").val(),
-        region: $("#nameRegion").val(),
+        city: $("#nameCity option:selected").text(),
+        region: $("#nameRegion option:selected").text(),
         firmId: $("#firms2 option:selected").val()
     }).then(data=>
     {
@@ -275,8 +281,6 @@ function getAllFirmsForEditFirmTabTable()//Injectvane na firmi v tablica za reda
     getRequest("/firm/getAllFirms").then(json=>
     {
         json.forEach(el => {
-            if(el["email"] != profileInfo["email"])
-            {
             var verified = "";
             if(el["verified"] == 1) verified = "Да";
             else verified = "Не";
@@ -284,7 +288,7 @@ function getAllFirmsForEditFirmTabTable()//Injectvane na firmi v tablica za reda
             if(el["moderationVerified"] == 1) modVerified = "Да";
             else modVerified = "Не";
             document.getElementById("bodyTable").innerHTML += `<tr><td>${el["id"]}</td><td>${el["firmName"]}</td><td>${el["eik"]}</td><td>${el["city"]}</td><td>${el["address"]}</td><td>${el["email"]}</td><td>${el["phoneNumber"]}</td><td>${verified}</td><td>${modVerified}</td><td class="text-secondary h5"><i class='far fa-edit' style='cursor: pointer;' onclick='editFirmShowModal("${el["id"]}", "${escapeQuotes(el["firmName"])}", "${el["eik"]}", "${escapeQuotes(el["city"])}", "${escapeQuotes(el["address"])}", "${escapeQuotes(el["email"])}", "${escapeQuotes(el["phoneNumber"])}");'></i></td></tr>`
-            }
+            
         });
         $('#firmEditDt').DataTable(tableTextFirm);
         $('.dataTables_length').addClass('bs-select');
@@ -296,8 +300,6 @@ function getAllFirmsForModerationVerifyFirmTable()//Injectvane na firmi v tablic
     getRequest("/firm/getAllFirms").then(json=>
     {
         json.forEach(el => {
-            if(el["email"] != profileInfo["email"])
-            {
                 if(el["moderationVerified"] == 0)
                 {
             var verified = "";
@@ -305,7 +307,6 @@ function getAllFirmsForModerationVerifyFirmTable()//Injectvane na firmi v tablic
             else verified = "Не";
             document.getElementById("bodyTable").innerHTML += `<tr><td>${el["id"]}</td><td>${el["firmName"]}</td><td>${el["eik"]}</td><td>${el["city"]}</td><td>${el["address"]}</td><td>${el["email"]}</td><td>${el["phoneNumber"]}</td><td>${verified}</td><td>Не</td><td class="text-secondary h5"><i class='far fa-check-square text-success' style='cursor: pointer;' onclick='firmModerationVerifyShowModal("${el["id"]}");'></i></td></tr>`
             }
-        }
         });
         $('#firmModerationVerifyDt').DataTable(tableTextFirm);
         $('.dataTables_length').addClass('bs-select');
@@ -468,17 +469,27 @@ function editUser(id)//Redaktirane na potrebitel po id
 function addTaxiDriverByAdmin(id)//Funkciq za dobavqne na taksimetrov shofyor kato admin
 {
     if(arguments.callee.caller === null) {console.log("%c You are not permitted to use this method!!!",  'color: red'); return;}
-    $("#modalAdmin").modal('hide');
-    console.log($("#allFirmsForAddDriver").val());
+    var isLicensePlate = /^(Е|А|В|ВТ|ВН|ВР|ЕВ|ТХ|К|КН|ОВ|М|РА|РК|ЕН|РВ|РР|Р|СС|СН|СМ|СО|СА|С|СВ|СТ|Т|Х|Н|У)[0-9][0-9][0-9][0-9][А-Я][А-Я]$/;
+    $('#licensePlate').removeClass("is-invalid");
+    if(!isLicensePlate.test($("#licensePlate").val()))
+    {
+        $('#licensePlate').addClass("is-invalid");
+    }
+    else
+    {
+        $("#modalAdmin").modal('hide');
+        $('#licensePlate').addClass("is-valid");
+    
         postRequest("/firm/addTaxiDriverById", 
         {
             firmID: $("#allFirmsForAddDriver").val(),
             userID: id,
+            licensePlate: $("#licensePlate").val()
         }).then(data=>
         {
             if(data == "true")
             {
-                document.getElementById("modalBody").innerText = `Успешно е добавен таксиметров шофьор с ID-${id} към фирма с име-${$("#allFirmsForAddDriver option:selected").text()}!`;
+                document.getElementById("modalBody").innerText = `Успешно е добавен таксиметров шофьор с ID-${id} и регистрационен номер-${$("#licensePlate").val()} към фирма с име-${$("#allFirmsForAddDriver option:selected").text()}!`;
             }
             else if(data == "false")
             {
@@ -488,6 +499,7 @@ function addTaxiDriverByAdmin(id)//Funkciq za dobavqne na taksimetrov shofyor ka
             $("#modal").modal();
         }
         );
+    }
 }
 function removeSupportedCityShowModal(firmId, cityId)//Pokazvane na modal za iztrivane na naseleno mqsto
 {
@@ -553,7 +565,7 @@ function addTaxiDriverShowModal(id)//Pokazvane na modal za dobavqne na shofyori
 {
     if(arguments.callee.caller === null) {console.log("%c You are not permitted to use this method!!!",  'color: red'); return;}
     document.getElementById("modalAdminLabel").innerText = `Добавяне на шофьор`;
-    document.getElementById("modalAdminBody").innerHTML = `<p class="text-center">Към коя фирма искате да добавите шофьор с ID-${id}?</p><select id="allFirmsForAddDriver" class="form-control"></select>`;
+    document.getElementById("modalAdminBody").innerHTML = `<p class="text-center">Към коя фирма искате да добавите шофьор с ID-${id}?</p><select id="allFirmsForAddDriver" class="form-control"></select><input type="email" class="form-control mt-4" id="licensePlate" placeholder="Регистрационен номер на колата"> <div class="invalid-feedback">Въвели сте невалиден регистрационен номер! Пример: ВТ1212АР. Регистрационният номер трябва да бъде на кирилица!</div>`;
     getAllFirmsForAddDrivers();
     document.getElementById("modalAdminButton").onclick = function() {addTaxiDriverByAdmin(id);};
     $("#modalAdmin").modal()
@@ -839,6 +851,12 @@ function addRemoveSupportedCityTab()//Tab za premhavane i dobavqne na poddurjani
                 document.getElementById("firms2").innerHTML += `<option value="${el["id"]}">${el["firmName"]}</option>`
             });
             }
+            $('#firms').selectpicker();
+            $('#firms2').selectpicker();
+            $('#nameRegion').selectpicker();
+            $('#nameCity').selectpicker();
+            setTimeout(function() {getCitiesByRegCode(document.getElementById("nameRegion"));}, 500);
+
         });
     });
 }

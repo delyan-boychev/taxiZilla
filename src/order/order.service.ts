@@ -23,15 +23,16 @@ export class OrderService {
         private jwtService:JwtService,
             
     ){};
-    async intervalCode()
+    async intervalCode(instance:any)
     {
+        
         let timeStamp = new Date();
-        console.log("Kurec");
         for(let i = 0; i < RequestsTimestamps.length; i++)
         {
-            if(timeStamp.getTime()-RequestsTimestamps[i].getTime()>23000)
+            if(RequestsTimestamps[i] && (timeStamp.getTime()-RequestsTimestamps[i].getTime()>23000))
             {
-                this.rejectRequestById(i);
+                Drivers[i] = undefined;
+                await instance.rejectRequestById(i);
             }
         }
     }

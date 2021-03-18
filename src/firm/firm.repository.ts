@@ -91,6 +91,7 @@ export class FirmRepository extends Repository<Firm>
     let firm:Firm = await this.findOne({eik});
       firm.drivers.splice(firm.drivers.indexOf(driver), 1);
       driver.firm=undefined;
+      driver.licensePlate = "";
       driver.role=newRole;
       await firm.save();
       await driver.save();
@@ -114,7 +115,7 @@ export class FirmRepository extends Repository<Firm>
     }
 
   }
-  async addTaxiDriver(eik:string, driver:User)
+  async addTaxiDriver(eik:string, driver:User, licensePlate:string)
   {
     let firm:Firm = await this.findOne({eik});
     if(!firm.moderationVerified || !firm.verified)
@@ -126,6 +127,7 @@ export class FirmRepository extends Repository<Firm>
       firm.drivers.push(driver);
       if(driver.role == UserRoles.USER)
       {
+      driver.licensePlate = licensePlate;
       driver.firm=firm;
       driver.role=UserRoles.DRIVER;
       await firm.save();

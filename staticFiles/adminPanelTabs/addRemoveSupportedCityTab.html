@@ -1,70 +1,58 @@
 <div class="tab-pane mt-4" >
-    <h5 class="font-weight-bold">Добавяне и премахване на поддържани градове</h5>
-    <hr>
-    <div class="row">
-    <div class="col-sm mt-3">
-    <h6 class="font-weight-bold">Премахване на поддържано населено място</h6><br>
-    <label class="text-center mt-3">Фирма, от която искате да премахнете населени места: </label><br>
-    <select class="form-control" id="firms"></select>
-    <button class="btn btn-primary text-secondary" onclick="getAllCitiesByFirmForRemoveCityTable()">Обнови таблица</button>
-    </div>
-    <div class="col-sm mt-3">
-              <h6 class="font-weight-bold">Добавяне на поддържано населено място</h6>
-              <label class="text-center mt-3">Област: </label><br>
-              <select class="form-control" id="nameRegion">
-                <option>Благоевград</option>
-                <option>Бургас</option>
-                <option>Варна</option>
-                <option>Велико Търново</option>
-                <option>Видин</option>
-                <option>Враца</option>
-                <option>Габрово</option>
-                <option>Добрич</option>
-                <option>Кърджали</option>
-                <option>Кюстендил</option>
-                <option>Ловеч</option>
-                <option>Монтана</option>
-                <option>Пазарджик</option>
-                <option>Перник</option>
-                <option>Плевен</option>
-                <option>Пловдив</option>
-                <option>Разград</option>
-                <option>Русе</option>
-                <option>Силистра</option>
-                <option>Сливен</option>
-                <option>Смолян</option>
-                <option>Софийска област</option>
-                <option>София</option>
-                <option>Стара Загора</option>
-                <option>Търговище</option>
-                <option>Хасково</option>
-                <option>Шумен</option>
-                <option>Ямбол</option>
+  <h5 class="font-weight-bold">Добавяне и премахване на поддържани градове</h5>
+  <hr>
+  <div class="row">
+  <div class="col-sm mt-3">
+  <h6 class="font-weight-bold">Премахване на поддържано населено място</h6><br>
+  <label class="text-center mt-3">Фирма, от която искате да премахнете населени места: </label><br>
+  <select class="form-control show-tick" data-style="btn-link border border-secondary" id="firms" data-none-results-text="Няма намерени фирми" data-live-search="true"></select>
+  <button class="btn btn-primary text-secondary" onclick="getAllCitiesByFirmForRemoveCityTable()">Обнови таблица</button>
+  </div>
+  <div class="col-sm mt-3">
+            <h6 class="font-weight-bold">Добавяне на поддържано населено място</h6>
+            <label class="text-center mt-3">Област: </label><br>
+              <select class="form-control show-tick" data-style="btn-link border border-secondary" data-dropup-auto="false" onchange="getCitiesByRegCode(this)" id="nameRegion">
+                <option value="BLG">Благоевград</option>
+                <option value="BGS">Бургас</option>
+                <option value="VAR">Варна</option>
+                <option value="VTR">Велико Търново</option>
+                <option value="VID">Видин</option>
+                <option value="VRC">Враца</option>
+                <option value="GAB">Габрово</option>
+                <option value="DOB">Добрич</option>
+                <option value="KRZ">Кърджали</option>
+                <option value="KNL">Кюстендил</option>
+                <option value="LOV">Ловеч</option>
+                <option value="MON">Монтана</option>
+                <option value="PAZ">Пазарджик</option>
+                <option value="PER">Перник</option>
+                <option value="PVN">Плевен</option>
+                <option value="PVD">Пловдив</option>
+                <option value="RAZ">Разград</option>
+                <option value="RSE">Русе</option>
+                <option value="SLS">Силистра</option>
+                <option value="SLV">Сливен</option>
+                <option value="SML">Смолян</option>
+                <option value="SFO">Софийска област</option>
+                <option value="SOF">София</option>
+                <option value="SZR">Стара Загора</option>
+                <option value="TGV">Търговище</option>
+                <option value="HKV">Хасково</option>
+                <option value="SHU">Шумен</option>
+                <option value="JAM">Ямбол</option>
               </select>
-              <label class="text-center mt-3">Тип населено място: </label><br>
-            <div class="custom-control custom-radio custom-control-inline">
-                <input class="custom-control-input"  type="radio" name="type" id="city" value="град" checked>
-                <label class="custom-control-label" for="city">
-                  Град
-                </label>
-              </div><br>
-              <div class="custom-control custom-radio custom-control-inline">
-                <input class="custom-control-input" type="radio" name="type" id="town" value="село">
-                <label class="custom-control-label" for="town">
-                  Село
-                </label>
-              </div><br>
-      <label class="text-center mt-3">Фирма към, която искате да добавите населено място: </label><br>
-      <select class="form-control" id="firms2"></select>
+    <label class="text-center mt-3">Фирма към, която искате да добавите населено място: </label><br>
+    <select class="form-control show-tick" id="firms2" data-none-results-text="Няма намерени фирми" data-style="btn-link border border-secondary" data-live-search="true"></select>
+    <label class="text-center mt-3">Населено място: </label>
       <div class="d-flex justify-content-between ">
-        <input type="text" class="form-control mt-3" id="nameCity" placeholder="Име на населено място">
-        <div class="invalid-feedback">Името на населеното място трябва да е по-дълго 2 символа</div>
-        <i class="fas fa-plus mt-3 pt-2 ml-3" style="cursor: pointer;" onclick="addCity()"></i>
+                <select class="form-control show-tick" data-none-results-text="Няма намерени фирми" data-dropup-auto="false" data-style="btn-link border border-secondary" data-live-search="true" id="nameCity">
+                </select>
+                <i class="fas fa-plus mt-3 pt-2 ml-3" style="cursor: pointer;" onclick="addCity()"></i>
       </div>
-      </div>
-    </div>
-    
-    <hr>
-    <div id="divTableRemoveCity">
     </div>
   </div>
+  
+  <hr>
+  <div id="divTableRemoveCity">
+  </div>
+</div>

@@ -183,6 +183,10 @@ export class FirmService {
   {
         return await this.firmRepository.registerFirm(registerFirmDto); 
   }
+  async getAllCitiesInBG()
+  {
+    return await this.cityRepository.getAllCitiesInBG();
+  }
   async sendVerifyFirm(registerFirmDto:RegisterFirmDTO)
   {
     const encrypter = new Cryptr("mXb35Bw^FvCz9MLN");
@@ -216,14 +220,14 @@ export class FirmService {
     let result = await this.firmRepository.verifyFirm(eik);
     return this.getVerifyPage(result);
   }
-  async addTaxiDriver(@Session() session:{token?: string, type?:string,role?:UserRoles},email:string)
+  async addTaxiDriver(@Session() session:{token?: string, type?:string,role?:UserRoles},email:string, licensePlate:string)
   {
     const driver:User = await this.userRepository.findOne({email});
     if(driver === undefined) return false;
     else{
     const decoded=await this.jwtService.decode(session.token);
     const eik=decoded["eik"];
-    return await this.firmRepository.addTaxiDriver(eik,driver);
+    return await this.firmRepository.addTaxiDriver(eik,driver, licensePlate);
     }
   }
   async removeTaxiDriver(@Session() session:{token?:string}, email:string)
@@ -289,6 +293,10 @@ export class FirmService {
       const firm = await this.firmRepository.findOne({eik});
       return await this.cityRepository.removeCity(city,region,firm);
   }
+  async getCitiesByRegCode(regCode:string)
+  {
+    return await this.cityRepository.getCitiesInBGByRegion(regCode);
+  }
   async getCitiesByFirmId(firmId:number)
   {
     const firm = await this.firmRepository.findOne({id:firmId});
@@ -307,7 +315,7 @@ export class FirmService {
     const user = await this.userRepository.findOne({email: decoded["email"]});
     await this.firmRepository.editFirmByAdmin(user, firmID, eik, firmName, email, phoneNumber, address, city);
   }
-  async addTaxiDriverById(@Session() session:{token?:string}, firmID:number, userID:number)
+  async addTaxiDriverById(@Session() session:{token?:string}, firmID:number, userID:number, licensePlate:string)
   {
     let umail = await this.jwtService.decode(session.token);
     const usera = await this.userRepository.findOne({ email: umail["email"]}); 
@@ -323,7 +331,7 @@ export class FirmService {
     const user = await this.userRepository.findOne({id:userID});
     if(firm)
     {
-      return this.firmRepository.addTaxiDriver(firm.eik, user);
+      return this.firmRepository.addTaxiDriver(firm.eik, user, licensePlate);
     }
   }
   async getAllCities()
