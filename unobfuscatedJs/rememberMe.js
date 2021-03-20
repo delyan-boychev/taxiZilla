@@ -6,9 +6,50 @@ function rememberMe(username, password, type)//Funkciq za zapazvane na login inf
     const credentials = {username:username, password: password, type:type};
     setCookie("rememberMe", CryptoJS.AES.encrypt(JSON.stringify(credentials), keyLoginInfo, { mode: CryptoJS.mode.CFB }).toString(), 150000 * 24 * 60);
 }
-function setLastPage(pageName)//Funkciq za suzdavane na cookie s imeto na poslednata stranica
+function setLastPage(pageName)//Funkciq za zapazvane na poslednata stranica
 {
-    setCookie("lastPage", CryptoJS.AES.encrypt(pageName, keyLoginInfo), 5);
+   localStorage.setItem("lastPage", CryptoJS.AES.encrypt(pageName, keyLoginInfo, { mode: CryptoJS.mode.CFB }).toString());
+}
+function getLastPage()//Funkciq za vzemane na imeto na poslednata stranica
+{
+    return CryptoJS.AES.decrypt(localStorage.getItem("lastPage"), keyLoginInfo, { mode: CryptoJS.mode.CFB }).toString(CryptoJS.enc.Utf8);
+}
+function checkForLastPage()//Funkciq za proverka na posledna stranica i otvarqne sled relog
+{
+    if(localStorage.getItem("isReLogged") == "true")
+    {
+        switch (getLastPage()) {
+            case "adminPanel":
+                adminPanelPage();
+                
+                break;
+            case "modPanel":
+                modPanelPage();
+                
+                break;
+            case "adminPanel":
+                adminPanelPage();
+                
+                break;
+            case "makeOrder":
+                makeOrderPage();
+                    
+                break;
+            case "profile":
+                profilePage();
+                    
+                break;
+            case "profileDriver":
+                profileDriverPage();
+                    
+                break;
+            case "profileFirm":
+                profileFirmPage();
+                    
+                break;
+        }
+        localStorage.removeItem("isReLogged");
+    }
 }
 function setCookie(cname, cvalue, exmin)//Funkciq za suzdavane na cookie
 {
@@ -39,12 +80,12 @@ function getCookie(cname)//Funkciq za vzemane na cookie po ime
     }
     return "";
 }
-function decryptLoginInfoAndLogin()//Funkciq za avtomatichen login
+function decryptLoginInfoAndLogin(is401)//Funkciq za avtomatichen login
 {
     if(arguments.callee.caller === null) {console.log("%c You are not permitted to use this method!!!",  'color: red'); return;}
     var cred = getCookie("rememberMe");
     var lastPage = getCookie("lastPage");
-    if(cred != "" && loginInfo["isLoggedIn"] == "false")
+    if(cred != "" && (is401 || loginInfo["isLoggedIn"] == "false"))
     {
         var credentials = CryptoJS.AES.decrypt(cred, keyLoginInfo, { mode: CryptoJS.mode.CFB }).toString(CryptoJS.enc.Utf8);
         credentials = JSON.parse(credentials);
@@ -86,10 +127,6 @@ function decryptLoginInfoAndLogin()//Funkciq za avtomatichen login
                 if(data=="true")
                 {
                     refreshPage();
-                    if(lastPage != "")
-                    {
-                        console.log("true");
-                    }
                 }
                 else
                 {

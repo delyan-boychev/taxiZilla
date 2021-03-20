@@ -1,3 +1,5 @@
+
+const keyLastPage = "8RKu^LMs+EPr6z9U^y6ZB#S2KWUx_ySQ";
 function pageRegisterUser()//Smqna na stranica za registraciq na klient
 {
         if(arguments.callee.caller === null) {console.log("%c You are not permitted to use this method!!!",  'color: red'); return;}
@@ -48,6 +50,7 @@ function resetPasswordPageFirm()//Smqna na stranica za zabravena parola na firma
 function adminPanelPage()//Smqna na stranica za administratorski panel
 {
         if(arguments.callee.caller === null) {console.log("%c You are not permitted to use this method!!!",  'color: red'); return;}
+        setLastPage("adminPanel");
         $(".navbar-collapse").collapse('hide');
         var exists = false;
         getRequest(window.location.protocol+'//'+ window.location.host +'/pages/adminPanel.html').then(data=>{
@@ -60,6 +63,7 @@ function adminPanelPage()//Smqna na stranica za administratorski panel
 function modPanelPage()//Smqna na stranica za moderatorski panel
 {
         if(arguments.callee.caller === null) {console.log("%c You are not permitted to use this method!!!",  'color: red'); return;}
+        setLastPage("modPanel");
         $(".navbar-collapse").collapse('hide');
         getRequest(window.location.protocol+'//'+ window.location.host +'/pages/modPanel.html').then(data=>{
         document.getElementById("pageContent").innerHTML = data;
@@ -70,6 +74,7 @@ function modPanelPage()//Smqna na stranica za moderatorski panel
 function makeOrderPage()//Smqna na stranica za poruchka
 {
         if(arguments.callee.caller === null) {console.log("%c You are not permitted to use this method!!!",  'color: red'); return;}
+        setLastPage("makeOrder");
         $(".navbar-collapse").collapse('hide');
         if(loginInfo.isLoggedIn == "false") return loginPage();
         getRequest(window.location.protocol+'//'+ window.location.host +'/pages/makeOrderPage.html').then(data=>{
@@ -148,6 +153,7 @@ function loginFirmPage()//Smqna na stranica za vlizane na firma
 function profilePage()//Smqna na stranica za profila na klienta
 {
         if(arguments.callee.caller === null) {console.log("%c You are not permitted to use this method!!!",  'color: red'); return;}
+        setLastPage("profile")
         $(".navbar-collapse").collapse('hide');
         getRequest(window.location.protocol+'//'+ window.location.host +'/pages/profilePage.html').then(data=>{
         document.getElementById("pageContent").innerHTML = data; getProfile(); getOrdersUser();});
@@ -156,6 +162,7 @@ function profilePage()//Smqna na stranica za profila na klienta
 function profileDriverPage()//Smqna na stranica za profila na shofyor
 {
         if(arguments.callee.caller === null) {console.log("%c You are not permitted to use this method!!!",  'color: red'); return;}
+        setLastPage("profileDriver");
         $(".navbar-collapse").collapse('hide');
         getRequest(window.location.protocol+'//'+ window.location.host +'/pages/profileDriverPage.html').then(data=>{
         document.getElementById("pageContent").innerHTML = data; getProfile(); getOrdersDriver();});
@@ -164,6 +171,7 @@ function profileDriverPage()//Smqna na stranica za profila na shofyor
 function profileFirmPage()//Smqna na stranica za profila na firmata
 {
         if(arguments.callee.caller === null) {console.log("%c You are not permitted to use this method!!!",  'color: red'); return;}
+        setLastPage("profileFirm");
         $(".navbar-collapse").collapse('hide');
         getRequest(window.location.protocol+'//'+ window.location.host +'/pages/profileFirmPage.html').then(data=>{
         document.getElementById("pageContent").innerHTML = data; getProfileFirm();
