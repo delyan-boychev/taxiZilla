@@ -19,16 +19,12 @@ function checkForLastPage()//Funkciq za proverka na posledna stranica i otvarqne
     if(localStorage.getItem("isReLogged") == "true")
     {
         switch (getLastPage()) {
-            case "adminPanel":
-                adminPanelPage();
-                
-                break;
             case "modPanel":
-                modPanelPage();
+                setTimeout(function(){ modPanelPage() }, 500);
                 
                 break;
             case "adminPanel":
-                adminPanelPage();
+                setTimeout(function(){ adminPanelPage() }, 500);
                 
                 break;
             case "makeOrder":
@@ -47,8 +43,15 @@ function checkForLastPage()//Funkciq za proverka na posledna stranica i otvarqne
                 profileFirmPage();
                     
                 break;
+            default:
+                homePage();
+                break;
         }
         localStorage.removeItem("isReLogged");
+    }
+    else
+    {
+        homePage();
     }
 }
 function setCookie(cname, cvalue, exmin)//Funkciq za suzdavane na cookie

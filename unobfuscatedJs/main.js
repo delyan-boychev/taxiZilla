@@ -11,14 +11,13 @@ var settings = {
 $(document).ready(function()
 {
   setLoginInfo();
-  homePage();
   decryptLoginInfoAndLogin(false);
   designChangeOnStart();
+  checkForLastPage();
   $('body').bsgdprcookies(settings);
 
   $('#cookiesBtn').on('click', function(){
       $('body').bsgdprcookies(settings, 'reinit');
   });
-  setTimeout(function(){checkForLastPage();}, 500);
 }
 );
