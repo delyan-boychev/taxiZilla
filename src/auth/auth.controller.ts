@@ -192,6 +192,7 @@ export class AuthController {
   @Post("/exitTaxiDriver/")
   exitTaxiDriver( @Body("key") key:string, @Body("driverID") driverID:string, @Body("offset") offset:string)
   {
+    console.log(true);
     // Декодиране на ключ и валидация
     if(!key) throw new UnauthorizedException();
     if(key.length!=19) throw new UnauthorizedException();
@@ -202,6 +203,7 @@ export class AuthController {
     const d3 = new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate(), date.getUTCHours(), date.getUTCMinutes(), date.getUTCSeconds()-3, date.getUTCMilliseconds()));
     if(isNaN(d2.getTime())) throw new UnauthorizedException();
     if(d2.getTime()>d.getTime() || d3.getTime()>d2.getTime()) throw new UnauthorizedException();
+    console.log("huichec");
     return this.authService.exitTaxiDriver(parseInt(driverID));
   }
   //Взимане на всички потребители
