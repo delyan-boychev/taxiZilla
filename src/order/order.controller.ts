@@ -22,11 +22,26 @@ export class OrderController {
         this.orderService.rejectAfterAccept(session, parseInt(orderID), parseInt(senderID));
     }
     @Post('/createOrder')
-    createOrder(@Body('x') x:number,@Body('y') y:number, @Body('notes') notes:string, @Body('address') address:string, @Session() session:{token?:string}, @Request() req:Request)
+    createOrder(@Body('x') x:number,@Body('y') y:number, @Body('notes') notes:string, @Body("items") items:string, @Body("key") key:string, @Body("offset") offset:string, @Body('address') address:string, @Session() session:{token?:string, type?:string, role?:string}, @Request() req:Request)
     {
-        if(!session.token)throw new UnauthorizedException();
+        if(!session.token || session.type == "Firm" || session.role == UserRoles.DRIVER)throw new UnauthorizedException();
         const ip = req.headers["cf-connecting-ip"];
-        return this.orderService.createOrder(x,y,notes, session, address, ip);
+        if(!key) throw new UnauthorizedException();
+        if(key.length!=19) throw new UnauthorizedException();
+        const date = new Date();
+        const d = new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate(), date.getUTCHours(), date.getUTCMinutes(), date.getUTCSeconds()+3, date.getUTCMilliseconds() ));
+        const str = this.orderService.decode(key);
+        const d2 = new Date(Date.UTC(parseInt(str.substr(0, 4)), parseInt(str.substr(6, 2))-1, parseInt(str.substr(4, 2)), parseInt(str.substr(8, 2)), parseInt(str.substr(10, 2)), parseInt(str.substr(12, 2)) + 1, 0 + parseInt(offset)));
+        const d3 = new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate(), date.getUTCHours(), date.getUTCMinutes(), date.getUTCSeconds()-3, date.getUTCMilliseconds()));
+        if(isNaN(d2.getTime())) throw new UnauthorizedException();
+        if(d2.getTime()>d.getTime() || d3.getTime()>d2.getTime()) throw new UnauthorizedException();
+        return this.orderService.createOrder(x,y,notes, session, address, items, ip);
+    }
+    @Post('/trackDriverByOrder')
+    async trackDriverByOrder(@Session() session:{token?:string, role?:string, type?:string}, @Body("orderID") id:string)
+    {
+        if(!session.token || session.type == "Firm" || session.role == UserRoles.DRIVER)throw new UnauthorizedException();
+        return await this.orderService.trackDriverByOrder(parseInt(id));
     }
     @Post("/acceptOrder/")
     async acceptOrder(@Session() session:{token?:string, role?:string})

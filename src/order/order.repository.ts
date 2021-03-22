@@ -1,4 +1,5 @@
 import { User } from "src/auth/user.entity";
+import { Drivers } from "src/coordsAndStatus.array";
 import { EntityRepository, Repository } from "typeorm";
 import { OrderStatus } from "./enums/orderStatus.enum";
 import { taxiOrder } from "./order.entity";
@@ -6,7 +7,7 @@ import { taxiOrder } from "./order.entity";
 @EntityRepository(taxiOrder)
 export class OrderRepository extends Repository<taxiOrder>
 {
-    async createOrder(sender:User,driverId:number,x:number,y:number, notes:string, address:string, ip:string, statusOrder:OrderStatus)
+    async createOrder(sender:User,driverId:number,x:number,y:number, notes:string, address:string, items:string, ip:string, statusOrder:OrderStatus)
     {
         let newOrder = new taxiOrder();
         newOrder.x=x;
@@ -17,7 +18,11 @@ export class OrderRepository extends Repository<taxiOrder>
         newOrder.userOrdered=sender;
         newOrder.userId = sender.id;
         newOrder.driverId=driverId;
-        newOrder.items = "";
+        if(!items)
+        {
+            items = "";
+        }
+        newOrder.items = items;
         newOrder.ip = ip;
         var today = new Date();
         var dd = String(today.getDate()).padStart(2, '0');
@@ -42,6 +47,24 @@ export class OrderRepository extends Repository<taxiOrder>
     {
         const order = await this.findOne({id});
         return order;
+    }
+    async trackDriverByOrder(order:taxiOrder)
+    {
+        if(order.orderStatus == OrderStatus.Open)
+        {
+            if(Drivers[order.driverId])
+            {
+                return Drivers[order.driverId].y + ", " + Drivers[order.driverId].x;
+            }
+            else
+            {
+                return "";
+            }
+        }
+        else
+        {
+            return false;
+        }
     }
     async deleteOrder(orderID:number)
     {

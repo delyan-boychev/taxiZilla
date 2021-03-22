@@ -17,7 +17,7 @@ export class Pair
 }
 export class taxiDriversFindNearest
 {
-    constructor(x:number, y:number,sender:User,notes:string, address:string, ip:string)
+    constructor(x:number, y:number,sender:User,notes:string, address:string, ip:string, items:string)
     {
         this.x=x;
         this.y=y;
@@ -25,7 +25,9 @@ export class taxiDriversFindNearest
         this.notes=notes;
         this.sender=sender;
         this.ip = ip;
+        this.items = items;
     }
+    items: string;
     address: string;
     x: number;
     y: number;
@@ -74,6 +76,7 @@ export class taxiDriversFindNearest
         Requests[Drivers[this.taxiDriversDistance[i].index].driver.id]={
                 x:this.x,
                 y:this.y,
+                items: this.items,
                 address: this.address,
                 sender:this.sender,
                 ip:this.ip,
