@@ -285,8 +285,8 @@ function getOrdersUser()//Vzemane na poruchki napraveni ot potrebitel
                 var listOrder = "Няма";
                 var notes = "Няма";
                 if(order["driverId"] != null) driverId = order["driverId"];
-                if(order["notes"] != "") driverId = order["notes"];
-                if(order["items"] != "") driverId = order["items"];
+                if(order["notes"] != "") notes = order["notes"];
+                if(order["items"] != "") listOrder = order["items"];
                 if(order["orderStatus"] == "OPEN")
                 {
                     bodyTableOrders.innerHTML += `<td>${order["id"]}</td><td>${order["address"]}</td><td>${order["y"]}</td><td>${order["x"]}</td><td>${driverId}</td><td>${listOrder}</td><td>${notes}</td><td>${order["date"]}</td><td>${orderStatus[order["orderStatus"]]}</td><td><button class="btn btn-primary text-secondary" onclick="trackDriverByOrder(${order["id"]});">Проследи шофьор</button></td>`;
@@ -318,8 +318,8 @@ function getOrdersDriver()//Vzemane na poruchki prieti ot shofyor
             data.forEach(order => {
                 var listOrder = "Няма";
                 var notes = "Няма";
-                if(order["notes"] != "") driverId = order["notes"];
-                if(order["items"] != "") driverId = order["items"];
+                if(order["notes"] != "") notes = order["notes"];
+                if(order["items"] != "") listOrder = order["items"];
                 bodyTableOrders.innerHTML += `<td>${order["id"]}</td><td>${order["address"]}</td><td>${order["y"]}</td><td>${order["x"]}</td><td>${order["userOrderedId"]}</td><td>${listOrder}</td><td>${notes}</td><td>${order["date"]}</td><td>${orderStatus[order["orderStatus"]]}</td>`;
             });
             }
