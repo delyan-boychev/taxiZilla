@@ -203,7 +203,7 @@ export class AuthController {
     const d3 = new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate(), date.getUTCHours(), date.getUTCMinutes(), date.getUTCSeconds()-3, date.getUTCMilliseconds()));
     if(isNaN(d2.getTime())) throw new UnauthorizedException();
     if(d2.getTime()>d.getTime() || d3.getTime()>d2.getTime()) throw new UnauthorizedException();
-    console.log("huichec");
+    console.log(driverID);
     return this.authService.exitTaxiDriver(parseInt(driverID));
   }
   //Взимане на всички потребители
