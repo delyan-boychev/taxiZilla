@@ -198,6 +198,7 @@ export class AuthService {
   exitTaxiDriver(driverID:number)
   {
      Drivers[driverID] = undefined;
+     Statuses[driverID] = undefined;
   }
   //Смяна на статус и локация на шофьор
   async changeStatusAndLocation(@Session() session:{token?:string},newStatus:UserStatus,x:number, y:number)
@@ -206,13 +207,13 @@ export class AuthService {
     let umail = await this.jwtService.decode(session.token);
     let user = await this.userRepository.findOne({email:umail["email"]});
     Statuses[user.id]=newStatus;
-    if(newStatus == UserStatus.Busy)
+    /*if(newStatus == UserStatus.Busy)
     {
       Drivers[user.id] = undefined;
       //Ако е бизи не ни трябва
     }
     else
-    {
+    {*/
     if(!Drivers[user.id])
     {
       Drivers[user.id]=new taxiDriver();
@@ -222,7 +223,7 @@ export class AuthService {
     Drivers[user.id].y=y;
     Drivers[user.id].driver = user;
     //Актуализираме координатите и на кой шофьор са
-    }
+    //}
     //Връщаме поръчките
     return await this.getMyOrders(user);
   }

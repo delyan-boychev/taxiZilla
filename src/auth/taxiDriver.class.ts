@@ -43,7 +43,7 @@ export class taxiDriversFindNearest
         this.taxiDriversDistance = []
         for(i=0; i < Drivers.length; i++)
         {
-            if(Drivers[i])
+            if(Drivers[i] && Statuses[i] != UserStatus.Busy)
             {
                 if(Requests[i] === undefined)
                 {

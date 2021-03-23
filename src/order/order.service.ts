@@ -32,6 +32,7 @@ export class OrderService {
             if(RequestsTimestamps[i] && (timeStamp.getTime()-RequestsTimestamps[i].getTime()>23000))
             {
                 Drivers[i] = undefined;
+                Statuses[i] = undefined;
                 await instance.rejectRequestById(i);
             }
         }
