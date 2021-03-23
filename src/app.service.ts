@@ -10,6 +10,6 @@ export class AppService {
   getPrivacyPolicy():string
   {
     const fs = require("fs");
-    return fs.readFileSync(join(__dirname, "/../staticFiles/pages/pravicypolicy.html")).toString();
+    return fs.readFileSync(join(__dirname, "/../staticFiles/pages/privacypolicy.html")).toString();
   }
 }
