@@ -7,4 +7,9 @@ export class AppService {
     const fs = require("fs");
   return fs.readFileSync(join(__dirname, "/../staticFiles/pages/index.html")).toString();
   }
+  getPrivacyPolicy():string
+  {
+    const fs = require("fs");
+    return fs.readFileSync(join(__dirname, "/../staticFiles/pages/pravicypolicy.html")).toString();
+  }
 }

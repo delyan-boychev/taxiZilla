@@ -31,7 +31,7 @@
             moreLinkActive: true,
             moreLinkLabel: 'More informations..',
             moreLinkNewTab: true,
-            moreLink: 'privacy-policy.php',
+            moreLink: 'privacypolicy',
             acceptButtonLabel: 'Accept',
             allowAdvancedOptions: false,
             advancedTitle: 'Select which cookies you want to accept',

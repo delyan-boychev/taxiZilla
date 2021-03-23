@@ -1,6 +1,7 @@
 import { Controller, Get, Header, HttpException, HttpStatus, Next, Param, Req, Res, Session, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import {Response} from 'express-serve-static-core';
+import { get } from 'http';
 import { AppService } from './app.service';
 import { UserRoles } from './auth/enums/userRoles.enum';
 
@@ -20,6 +21,11 @@ export class AppController {
     }
     let homePage:string = this.appService.getMainPage().replace("</body>", "<p id=\"res\"style=\"display:none;\">" + JSON.stringify(resp) +" </p>").replace("</html>", "");
     res.send(homePage + "</body></html>");
+  }
+  @Get("/privacypolicy")
+  privacypolicy()
+  {
+    return this.appService.getPrivacyPolicy();
   }
   @Get("/logout/")
   logout(@Session() session:{token?:string, type?:string, role?:UserRoles}, @Res() res:Response)
