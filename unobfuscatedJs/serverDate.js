@@ -1,7 +1,7 @@
 const fetchSampleImplementation = async () => {
     const requestDate = new Date();
   
-    const { headers, ok, statusText } = await fetch(window.location, {
+    const { headers, ok, statusText } = await fetch(window.location + "syncClock", {
       cache: `no-store`,
       method: `HEAD`,
     });
@@ -21,6 +21,8 @@ const fetchSampleImplementation = async () => {
     { fetchSample } = { fetchSample: fetchSampleImplementation }
   ) => {
     let best = { uncertainty: Number.MAX_VALUE };
+    for (let index = 0; index < 10; index++) {
+      console.log(index);
       try {
         
         const { requestDate, responseDate, serverDate } = await fetchSample();
@@ -38,6 +40,7 @@ const fetchSampleImplementation = async () => {
       } catch (exception) {
         console.warn(exception);
       }
+    }
   
     return best;
   };

@@ -27,6 +27,11 @@ export class AppController {
   {
     return this.appService.getPrivacyPolicy();
   }
+  @Get("/syncClock")
+  syncClock()
+  {
+    return "";
+  }
   @Get("/logout/")
   logout(@Session() session:{token?:string, type?:string, role?:UserRoles}, @Res() res:Response)
   {
