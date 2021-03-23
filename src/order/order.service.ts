@@ -9,7 +9,7 @@ import { taxiDriver, taxiDriversFindNearest } from 'src/auth/taxiDriver.class';
 import { RequestsTimestamps } from 'src/auth/timestamps.exports';
 import { User } from 'src/auth/user.entity';
 import { UserRepository } from 'src/auth/user.repository';
-import { Statuses, Drivers,x,y, Requests } from 'src/coordsAndStatus.array';
+import { Drivers,x,y, Requests, DriversForTracking } from 'src/coordsAndStatus.array';
 import { OrderStatus } from './enums/orderStatus.enum';
 import { OrderRepository } from './order.repository';
 
@@ -32,7 +32,7 @@ export class OrderService {
             if(RequestsTimestamps[i] && (timeStamp.getTime()-RequestsTimestamps[i].getTime()>23000))
             {
                 Drivers[i] = undefined;
-                Statuses[i] = undefined;
+                DriversForTracking[i] = undefined;
                 await instance.rejectRequestById(i);
             }
         }

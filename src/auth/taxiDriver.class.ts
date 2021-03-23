@@ -1,4 +1,4 @@
-import { Drivers, Requests, Statuses } from "src/coordsAndStatus.array";
+import { Drivers, Requests} from "src/coordsAndStatus.array";
 import { UserStatus } from "./enums/userStatus.enum";
 import { RequestsTimestamps } from "./timestamps.exports";
 import { User } from "./user.entity";
@@ -7,6 +7,7 @@ import { User } from "./user.entity";
 export class taxiDriver
 {
     driver:User;
+    status:UserStatus;
     x: number;
     y: number;
 }
@@ -45,8 +46,6 @@ export class taxiDriversFindNearest
         {
             if(Drivers[i])
             {
-                if(Statuses[i] != UserStatus.Busy)
-                {
                     if(Requests[i] === undefined)
                     {
         
@@ -59,7 +58,6 @@ export class taxiDriversFindNearest
                     this.taxiDriversDistance[i].distance = Math.sqrt(Math.pow(this.x - Drivers[i].x, 2) + Math.pow(this.y - Drivers[i].y, 2));
                     this.taxiDriversDistance[i].index=i;
                     }
-                }
             }
         }
     }

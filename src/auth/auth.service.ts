@@ -13,7 +13,7 @@ import * as Cryptr from 'cryptr';
 import { FirmRepository } from '../firm/firm.repository';
 import { UserRoles } from './enums/userRoles.enum';
 import { UserStatus } from './enums/userStatus.enum';
-import { Drivers, Statuses, x, y, Requests } from 'src/coordsAndStatus.array';
+import { Drivers, x, y, Requests, DriversForTracking } from 'src/coordsAndStatus.array';
 import { taxiDriver } from './taxiDriver.class';
 import { FirmService } from 'src/firm/firm.service';
 import { use } from 'passport';
@@ -198,7 +198,7 @@ export class AuthService {
   exitTaxiDriver(driverID:number)
   {
      Drivers[driverID] = undefined;
-     Statuses[driverID] = undefined;
+     DriversForTracking[driverID] = undefined;
   }
   //Смяна на статус и локация на шофьор
   async changeStatusAndLocation(@Session() session:{token?:string},newStatus:UserStatus,x:number, y:number)
@@ -206,24 +206,33 @@ export class AuthService {
     const date = new Date();
     let umail = await this.jwtService.decode(session.token);
     let user = await this.userRepository.findOne({email:umail["email"]});
-    Statuses[user.id]=newStatus;
-    /*if(newStatus == UserStatus.Busy)
+    if(newStatus == UserStatus.Busy)
     {
       Drivers[user.id] = undefined;
       //Ако е бизи не ни трябва
     }
     else
-    {*/
-    if(!Drivers[user.id])
     {
-      Drivers[user.id]=new taxiDriver();
+      if(!Drivers[user.id])
+      {
+        Drivers[user.id]=new taxiDriver();
+        //ако го няма просто го записваме
+      }
+      Drivers[user.id].x=x;
+      Drivers[user.id].y=y;
+      Drivers[user.id].driver = user;
+      Drivers[user.id].status = newStatus;
+      //Актуализираме координатите и на кой шофьор са
+    }
+    if(!DriversForTracking[user.id])
+    {
+      DriversForTracking[user.id]=new taxiDriver();
       //ако го няма просто го записваме
     }
-    Drivers[user.id].x=x;
-    Drivers[user.id].y=y;
-    Drivers[user.id].driver = user;
-    //Актуализираме координатите и на кой шофьор са
-    //}
+    DriversForTracking[user.id].x = x;
+    DriversForTracking[user.id].y = y;
+    DriversForTracking[user.id].driver = user;
+    DriversForTracking[user.id].status = newStatus;
     //Връщаме поръчките
     return await this.getMyOrders(user);
   }

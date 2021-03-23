@@ -1,5 +1,5 @@
 import { User } from "src/auth/user.entity";
-import { Drivers } from "src/coordsAndStatus.array";
+import { Drivers, DriversForTracking } from "src/coordsAndStatus.array";
 import { EntityRepository, Repository } from "typeorm";
 import { OrderStatus } from "./enums/orderStatus.enum";
 import { taxiOrder } from "./order.entity";
@@ -52,9 +52,9 @@ export class OrderRepository extends Repository<taxiOrder>
     {
         if(order.orderStatus == OrderStatus.Open)
         {
-            if(Drivers[order.driverId])
+            if(DriversForTracking[order.driverId])
             {
-                return Drivers[order.driverId].y + ", " + Drivers[order.driverId].x;
+                return DriversForTracking[order.driverId].y + ", " + DriversForTracking[order.driverId].x;
             }
             else
             {
