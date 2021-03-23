@@ -565,8 +565,9 @@ function addTaxiDriverShowModal(id)//Pokazvane na modal za dobavqne na shofyori
 {
     if(arguments.callee.caller === null) {console.log("%c You are not permitted to use this method!!!",  'color: red'); return;}
     document.getElementById("modalAdminLabel").innerText = `Добавяне на шофьор`;
-    document.getElementById("modalAdminBody").innerHTML = `<p class="text-center">Към коя фирма искате да добавите шофьор с ID-${id}?</p><select id="allFirmsForAddDriver" class="form-control"></select><input type="email" class="form-control mt-4" id="licensePlate" placeholder="Регистрационен номер на колата"> <div class="invalid-feedback">Въвели сте невалиден регистрационен номер! Пример: ВТ1212АР. Регистрационният номер трябва да бъде на кирилица!</div>`;
+    document.getElementById("modalAdminBody").innerHTML = `<p class="text-center">Към коя фирма искате да добавите шофьор с ID-${id}?</p><select id="allFirmsForAddDriver" class="form-control show-tick" data-none-results-text="Няма намерени фирми" data-style="btn-link ml-0 border border-secondary" data-dropup-auto="false" data-live-search="true"></select><input type="email" class="form-control mt-4" id="licensePlate" placeholder="Регистрационен номер на колата"> <div class="invalid-feedback">Въвели сте невалиден регистрационен номер! Пример: ВТ1212АР. Регистрационният номер трябва да бъде на кирилица!</div>`;
     getAllFirmsForAddDrivers();
+    $("#allFirmsForAddDriver").selectpicker();
     document.getElementById("modalAdminButton").onclick = function() {addTaxiDriverByAdmin(id);};
     $("#modalAdmin").modal()
 }

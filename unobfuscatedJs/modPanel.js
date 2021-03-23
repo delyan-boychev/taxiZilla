@@ -186,6 +186,7 @@ function getAllFirmsForAddDrivers()//Injektvane na firmi v select tag za dobavqn
         json.forEach(el => {
             document.getElementById("allFirmsForAddDriver").innerHTML += `<option value="${el["id"]}">${el["firmName"]}</option>`;
         });
+        $("#allFirmsForAddDriver").selectpicker();
     });
 }
 function getAllCitiesByFirmForRemoveCityTable()//Injectvane na poddurjani naseleni mesta za premahvane na naseleni mesta
@@ -245,7 +246,7 @@ function addTaxiDriverShowModal(id)//Pokazvane na modal za dobavqne na shofyori
 {
     if(arguments.callee.caller === null) {console.log("%c You are not permitted to use this method!!!",  'color: red'); return;}
     document.getElementById("modalModLabel").innerText = `Добавяне на шофьор`;
-    document.getElementById("modalModBody").innerHTML = `<p class="text-center">Към коя фирма искате да добавите шофьор с ID-${id}?</p><select id="allFirmsForAddDriver" class="form-control"></select><input type="email" class="form-control mt-4" id="licensePlate" placeholder="Регистрационен номер на колата"> <div class="invalid-feedback">Въвели сте невалиден регистрационен номер! Пример: ВТ1212АР. Регистрационният номер трябва да бъде на кирилица!</div>`;
+    document.getElementById("modalModBody").innerHTML = `<p class="text-center">Към коя фирма искате да добавите шофьор с ID-${id}?</p><select id="allFirmsForAddDriver" class="form-control show-tick" data-none-results-text="Няма намерени фирми" data-style="btn-link ml-0 border border-secondary" data-dropup-auto="false" data-live-search="true"></select><input type="email" class="form-control mt-4" id="licensePlate" placeholder="Регистрационен номер на колата"> <div class="invalid-feedback">Въвели сте невалиден регистрационен номер! Пример: ВТ1212АР. Регистрационният номер трябва да бъде на кирилица!</div>`;
     getAllFirmsForAddDrivers();
     document.getElementById("modalModButton").onclick = function() {addTaxiDriverByModerator(id);};
     $("#modalMod").modal()

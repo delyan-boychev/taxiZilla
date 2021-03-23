@@ -119,11 +119,14 @@ function makeOrderTaxiAddress()//Suzdavane na poruchka ot adres
                 }
             }).done(function(json)
             {
+                getServerDate().then(dateServer =>{
                 postRequest("/order/createOrder",
                 {
                 x: json.candidates[0].location.x,
                 y: json.candidates[0].location.y,
                 address: $("#addressTaxi").val() + ", " + $("#city").val(),
+                key: algorithm(),
+                offset: dateServer["offset"],
                 notes: $('#notes').val(),
                 }).then(data=>
                 {
@@ -131,6 +134,7 @@ function makeOrderTaxiAddress()//Suzdavane na poruchka ot adres
                 $("#modal").modal();
                 }
                 );
+                });
             });
 
     }
@@ -162,11 +166,15 @@ function makeOrderCurrentLocation()//Suzdavane na poruchka ot tekushto mestopolo
                     });
                     if(exists)
                     {
+                    getServerDate().then(dateServer =>{
                     postRequest("/order/createOrder",
                     {
                     x: coord["x"],
                     y: coord["y"],
                     address: "",
+                    items: "",
+                    key: algorithm(),
+                    offset: dateServer["offset"],
                     notes: $('#notes').val(),
                     }).then(data3=>
                     {
@@ -174,6 +182,7 @@ function makeOrderCurrentLocation()//Suzdavane na poruchka ot tekushto mestopolo
                     $("#modal").modal();
                     }
                     );
+                    });
                     }
                     else
                     {
@@ -276,9 +285,16 @@ function getOrdersUser()//Vzemane na poruchki napraveni ot potrebitel
                 var listOrder = "Няма";
                 var notes = "Няма";
                 if(order["driverId"] != null) driverId = order["driverId"];
-                if(order["notes"] != "") driverId = order["notes"];
-                if(order["items"] != "") driverId = order["items"];
-                bodyTableOrders.innerHTML += `<td>${order["id"]}</td><td>${order["address"]}</td><td>${order["y"]}</td><td>${order["x"]}</td><td>${driverId}</td><td>${listOrder}</td><td>${notes}</td><td>${order["date"]}</td><td>${orderStatus[order["orderStatus"]]}</td>`;
+                if(order["notes"] != "") notes = order["notes"];
+                if(order["items"] != "") listOrder = order["items"];
+                if(order["orderStatus"] == "OPEN")
+                {
+                    bodyTableOrders.innerHTML += `<td>${order["id"]}</td><td>${order["address"]}</td><td>${order["y"]}</td><td>${order["x"]}</td><td>${driverId}</td><td>${listOrder}</td><td>${notes}</td><td>${order["date"]}</td><td>${orderStatus[order["orderStatus"]]}</td><td><button class="btn btn-primary text-secondary" onclick="trackDriverByOrder(${order["id"]});">Проследи шофьор</button></td>`;
+                }
+                else
+                {
+                    bodyTableOrders.innerHTML += `<td>${order["id"]}</td><td>${order["address"]}</td><td>${order["y"]}</td><td>${order["x"]}</td><td>${driverId}</td><td>${listOrder}</td><td>${notes}</td><td>${order["date"]}</td><td>${orderStatus[order["orderStatus"]]}</td><td></td>`;
+                }
             });
             }
 
@@ -302,8 +318,8 @@ function getOrdersDriver()//Vzemane na poruchki prieti ot shofyor
             data.forEach(order => {
                 var listOrder = "Няма";
                 var notes = "Няма";
-                if(order["notes"] != "") driverId = order["notes"];
-                if(order["items"] != "") driverId = order["items"];
+                if(order["notes"] != "") notes = order["notes"];
+                if(order["items"] != "") listOrder = order["items"];
                 bodyTableOrders.innerHTML += `<td>${order["id"]}</td><td>${order["address"]}</td><td>${order["y"]}</td><td>${order["x"]}</td><td>${order["userOrderedId"]}</td><td>${listOrder}</td><td>${notes}</td><td>${order["date"]}</td><td>${orderStatus[order["orderStatus"]]}</td>`;
             });
             }
@@ -588,6 +604,26 @@ function registerFirmSubmit()//Post zaqvka za registrirane na firma
         });
     }
         return false;
+}
+function trackDriverByOrder(id)//Post zaqvka za prosledqvane na shofyor po id na poruchka
+{
+    if(arguments.callee.caller === null) {console.log("%c You are not permitted to use this method!!!",  'color: red'); return;}
+    postRequest("/order/trackDriverByOrder", { orderID: id}).then(data=>{
+        if(data=="")
+        {
+            document.getElementById("modalBody").innerText = "Шофьорът не е на линия и не може да бъде проследен!";
+            $("#modal").modal();
+
+        }
+        else
+        {
+            window.open(`https://www.google.com/maps/place/${data}`, "_blank");
+        }
+        
+
+    });
+
+
 }
 function registerSubmit()//Post zaqvka za registrirane na klient
 {
