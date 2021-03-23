@@ -43,19 +43,22 @@ export class taxiDriversFindNearest
         this.taxiDriversDistance = []
         for(i=0; i < Drivers.length; i++)
         {
-            if(Drivers[i] && Statuses[i] != UserStatus.Busy)
+            if(Drivers[i])
             {
-                if(Requests[i] === undefined)
+                if(Statuses[i] != UserStatus.Busy)
                 {
-    
-                if(!this.taxiDriversDistance[i])
-                {
-                    this.taxiDriversDistance[i] = {
-                        distance:0,
-                        index:k,};
-                }
-                this.taxiDriversDistance[i].distance = Math.sqrt(Math.pow(this.x - Drivers[i].x, 2) + Math.pow(this.y - Drivers[i].y, 2));
-                this.taxiDriversDistance[i].index=i;
+                    if(Requests[i] === undefined)
+                    {
+        
+                    if(!this.taxiDriversDistance[i])
+                    {
+                        this.taxiDriversDistance[i] = {
+                            distance:0,
+                            index:k,};
+                    }
+                    this.taxiDriversDistance[i].distance = Math.sqrt(Math.pow(this.x - Drivers[i].x, 2) + Math.pow(this.y - Drivers[i].y, 2));
+                    this.taxiDriversDistance[i].index=i;
+                    }
                 }
             }
         }
