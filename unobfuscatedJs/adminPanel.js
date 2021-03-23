@@ -345,6 +345,8 @@ function getAllFirmsForAddDrivers()//Injektvane na firmi v select tag za dobavqn
         json.forEach(el => {
             document.getElementById("allFirmsForAddDriver").innerHTML += `<option value="${el["id"]}">${el["firmName"]}</option>`;
         });
+        $("#allFirmsForAddDriver").selectpicker();
+
     });
 }
 function getAllOrdersForListAndRemove()//Injektvane na poruchki v tablica za premahvane i razgledjdane na poruchki
