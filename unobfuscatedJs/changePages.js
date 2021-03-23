@@ -1,5 +1,4 @@
 
-const keyLastPage = "8RKu^LMs+EPr6z9U^y6ZB#S2KWUx_ySQ";
 function pageRegisterUser()//Smqna na stranica za registraciq na klient
 {
         if(arguments.callee.caller === null) {console.log("%c You are not permitted to use this method!!!",  'color: red'); return;}
