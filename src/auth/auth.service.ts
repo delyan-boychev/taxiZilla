@@ -19,6 +19,7 @@ import { FirmService } from 'src/firm/firm.service';
 import { use } from 'passport';
 import {ModeratorOperation} from './modOperation.entity';
 import { ModOperationRepository } from './modOperation.repository';
+import { OrderStatus } from 'src/order/enums/orderStatus.enum';
 
 @Injectable()
 export class AuthService {
@@ -32,6 +33,7 @@ export class AuthService {
     private firmService:FirmService,
     private supportedCityRespository:SupportedCityRepository,
     private modRepository:ModOperationRepository,
+    private orderRepository:OrderRepository,
   ) { };
   generateString(length)//Funkciq za generirane na niz po zadadena duljina
   {
@@ -195,10 +197,20 @@ export class AuthService {
     let user = await this.userRepository.findOne({email:umail["email"]});
     return await this.userRepository.removeUserByAdmin(user,userid);
   }
-  exitTaxiDriver(driverID:number)
+  async exitTaxiDriver(driverID:number, lastOrderID:string)
   {
-     Drivers[driverID] = undefined;
-     DriversForTracking[driverID] = undefined;
+    console.log(lastOrderID);
+    if(lastOrderID != "none")
+    {
+      const order = await this.orderRepository.findOne({id: parseInt(lastOrderID)});
+      if(order.orderStatus == OrderStatus.Open)
+      {
+        order.orderStatus = OrderStatus.Closed;
+        await order.save();
+      }
+    }
+    Drivers[driverID] = undefined;
+    DriversForTracking[driverID] = undefined;
   }
   //Смяна на статус и локация на шофьор
   async changeStatusAndLocation(@Session() session:{token?:string},newStatus:UserStatus,x:number, y:number)
