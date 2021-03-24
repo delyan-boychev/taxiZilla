@@ -202,10 +202,13 @@ export class AuthService {
     if(lastOrderID != "none")
     {
       const order = await this.orderRepository.findOne({id: parseInt(lastOrderID)});
-      if(order.orderStatus == OrderStatus.Open)
+      if(order)
       {
-        order.orderStatus = OrderStatus.Closed;
-        await order.save();
+        if(order.orderStatus == OrderStatus.Open)
+        {
+          order.orderStatus = OrderStatus.Closed;
+          await order.save();
+        }
       }
     }
     Drivers[driverID] = undefined;

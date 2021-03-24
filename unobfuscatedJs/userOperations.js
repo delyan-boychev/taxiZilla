@@ -165,11 +165,11 @@ function getMessageOrder()//Get zqvka za proverka dali poruchkata e prieta
                 clearInterval(checkForOrdersInterval);
                 if(data["driverName"]=="")
                 {
-                    document.getElementById("orderWaiting").innerHTML =`<h1 class="font-weight-bold">За наше голямо съжаление, поръчката Ви беше отказана!</h1><p style="font-size: 24px;">Не успяхме да намерим шофьор, който да приеме Вашата поръчка! Извиняваме се за неудобството!</p><div style="font-size: 24px;"><i class="fas fa-frown fa-10x text-primary"></i></div>`;
+                    document.getElementById("orderWaiting").innerHTML =`<h1 class="font-weight-bold mt-5 ml-2 mr-2">За наше голямо съжаление, поръчката Ви беше отказана!</h1><p class="mt-5 ml-2 mr-2" style="font-size: 24px;">Не успяхме да намерим шофьор, който да приеме Вашата поръчка! Извиняваме се за неудобството!</p><div style="font-size: 24px;"><i style="-webkit-text-stroke-width: 4px; -webkit-text-stroke-color: black;" class="fas fa-frown fa-10x text-primary mt-5 ml-2 mr-2"></i></div>`;
                 }
                 else
                 {
-                    document.getElementById("orderWaiting").innerHTML =`<h1 class="font-weight-bold">Поръчката Ви беше приета успешно!</h1><p style="font-size: 24px;">До няколко минути ще дойде <span class="font-weight-bold">${data["driverName"]}</span>, който се намира най-близо до Вас! Благоадрим Ви, че използвате taxiZilla!</p><div style="font-size: 24px;"><i class="fas fa-smile fa-10x text-primary"></i></div>`;
+                    document.getElementById("orderWaiting").innerHTML =`<h1 class="font-weight-bold mt-5 ml-2 mr-2">Поръчката Ви беше приета успешно!</h1><p class="mt-5 ml-2 mr-2" style="font-size: 24px;">До няколко минути ще дойде <span class="font-weight-bold">${data["driverName"]}</span>, който се намира най-близо до Вас! Благоадрим Ви, че използвате taxiZilla!</p><div style="font-size: 24px;"><i style="-webkit-text-stroke-width: 4px; -webkit-text-stroke-color: black;" class="fas fa-smile fa-10x text-primary mt-5 ml-2 mr-2"></i></div>`;
                 }
             }
         });
