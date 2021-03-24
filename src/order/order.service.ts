@@ -5,11 +5,11 @@ import { tmpdir } from 'os';
 import { session } from 'passport';
 import { UserRoles } from 'src/auth/enums/userRoles.enum';
 import { UserStatus } from 'src/auth/enums/userStatus.enum';
-import { taxiDriver, taxiDriversFindNearest } from 'src/auth/taxiDriver.class';
+import { orderMessage, taxiDriver, taxiDriversFindNearest } from 'src/auth/taxiDriver.class';
 import { RequestsTimestamps } from 'src/auth/timestamps.exports';
 import { User } from 'src/auth/user.entity';
 import { UserRepository } from 'src/auth/user.repository';
-import { Drivers,x,y, Requests, DriversForTracking } from 'src/coordsAndStatus.array';
+import { Drivers,x,y, Requests, DriversForTracking, orderMessages } from 'src/coordsAndStatus.array';
 import { OrderStatus } from './enums/orderStatus.enum';
 import { OrderRepository } from './order.repository';
 
@@ -47,11 +47,13 @@ export class OrderService {
                 Requests[user.id]["status"]=0;
                 if(Requests[user.id]["distances"][Requests[user.id]["curdriveridx"]+1])
                 {
-                Requests[Requests[user.id]["distances"][Requests[user.id]["curdriveridx"]+1]["index"]]=Requests[user.id];
-                RequestsTimestamps[Requests[user.id]["distances"][Requests[user.id]["curdriveridx"]+1]["index"]]=RequestsTimestamps[user.id];
+                    Requests[Requests[user.id]["distances"][Requests[user.id]["curdriveridx"]+1]["index"]]=Requests[user.id];
+                    RequestsTimestamps[Requests[user.id]["distances"][Requests[user.id]["curdriveridx"]+1]["index"]]=RequestsTimestamps[user.id];
                 }
                 else
                 {
+                    orderMessages[Requests[user.id]["sender"].id].isAccepted = true;
+                    orderMessages[Requests[user.id]["sender"].id].driverName = "";
                     this.orderRepository.createOrder(Requests[user.id]["sender"],null,Requests[user.id]["x"],Requests[user.id]["y"], Requests[user.id]["notes"], Requests[user.id]["address"],Requests[user.id]["items"], Requests[user.id]["ip"], OrderStatus.Canceled); 
                 }
                 Requests[user.id]=undefined;
@@ -66,6 +68,22 @@ export class OrderService {
         const order = await this.orderRepository.findOne({id: orderID});
         return await this.orderRepository.trackDriverByOrder(order);
     }
+    async getOrderMessage(@Session() session:{token?:string})
+    {
+        let uemail = await this.jwtService.decode(session.token);
+        let user = await this.userRepository.findOne({email:uemail["email"]});
+        if(orderMessages[user.id])
+        {
+            var message = orderMessages[user.id];
+            if(orderMessages[user.id].isAccepted == true) orderMessages[user.id] = undefined;
+            return message;
+        }
+        else
+        {
+            return "";
+        }
+
+    }
     async rejectRequest(@Session() session:{token?:string})
     {
         let uemail = await this.jwtService.decode(session.token);
@@ -77,11 +95,13 @@ export class OrderService {
                 Requests[user.id]["status"]=0;
                 if(Requests[user.id]["distances"][Requests[user.id]["curdriveridx"]+1])
                 {
-                Requests[Requests[user.id]["distances"][Requests[user.id]["curdriveridx"]+1]["index"]]=Requests[user.id];
-                RequestsTimestamps[Requests[user.id]["distances"][Requests[user.id]["curdriveridx"]+1]["index"]]=RequestsTimestamps[user.id];
+                    Requests[Requests[user.id]["distances"][Requests[user.id]["curdriveridx"]+1]["index"]]=Requests[user.id];
+                    RequestsTimestamps[Requests[user.id]["distances"][Requests[user.id]["curdriveridx"]+1]["index"]]=RequestsTimestamps[user.id];
                 }
                 else
                 {
+                    orderMessages[Requests[user.id]["sender"].id].isAccepted = true;
+                    orderMessages[Requests[user.id]["sender"].id].driverName = "";
                     this.orderRepository.createOrder(Requests[user.id]["sender"],null,Requests[user.id]["x"],Requests[user.id]["y"], Requests[user.id]["notes"], Requests[user.id]["address"],Requests[user.id]["items"],Requests[user.id]["ip"], OrderStatus.Canceled); 
                 }
                 Requests[user.id]=undefined;
@@ -143,10 +163,12 @@ export class OrderService {
         }
         if(k > 0)
         {
-        a.getTheNearestDriver();
+            orderMessages[sended.id] = new orderMessage(false, "");
+            a.getTheNearestDriver();
         }
         else
         {
+            orderMessages[sended.id] = new orderMessage(true, "");
             this.orderRepository.createOrder(sended, null,x,y, notes, address, items, ip, OrderStatus.Canceled); 
         }
     }
@@ -167,6 +189,8 @@ export class OrderService {
         {
             Requests[user.id]["status"]=1;
             let idOrder = await this.orderRepository.createOrder(Requests[user.id]["sender"],user.id,Requests[user.id]["x"],Requests[user.id]["y"], Requests[user.id]["notes"], Requests[user.id]["address"],Requests[user.id]["items"], Requests[user.id]["ip"], OrderStatus.Open); 
+            orderMessages[Requests[user.id]["sender"].id].driverName = user.fName + " " + user.lName;
+            orderMessages[Requests[user.id]["sender"].id].isAccepted = true;
             Requests[user.id] = undefined;
             RequestsTimestamps[user.id] = undefined;
             return idOrder;

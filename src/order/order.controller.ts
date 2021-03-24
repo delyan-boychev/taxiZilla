@@ -21,6 +21,12 @@ export class OrderController {
         if(!session.token || session.role != UserRoles.DRIVER) throw new UnauthorizedException();
         this.orderService.rejectAfterAccept(session, parseInt(orderID), parseInt(senderID));
     }
+    @Get('/getOrderMessage')
+    async getOrderMessage(@Session() session: {token?:string, role?:string, type?:string})
+    {
+        if(!session.token || session.type == "Firm" || session.role == UserRoles.DRIVER) throw new UnauthorizedException();
+        return await this.orderService.getOrderMessage(session);
+    }
     @Post('/createOrder')
     createOrder(@Body('x') x:number,@Body('y') y:number, @Body('notes') notes:string, @Body("items") items:string, @Body("key") key:string, @Body("offset") offset:string, @Body('address') address:string, @Session() session:{token?:string, type?:string, role?:string}, @Request() req:Request)
     {

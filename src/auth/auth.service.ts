@@ -199,7 +199,6 @@ export class AuthService {
   }
   async exitTaxiDriver(driverID:number, lastOrderID:string)
   {
-    console.log(lastOrderID);
     if(lastOrderID != "none")
     {
       const order = await this.orderRepository.findOne({id: parseInt(lastOrderID)});

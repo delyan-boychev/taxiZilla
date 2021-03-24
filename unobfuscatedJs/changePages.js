@@ -166,6 +166,13 @@ function profileDriverPage()//Smqna na stranica za profila na shofyor
         document.getElementById("pageContent").innerHTML = data; getProfile(); getOrdersDriver();});
 
 }
+function waitingForOrderAcceptPage()//Sqmna na strtanica za izchakvane na poruchka
+{
+    if(arguments.callee.caller === null) {console.log("%c You are not permitted to use this method!!!",  'color: red'); return;}
+    $(".navbar-collapse").collapse('hide');
+    getRequest(window.location.protocol+'//'+ window.location.host +'/pages/waitingForOrderAccept.html').then(data=>{
+    document.getElementById("pageContent").innerHTML = data;});
+}
 function profileFirmPage()//Smqna na stranica za profila na firmata
 {
         if(arguments.callee.caller === null) {console.log("%c You are not permitted to use this method!!!",  'color: red'); return;}

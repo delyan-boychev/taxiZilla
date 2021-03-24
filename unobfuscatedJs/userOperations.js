@@ -1,5 +1,6 @@
 
 //Deklarirane na promenlivi i konstanti
+var checkForOrdersInterval;
 const userRole = Object.freeze({
     Admin: "Администратор",
     Moderator: "Модератор",
@@ -122,17 +123,20 @@ function makeOrderTaxiAddress()//Suzdavane na poruchka ot adres
                 getServerDate().then(dateServer =>{
                 postRequest("/order/createOrder",
                 {
-                x: json.candidates[0].location.x,
-                y: json.candidates[0].location.y,
-                address: $("#addressTaxi").val() + ", " + $("#city").val(),
-                key: algorithm(),
-                offset: dateServer["offset"],
-                notes: $('#notes').val(),
-                }).then(data=>
-                {
-                document.getElementById("modalBody").innerText="Успешно е направенa поръчка!";
-                $("#modal").modal();
-                }
+                    x: json.candidates[0].location.x,
+                    y: json.candidates[0].location.y,
+                    address: $("#addressTaxi").val() + ", " + $("#city").val(),
+                    key: algorithm(),
+                    offset: dateServer["offset"],
+                    notes: $('#notes').val(),
+                    }).then(data=>
+                    {
+                        if(data!="401")
+                        {
+                        waitingForOrderAcceptPage();
+                        setIntervalMessage();
+                        }
+                    }
                 );
                 });
             });
@@ -150,6 +154,30 @@ async function getLocation()//Vzemane na tekushto mestopolozenie
         await new Promise(r => setTimeout(r, 500));
         return coord;
     }
+}
+function getMessageOrder()//Get zqvka za proverka dali poruchkata e prieta
+{
+    if(arguments.callee.caller === null) {console.log("%c You are not permitted to use this method!!!",  'color: red'); return;}
+    getRequest("/order/getOrderMessage").then(data=>
+        {
+            if(data["isAccepted"] == true)
+            {
+                clearInterval(checkForOrdersInterval);
+                if(data["driverName"]=="")
+                {
+                    document.getElementById("orderWaiting").innerHTML =`<h1 class="font-weight-bold">За наше голямо съжаление, поръчката Ви беше отказана!</h1><p style="font-size: 24px;">Не успяхме да намерим шофьор, който да приеме Вашата поръчка! Извиняваме се за неудобството!</p><div style="font-size: 24px;"><i class="fas fa-frown fa-10x text-primary"></i></div>`;
+                }
+                else
+                {
+                    document.getElementById("orderWaiting").innerHTML =`<h1 class="font-weight-bold">Поръчката Ви беше приета успешно!</h1><p style="font-size: 24px;">До няколко минути ще дойде <span class="font-weight-bold">${data["driverName"]}</span>, който се намира най-близо до Вас! Благоадрим Ви, че използвате taxiZilla!</p><div style="font-size: 24px;"><i class="fas fa-smile fa-10x text-primary"></i></div>`;
+                }
+            }
+        });
+
+}
+function setIntervalMessage()
+{
+    checkForOrdersInterval = setInterval(function(){getMessageOrder()}, 6000);
 }
 function makeOrderCurrentLocation()//Suzdavane na poruchka ot tekushto mestopolozenie
 {
@@ -169,20 +197,23 @@ function makeOrderCurrentLocation()//Suzdavane na poruchka ot tekushto mestopolo
                     getServerDate().then(dateServer =>{
                     postRequest("/order/createOrder",
                     {
-                    x: coord["x"],
-                    y: coord["y"],
-                    address: "",
-                    items: "",
-                    key: algorithm(),
-                    offset: dateServer["offset"],
-                    notes: $('#notes').val(),
-                    }).then(data3=>
-                    {
-                    document.getElementById("modalBody").innerText="Успешно е направенa поръчка!";
-                    $("#modal").modal();
-                    }
-                    );
-                    });
+                        x: coord["x"],
+                        y: coord["y"],
+                        address: "",
+                        items: "",
+                        key: algorithm(),
+                        offset: dateServer["offset"],
+                        notes: $('#notes').val(),
+                        }).then(data3=>
+                            {
+                                if(data!="401")
+                                {
+                                    waitingForOrderAcceptPage();
+                                    setIntervalMessage();
+                                }
+                            }
+                            );
+                        });
                     }
                     else
                     {

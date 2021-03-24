@@ -11,6 +11,16 @@ export class taxiDriver
     x: number;
     y: number;
 }
+export class orderMessage
+{
+    constructor(accepted:boolean, driverName:string)
+    {
+        this.isAccepted = accepted;
+        this.driverName = driverName;
+    }
+    isAccepted:boolean;
+    driverName:string;
+}
 export class Pair
 {
     index:number;
