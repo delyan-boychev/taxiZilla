@@ -1,4 +1,4 @@
-import { Injectable, Session, UnauthorizedException } from '@nestjs/common';
+import { BadRequestException, Injectable, Session, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { join } from 'path';
 import { RegisterFirmDTO } from './dto/registerFirm.dto';
@@ -152,9 +152,20 @@ export class FirmService {
     async verifyResetPassword(email:string,password:string,time:string)
     {
       const encrypter = new Cryptr("mXb35Bw^FvCz9MLN");
-      const emaddr = encrypter.decrypt(email);
-      const passw = encrypter.decrypt(password);
-      const timeStr= encrypter.decrypt(time);
+      let emaddr = "";
+      let passw = "";
+      let timeStr = "";
+      try
+      {
+        emaddr = encrypter.decrypt(email);
+        passw = encrypter.decrypt(password);
+        timeStr = encrypter.decrypt(time);
+      }
+      catch(ex)
+      {
+        throw new BadRequestException();
+      }
+
       const timeSt = new Date(timeStr);
       const now = new Date();
       const fs = require("fs");
@@ -216,7 +227,15 @@ export class FirmService {
   async verifyFirm(code:string)
   {
     const encrypter = new Cryptr("mXb35Bw^FvCz9MLN");
-    const eik = encrypter.decrypt(code);
+    let eik = "";
+    try
+    {
+      eik = encrypter.decrypt(code);
+    }
+    catch(ex)
+    {
+      throw new BadRequestException();
+    }
     let result = await this.firmRepository.verifyFirm(eik);
     return this.getVerifyPage(result);
   }

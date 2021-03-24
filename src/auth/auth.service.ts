@@ -1,4 +1,4 @@
-import { Injectable, Session, UnauthorizedException } from '@nestjs/common';
+import { BadRequestException, Injectable, Session, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { OrderRepository } from "../order/order.repository";
 import { InjectRepository } from '@nestjs/typeorm';
@@ -98,9 +98,19 @@ export class AuthService {
   async verifyResetPassword(email:string,password:string,time:string)
   {
     const encrypter = new Cryptr("mXb35Bw^FvCz9MLN");
-    const emaddr = await encrypter.decrypt(email);
-    const passw = await encrypter.decrypt(password);
-    const timeStr=await encrypter.decrypt(time);
+    let emaddr = "";
+    let passw = "";
+    let timeStr = "";
+    try
+    {
+      emaddr = await encrypter.decrypt(email);
+      passw = await encrypter.decrypt(password);
+      timeStr=await encrypter.decrypt(time);
+    }
+    catch(ex)
+    {
+      throw new BadRequestException();
+    }
     const timeSt = new Date(timeStr);
     const now = new Date();
     const fs = require("fs");
@@ -371,7 +381,16 @@ export class AuthService {
   {
     //Разкриптираме кода от линка който е потребителското име на човека и го потвърждаваме
     const encrypter = new Cryptr("mXb35Bw^FvCz9MLN");
-    const username = encrypter.decrypt(code);
+    let username = "";
+    try
+    {
+      username = encrypter.decrypt(code);
+    }
+    catch(ex)
+    {
+      throw new BadRequestException();
+    }
+    
     let result = await this.userRepository.verifyUser(username);
     return this.getVerifyPage(result);
   }

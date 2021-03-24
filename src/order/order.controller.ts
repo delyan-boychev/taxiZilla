@@ -1,9 +1,10 @@
-import { Body, Controller, Get, Post, Request, Session, UnauthorizedException, UseGuards } from '@nestjs/common';
+import { BadRequestException, Body, Controller, Get, Post, Request, Session, UnauthorizedException, UseGuards, ValidationPipe } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { session } from 'passport';
 import { parse } from 'path';
 import { UserRoles } from 'src/auth/enums/userRoles.enum';
 import { User } from 'src/auth/user.entity';
+import { CreateOrderDTO } from './dto/createOrderDto.dto';
 import { taxiOrder } from './order.entity';
 import { OrderService } from './order.service';
 
@@ -18,6 +19,7 @@ export class OrderController {
     @Post('/rejectOrderAfterAccept')
     async rejectOrderAfterAccept(@Session() session: {token?: string, role?:string}, @Body("orderID") orderID:string, @Body("senderID") senderID:string)
     {
+        if(!session||!orderID||!senderID)throw new BadRequestException();
         if(!session.token || session.role != UserRoles.DRIVER) throw new UnauthorizedException();
         this.orderService.rejectAfterAccept(session, parseInt(orderID), parseInt(senderID));
     }
@@ -28,8 +30,9 @@ export class OrderController {
         return await this.orderService.getOrderMessage(session);
     }
     @Post('/createOrder')
-    createOrder(@Body('x') x:number,@Body('y') y:number, @Body('notes') notes:string, @Body("items") items:string, @Body("key") key:string, @Body("offset") offset:string, @Body('address') address:string, @Session() session:{token?:string, type?:string, role?:string}, @Request() req:Request)
+    createOrder(@Body(ValidationPipe) createOrderDTO:CreateOrderDTO, @Session() session:{token?:string, type?:string, role?:string}, @Request() req:Request)
     {
+        const {x,y,offset,address,key,notes,items} = createOrderDTO;
         if(!session.token || session.type == "Firm" || session.role == UserRoles.DRIVER)throw new UnauthorizedException();
         const ip = req.headers["cf-connecting-ip"];
         if(!key) throw new UnauthorizedException();
@@ -46,6 +49,7 @@ export class OrderController {
     @Post('/trackDriverByOrder')
     async trackDriverByOrder(@Session() session:{token?:string, role?:string, type?:string}, @Body("orderID") id:string)
     {
+        if(!id)throw new BadRequestException();
         if(!session.token || session.type == "Firm" || session.role == UserRoles.DRIVER)throw new UnauthorizedException();
         return await this.orderService.trackDriverByOrder(parseInt(id));
     }
@@ -64,6 +68,7 @@ export class OrderController {
     @Post("/finishOrder/")
     async finishOrder(@Session() session:{token?:string, role?:string}, @Body('id') id:string)
     {
+        if(!id)throw new BadRequestException();
         if(!session.token || session.role != UserRoles.DRIVER) throw new UnauthorizedException();
         this.orderService.finishOrder(Number(id));
     }
@@ -88,6 +93,7 @@ export class OrderController {
     @Post("/removeOrder")
     async removeOrder(@Session() session:{token?:string, role?:string}, @Body("orderId") orderId:string)
     {
+        if(!orderId)throw new BadRequestException();
         if(!session.token ||session.role != UserRoles.ADMIN)throw new UnauthorizedException();
         return await this.orderService.removeOrder(parseInt(orderId));
     }
