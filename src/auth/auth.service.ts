@@ -201,7 +201,6 @@ export class AuthService {
   {
     if(lastOrderID != "none")
     {
-      console.log(lastOrderID);
       const order = await this.orderRepository.findOne({id: parseInt(lastOrderID)});
       if(order)
       {
