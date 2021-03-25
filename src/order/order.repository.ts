@@ -18,10 +18,6 @@ export class OrderRepository extends Repository<taxiOrder>
         newOrder.userOrdered=sender;
         newOrder.userId = sender.id;
         newOrder.driverId=driverId;
-        if(!items)
-        {
-            items = "";
-        }
         newOrder.items = items;
         newOrder.ip = ip;
         var today = new Date();

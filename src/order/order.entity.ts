@@ -17,7 +17,7 @@ export class taxiOrder extends BaseEntity
     @ManyToOne(type => User, user => user.orders, {onDelete:'CASCADE'})
     userOrdered:User;
 
-    @Column()
+    @Column({default:""})
     items:string;
 
     @Column({nullable: true})
