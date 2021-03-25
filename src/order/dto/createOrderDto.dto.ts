@@ -3,11 +3,11 @@ import { IsNotEmpty, IsNumber, IsNumberString, Length } from "class-validator";
 
 export class CreateOrderDTO
 {
-    @IsNumber()
-    x:number;
+    @IsNumberString()
+    x:string;
 
-    @IsNumber()
-    y:number;
+    @IsNumberString()
+    y:string;
 
     notes:string;
 
