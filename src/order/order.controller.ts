@@ -44,7 +44,6 @@ export class OrderController {
         const d3 = new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate(), date.getUTCHours(), date.getUTCMinutes(), date.getUTCSeconds()-3, date.getUTCMilliseconds()));
         if(isNaN(d2.getTime())) throw new UnauthorizedException();
         if(d2.getTime()>d.getTime() || d3.getTime()>d2.getTime()) throw new UnauthorizedException();
-        console.log(items);
         return this.orderService.createOrder(parseFloat(x),parseFloat(y),notes, session, address, items, ip);
     }
     @Post('/trackDriverByOrder')
