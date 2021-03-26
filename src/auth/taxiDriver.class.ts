@@ -28,16 +28,18 @@ export class Pair
 }
 export class taxiDriversFindNearest
 {
-    constructor(x:number, y:number,sender:User,notes:string, address:string, ip:string, items:string)
+    constructor(x:number, y:number,sender:User,notes:string, address:string, ip:string, items:string, phoneNumber:string)
     {
         this.x=x;
         this.y=y;
+        this.phoneNumber = phoneNumber;
         this.address = address;
         this.notes=notes;
         this.sender=sender;
         this.ip = ip;
         this.items = items;
     }
+    phoneNumber:string;
     items: string;
     address: string;
     x: number;
@@ -95,6 +97,7 @@ export class taxiDriversFindNearest
                 status:0,
                 distances:this.taxiDriversDistance,
                 curdriveridx:0,
+                phoneNumber: this.phoneNumber
         };
         RequestsTimestamps[Drivers[this.taxiDriversDistance[i].index].driver.id] = new Date();
     }

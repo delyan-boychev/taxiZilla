@@ -116,7 +116,7 @@ export class OrderService {
         let uemail = await this.jwtService.decode(session.token);
         let user = await this.userRepository.findOne({id: senderID});
         const order = await this.orderRepository.deleteOrder(orderID);
-        let a:taxiDriversFindNearest = new taxiDriversFindNearest(order.x,order.y,user ,order.notes, order.address, order.ip, order.items);
+        let a:taxiDriversFindNearest = new taxiDriversFindNearest(order.x,order.y,user ,order.notes, order.address, order.ip, order.items, user.telephone);
         let k = 0;
         for(let i=0; i<Drivers.length; i++)
         {
@@ -152,7 +152,7 @@ export class OrderService {
     {
         let uemail = await this.jwtService.decode(session.token);
         let sended = await this.userRepository.findOne({email:uemail["email"]});
-        let a:taxiDriversFindNearest = new taxiDriversFindNearest(x,y,sended,notes, address, ip, items);
+        let a:taxiDriversFindNearest = new taxiDriversFindNearest(x,y,sended,notes, address, ip, items, sended.telephone);
         let k = 0;
         for(let i=0; i<Drivers.length; i++)
         {
