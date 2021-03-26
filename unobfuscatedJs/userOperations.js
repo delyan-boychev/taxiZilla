@@ -93,14 +93,17 @@ function getAllCities()//Vzemane na vsichki gradove, koito sa poddurzani
     {
         var json = data;
         json.forEach(el => {
-            document.getElementById("city").innerHTML += "<option value='"+ el["city"]+", "+ el["region"] +"'>"+ el["city"]+", "+ el["region"] +"</option>"
+            document.getElementById("city").innerHTML += "<option value='"+ el["city"]+", "+ el["region"] +"'>"+ el["city"]+", "+ el["region"] +"</option>";
+            document.getElementById("city2").innerHTML += "<option value='"+ el["city"]+", "+ el["region"] +"'>"+ el["city"]+", "+ el["region"] +"</option>";
         });
         $("#city").selectpicker();
+        $("#city2").selectpicker();
     });
 }
 function makeOrderTaxiAddress()//Suzdavane na poruchka ot adres
 {
     if(arguments.callee.caller === null) {console.log("%c You are not permitted to use this method!!!",  'color: red'); return;}
+
     if($("#addressTaxi").val().length < 6)
     {
         $('#addressTaxi').addClass("is-invalid");
@@ -133,8 +136,62 @@ function makeOrderTaxiAddress()//Suzdavane na poruchka ot adres
                     {
                         if(data!="401")
                         {
-                        waitingForOrderAcceptPage();
-                        setIntervalMessage();
+                            waitingForOrderAcceptPage();
+                            setIntervalMessage("taxi");
+                        }
+                    }
+                );
+                });
+            });
+
+    }
+}
+function makeOrderItemsAddress()//Suzdavane na poruchka za pazaruvane ot adres
+{
+    if(arguments.callee.caller === null) {console.log("%c You are not permitted to use this method!!!",  'color: red'); return;}
+    $("input").removeClass("is-invalid");
+    $("input").removeClass("is-valid");
+    var isChecked = true;
+    if($("#addressTaxiItems").val().length < 6)
+    {
+        $('#addressTaxiItems').addClass("is-invalid");
+        isChecked = false;
+    }
+    if($('#items').val().length < 3)
+    {
+        $('#items').addClass("is-invalid");
+        isChecked = false;
+    }
+    if(isChecked)
+    {
+        $('#addressTaxiItems').addClass("is-valid");
+        $.ajax(
+            {
+                async: true,
+                url: "https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/findAddressCandidates",
+                type: "GET",
+                data:
+                {
+                SingleLine: $("#addressTaxiItems").val() + ", " + $("#city2").val(),
+                f: "json"
+                }
+            }).done(function(json)
+            {
+                getServerDate().then(dateServer =>{
+                postRequest("/order/createOrder",
+                {
+                    x: json.candidates[0].location.x,
+                    y: json.candidates[0].location.y,
+                    address: $("#addressTaxiItems").val() + ", " + $("#city2").val(),
+                    key: algorithm(),
+                    offset: dateServer["offset"],
+                    items: $('#items').val(),
+                    }).then(data=>
+                    {
+                        if(data!="401")
+                        {
+                            waitingForOrderAcceptPage();
+                            setIntervalMessage("items");
                         }
                     }
                 );
@@ -155,7 +212,7 @@ async function getLocation()//Vzemane na tekushto mestopolozenie
         return coord;
     }
 }
-function getMessageOrder()//Get zqvka za proverka dali poruchkata e prieta
+function getMessageOrder(orderType)//Get zqvka za proverka dali poruchkata e prieta
 {
     if(arguments.callee.caller === null) {console.log("%c You are not permitted to use this method!!!",  'color: red'); return;}
     getRequest("/order/getOrderMessage").then(data=>
@@ -163,21 +220,84 @@ function getMessageOrder()//Get zqvka za proverka dali poruchkata e prieta
             if(data["isAccepted"] == true)
             {
                 clearInterval(checkForOrdersInterval);
+                var text = "";
+                if(orderType == "taxi")
+                {
+                    text = `До няколко минути очаквайте <span class="font-weight-bold">${data["driverName"]}</span>, който се намира най-близо до Вас! Благодарим Ви, че използвате taxiZilla и приятно пътуване!`;
+                }
+                else if(orderType == "items")
+                {
+                    text=`<span class="font-weight-bold">${data["driverName"]}</span> ще изпълни Вашата поръчка за пазаруване. Скоро очаквайте обаждане от шофьора! Благодарим Ви, че използвате taxiZilla!`;
+                }
                 if(data["driverName"]=="")
                 {
                     document.getElementById("orderWaiting").innerHTML =`<h1 class="font-weight-bold mt-5 ml-2 mr-2">За наше голямо съжаление, поръчката Ви беше отказана!</h1><p class="mt-5 ml-2 mr-2" style="font-size: 24px;">Не успяхме да намерим шофьор, който да приеме Вашата поръчка! Извиняваме се за неудобството!</p><div style="font-size: 24px;"><i style="-webkit-text-stroke-width: 4px; -webkit-text-stroke-color: black;" class="fas fa-frown fa-10x text-primary mt-5 ml-2 mr-2"></i></div>`;
                 }
                 else
                 {
-                    document.getElementById("orderWaiting").innerHTML =`<h1 class="font-weight-bold mt-5 ml-2 mr-2">Поръчката Ви беше приета успешно!</h1><p class="mt-5 ml-2 mr-2" style="font-size: 24px;">До няколко минути ще дойде <span class="font-weight-bold">${data["driverName"]}</span>, който се намира най-близо до Вас! Благоадрим Ви, че използвате taxiZilla!</p><div style="font-size: 24px;"><i style="-webkit-text-stroke-width: 4px; -webkit-text-stroke-color: black;" class="fas fa-smile fa-10x text-primary mt-5 ml-2 mr-2"></i></div>`;
+                    document.getElementById("orderWaiting").innerHTML =`<h1 class="font-weight-bold mt-5 ml-2 mr-2">Поръчката Ви беше приета успешно!</h1><p class="mt-5 ml-2 mr-2" style="font-size: 24px;">${text}</p><div style="font-size: 24px;"><i style="-webkit-text-stroke-width: 4px; -webkit-text-stroke-color: black;" class="fas fa-smile fa-10x text-primary mt-5 ml-2 mr-2"></i></div>`;
                 }
             }
         });
 
 }
-function setIntervalMessage()
+function setIntervalMessage(orderType)
 {
-    checkForOrdersInterval = setInterval(function(){getMessageOrder()}, 6000);
+    checkForOrdersInterval = setInterval(function(){getMessageOrder(orderType)}, 6000);
+}
+function makeOrderItemsCurrentLocation()//Suzdavane na poruchka ot tekushto mestopolozenie
+{
+    if(arguments.callee.caller === null) {console.log("%c You are not permitted to use this method!!!",  'color: red'); return;}
+    $("input").removeClass("is-invalid");
+    $("input").removeClass("is-valid");
+    if($("#items").val().length < 4)
+    {
+        $("#items").addClass("is-invalid");
+    }
+    else
+    {
+    $("#items").addClass("is-valid");
+    getLocation().then(coord => {
+            getRequest("https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/reverseGeocode?location="+ coord["x"]+", " + coord["y"] + "&f=pjson").then(data=>
+            {
+                data = JSON.parse(data);
+                getRequest("/firm/getAllCities").then(data2=>
+                {
+                    var exists = false;
+                    data2.forEach(el => {
+                        if(el["city"].includes(data["address"]["City"]) && el["region"] == data["address"]["Region"]) exists = true;
+                    });
+                    if(exists)
+                    {
+                    getServerDate().then(dateServer =>{
+                    postRequest("/order/createOrder",
+                    {
+                        x: coord["x"],
+                        y: coord["y"],
+                        address: "",
+                        key: algorithm(),
+                        offset: dateServer["offset"],
+                        items: $('#items').val(),
+                        }).then(data3=>
+                            {
+                                if(data!="401")
+                                {
+                                    waitingForOrderAcceptPage();
+                                    setIntervalMessage("items");
+                                }
+                            }
+                            );
+                        });
+                    }
+                    else
+                    {
+                        document.getElementById("modalBody").innerText="Не се намирате в поддържано населено място!";
+                        $("#modal").modal();
+                    }
+                });
+            });
+        });
+    }
 }
 function makeOrderCurrentLocation()//Suzdavane na poruchka ot tekushto mestopolozenie
 {
@@ -209,7 +329,7 @@ function makeOrderCurrentLocation()//Suzdavane na poruchka ot tekushto mestopolo
                                 if(data!="401")
                                 {
                                     waitingForOrderAcceptPage();
-                                    setIntervalMessage();
+                                    setIntervalMessage("taxi");
                                 }
                             }
                             );
