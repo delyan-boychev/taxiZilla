@@ -29,7 +29,7 @@ export class OrderService {
         let timeStamp = new Date();
         for(let i = 0; i < RequestsTimestamps.length; i++)
         {
-            if(RequestsTimestamps[i] && (timeStamp.getTime()-RequestsTimestamps[i].getTime()>23000))
+            if(RequestsTimestamps[i] && (timeStamp.getTime()-RequestsTimestamps[i].getTime()>30000))
             {
                 Drivers[i] = undefined;
                 DriversForTracking[i] = undefined;
