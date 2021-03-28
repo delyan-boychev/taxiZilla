@@ -248,7 +248,6 @@ export class AuthService {
       Drivers[user.id].status = newStatus;
       //Актуализираме координатите и на кой шофьор са
     }
-    console.log(Drivers[user.id]);
     if(!DriversForTracking[user.id])
     {
       DriversForTracking[user.id]=new taxiDriver();
