@@ -18,13 +18,28 @@ function changeTabOrder(radio)
     var contentTab = document.getElementById("contentTab");
     if(radio.value=="address")
     {
+        contentTab.innerHTML = '<input type="text" id="addressTaxi" class="form-control" placeholder="Адрес"><div class="invalid-feedback">Адресът трябва да е по-дълъг от 5 символа!</div><br><label class="text-left mt-3">Населено място: </label><select class="form-control selectpicker show-tick" data-dropdown-align-right="true" data-none-results-text="Няма намерени наслени места" data-dropup-auto="false"  data-style="btn-link ml-0 border border-secondary" data-live-search="true" id="city"></select><br><textarea placeholder="Бележки(по избор)" class="form-control mt-3" id="notes" style="resize: none; height: 200px" rows="3"></textarea><br><button id="currentLocationReload" class="btn btn-primary ml-0 black-text btn-block rounded" type="submit" onclick="updateMapAddressItems()">Обнови картата</button><br><button class="btn btn-primary ml-0 black-text mt-2 btn-block rounded" type="submit" onclick="makeOrderTaxiAddress()">Направи поръчка</button>';
         getAllCities();
-        contentTab.innerHTML = '<input type="text" id="addressTaxi" class="form-control" placeholder="Адрес"><div class="invalid-feedback">Адресът трябва да е по-дълъг от 5 символа!</div><br><label class="text-left mt-3">Населено място: </label><select class="form-control selectpicker show-tick" data-mobile="true" data-none-results-text="Няма намерени наслени места" data-dropup-auto="false"  data-style="btn-link ml-0 border border-secondary" data-live-search="true" id="city"></select><br><textarea placeholder="Бележки(по избор)" class="form-control mt-3" id="notes" style="resize: none; height: 200px" rows="3"></textarea><br><button id="currentLocationReload" class="btn btn-primary ml-0 black-text btn-block rounded" type="submit" onclick="updateMapAddress()">Обнови картата</button><br><button class="btn btn-primary ml-0 black-text mt-2 btn-block rounded" type="submit" onclick="makeOrderTaxiAddress()">Направи поръчка</button>';
     }
     else 
     {
         showCurrentPosition();
         contentTab.innerHTML = '<textarea placeholder="Бележки(по избор)" class="form-control mt-3" id="notes" style="resize: none; height: 200px" rows="3"></textarea><br><button class="btn btn-primary ml-0 black-text btn-block rounded" type="submit" onclick="showCurrentPosition()">Обнови картата</button><br><button class="btn btn-primary ml-0 mt-2 black-text btn-block rounded" type="submit" onclick="makeOrderCurrentLocation()">Направи поръчка</button>';
+    }
+}
+function changeTabOrderItems(radio)
+{
+    if(arguments.callee.caller === null) {console.log("%c You are not permitted to use this method!!!",  'color: red'); return;}
+    var contentTab = document.getElementById("contentTab2");
+    if(radio.value=="addressItems")
+    {
+        contentTab.innerHTML = '<input type="text" id="addressTaxiItems" class="form-control" placeholder="Адрес"><div class="invalid-feedback">Адресът трябва да е по-дълъг от 5 символа!</div><br><label class="text-left mt-3">Населено място: </label><select class="form-control selectpicker show-tick" data-dropdown-align-right="true" data-none-results-text="Няма намерени наслени места" data-dropup-auto="false"  data-style="btn-link ml-0 border border-secondary" data-live-search="true" id="city2"></select><br><textarea placeholder="Указания за пазаруване" class="form-control mt-3" id="items" style="resize: none; height: 200px" rows="3"></textarea><div class="invalid-feedback">Указанията за пазаруване трябва да са по-дълги от 5 символа!</div><br><button id="currentLocationReload" class="btn btn-primary ml-0 black-text btn-block rounded" type="submit" onclick="updateMapAddress()">Обнови картата</button><br><button class="btn btn-primary ml-0 black-text mt-2 btn-block rounded" type="submit" onclick="makeOrderItemsAddress()">Направи поръчка</button>';
+        getAllCities2();
+    }
+    else 
+    {
+        showCurrentPosition();
+        contentTab.innerHTML = '<textarea placeholder="Указания за пазаруване" class="form-control mt-3" id="items" style="resize: none; height: 200px" rows="3"></textarea><div class="invalid-feedback">Указанията за пазаруване трябва да са по-дълги от 5 символа!</div><br><button class="btn btn-primary ml-0 black-text btn-block rounded" type="submit" onclick="showCurrentPosition()">Обнови картата</button><br><button class="btn btn-primary ml-0 mt-2 black-text btn-block rounded" type="submit" onclick="makeOrderItemsCurrentLocation()">Направи поръчка</button>';
     }
 }
 const sleep = (milliseconds) => {
@@ -45,6 +60,13 @@ function updateMapAddress()//Update na karta ot zadaden adres
 {
     if(arguments.callee.caller === null) {console.log("%c You are not permitted to use this method!!!",  'color: red'); return;}
 document.getElementById("map").src = "https://maps.google.com/maps?q="+ $("#addressTaxi").val() +", " + $("#city").val() + "&t=&z=17&ie=UTF8&iwloc=&output=embed"; $([document.documentElement, document.body]).animate({
+            scrollTop: $("#map").offset().top
+        }, 1000);
+}
+function updateMapAddressItems()//Update na karta ot zadaden adres
+{
+    if(arguments.callee.caller === null) {console.log("%c You are not permitted to use this method!!!",  'color: red'); return;}
+document.getElementById("map").src = "https://maps.google.com/maps?q="+ $("#addressTaxiItems").val() +", " + $("#city2").val() + "&t=&z=17&ie=UTF8&iwloc=&output=embed"; $([document.documentElement, document.body]).animate({
             scrollTop: $("#map").offset().top
         }, 1000);
 }

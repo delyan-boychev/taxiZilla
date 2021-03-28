@@ -5,13 +5,13 @@
   <div class="col-sm mt-3">
   <h6 class="font-weight-bold">Премахване на поддържано населено място</h6><br>
   <label class="text-center mt-3">Фирма, от която искате да премахнете населени места: </label><br>
-  <select class="form-control show-tick" data-style="btn-link ml-0 border border-secondary" id="firms"  data-dropup-auto="false" data-none-results-text="Няма намерени фирми" data-live-search="true"></select>
+  <select class="form-control show-tick" data-dropdown-align-right="true" data-style="btn-link ml-0 border border-secondary" id="firms"  data-dropup-auto="false" data-none-results-text="Няма намерени фирми" data-live-search="true"></select>
   <button class="btn btn-primary text-secondary" onclick="getAllCitiesByFirmForRemoveCityTable()">Обнови таблица</button>
   </div>
   <div class="col-sm mt-3">
             <h6 class="font-weight-bold">Добавяне на поддържано населено място</h6>
             <label class="text-center mt-3">Област: </label><br>
-              <select class="form-control show-tick" data-style="btn-link ml-0 border border-secondary" data-dropup-auto="false" onchange="getCitiesByRegCode(this)" id="nameRegion">
+              <select class="form-control show-tick" data-dropdown-align-right="true" data-style="btn-link ml-0 border border-secondary" data-dropup-auto="false" onchange="getCitiesByRegCode(this)" id="nameRegion">
                 <option value="BLG">Благоевград</option>
                 <option value="BGS">Бургас</option>
                 <option value="VAR">Варна</option>
@@ -42,10 +42,10 @@
                 <option value="JAM">Ямбол</option>
               </select>
     <label class="text-center mt-3">Фирма към, която искате да добавите населено място: </label><br>
-    <select class="form-control show-tick" id="firms2" data-none-results-text="Няма намерени фирми" data-style="btn-link ml-0 border border-secondary" data-dropup-auto="false" data-live-search="true"></select>
+    <select id="firms2" class="form-control show-tick" data-dropdown-align-right="true" data-none-results-text="Няма намерени фирми" data-style="btn-link ml-0 border border-secondary" data-dropup-auto="false" data-live-search="true"></select>
     <label class="text-center mt-3">Населено място: </label>
       <div class="d-flex justify-content-between ">
-                <select class="form-control selectpicker show-tick" data-none-results-text="Няма намерени наслени места" data-dropup-auto="false" data-style="btn-link ml-0 border border-secondary" data-live-search="true" id="nameCity">
+                <select class="form-control selectpicker show-tick" data-dropdown-align-right="true" data-none-results-text="Няма намерени наслени места" data-dropup-auto="false" data-style="btn-link ml-0 border border-secondary" data-live-search="true" id="nameCity">
                 </select>
                 <i class="fas fa-plus mt-3 pt-2 ml-3" style="cursor: pointer;" onclick="addCity()"></i>
       </div>

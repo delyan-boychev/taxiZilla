@@ -26,7 +26,7 @@
               </div>
           </div>
             <div class="col-md-4 center-div" id="contentTab">
-              <input type="text" id="addressTaxi" class="form-control" placeholder="Адрес"><div class="invalid-feedback">Адресът трябва да е по-дълъг от 5 символа!</div><br><label class="text-left mt-3">Населено място: </label><select class="form-control selectpicker show-tick" data-none-results-text="Няма намерени наслени места" data-mobile="true" data-dropup-auto="false"  data-style="btn-link ml-0 border border-secondary" data-live-search="true" id="city"></select><br><textarea placeholder="Бележки(по избор)" class="form-control mt-3" id="notes" style="resize: none; height: 200px" rows="3"></textarea><br><button id="currentLocationReload" class="btn btn-primary ml-0 black-text btn-block rounded" type="submit" onclick="updateMapAddress()">Обнови картата</button><br><button class="btn btn-primary ml-0 black-text mt-2 btn-block rounded" type="submit" onclick="makeOrderTaxiAddress()">Направи поръчка</button>
+              <input type="text" id="addressTaxi" class="form-control" placeholder="Адрес"><div class="invalid-feedback">Адресът трябва да е по-дълъг от 5 символа!</div><br><label class="text-left mt-3">Населено място: </label><select class="form-control selectpicker show-tick" data-dropdown-align-right="true" data-none-results-text="Няма намерени наслени места" data-mobile="true" data-dropup-auto="false"  data-style="btn-link ml-0 border border-secondary" data-live-search="true" id="city"></select><br><textarea placeholder="Бележки(по избор)" class="form-control mt-3" id="notes" style="resize: none; height: 200px" rows="3"></textarea><br><button id="currentLocationReload" class="btn btn-primary ml-0 black-text btn-block rounded" type="submit" onclick="updateMapAddress()">Обнови картата</button><br><button class="btn btn-primary ml-0 black-text mt-2 btn-block rounded" type="submit" onclick="makeOrderTaxiAddress()">Направи поръчка</button>
             </div>
         </div>
       </div>
@@ -38,19 +38,19 @@
             <label class="font-weight-bold text-center">Такси от: </label><br>
             <div class="custom-control custom-radio custom-control-inline">
                 <input class="custom-control-input" onclick="changeTabOrderItems(this)" checked="checked"  type="radio" name="taxiItemsLocation" id="addressItems" value="addressItems">
-                <label class="custom-control-label" for="address">
+                <label class="custom-control-label" for="addressItems">
                   Aдрес
                 </label>
               </div><br>
               <div class="custom-control custom-radio custom-control-inline">
                 <input class="custom-control-input" onclick="changeTabOrderItems(this)" type="radio" name="taxiItemsLocation" id="currentLocationItems" value="currentLocationItems">
-                <label class="custom-control-label" for="currentLocation">
+                <label class="custom-control-label" for="currentLocationItems">
                   Tекущо местоположение
                 </label>
               </div>
           </div>
             <div class="col-md-4 center-div" id="contentTab2">
-              <input type="text" id="addressTaxiItems" class="form-control" placeholder="Адрес"><div class="invalid-feedback">Адресът трябва да е по-дълъг от 5 символа!</div><br><label class="text-left mt-3">Населено място: </label><select class="form-control selectpicker show-tick" data-none-results-text="Няма намерени наслени места" data-mobile="true" data-dropup-auto="false"  data-style="btn-link ml-0 border border-secondary" data-live-search="true" id="city2"></select><br><textarea placeholder="Указания за пазаруване" class="form-control mt-3" id="items" style="resize: none; height: 200px" rows="3"></textarea><br><button id="currentLocationReload" class="btn btn-primary ml-0 black-text btn-block rounded" type="submit" onclick="updateMapAddress()">Обнови картата</button><br><button class="btn btn-primary ml-0 black-text mt-2 btn-block rounded" type="submit" onclick="makeOrderItemsAddress()">Направи поръчка</button>
+              <input type="text" id="addressTaxiItems" class="form-control" placeholder="Адрес"><div class="invalid-feedback">Адресът трябва да е по-дълъг от 5 символа!</div><br><label class="text-left mt-3">Населено място: </label><select class="form-control selectpicker show-tick" data-dropdown-align-right="true" data-none-results-text="Няма намерени наслени места" data-mobile="true" data-dropup-auto="false"  data-style="btn-link ml-0 border border-secondary" data-live-search="true" id="city2"></select><br><textarea placeholder="Указания за пазаруване" class="form-control mt-3" id="items" style="resize: none; height: 200px" rows="3"></textarea><br><button id="currentLocationReload" class="btn btn-primary ml-0 black-text btn-block rounded" type="submit" onclick="updateMapAddress()">Обнови картата</button><br><button class="btn btn-primary ml-0 black-text mt-2 btn-block rounded" type="submit" onclick="makeOrderItemsAddress()">Направи поръчка</button>
             </div>
         </div>
     </div>

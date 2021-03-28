@@ -91,15 +91,30 @@ function getAllCities()//Vzemane na vsichki gradove, koito sa poddurzani
     if(arguments.callee.caller === null) {console.log("%c You are not permitted to use this method!!!",  'color: red'); return;}
     getRequest("/firm/getAllCities").then(data=>
     {
+
         var json = data;
+        document.getElementById("city").innerHTML = "";
         json.forEach(el => {
             document.getElementById("city").innerHTML += "<option value='"+ el["city"]+", "+ el["region"] +"'>"+ el["city"]+", "+ el["region"] +"</option>";
-            document.getElementById("city2").innerHTML += "<option value='"+ el["city"]+", "+ el["region"] +"'>"+ el["city"]+", "+ el["region"] +"</option>";
         });
         $("#city").selectpicker();
+    });
+}
+function getAllCities2()//Vzemane na vsichki gradove, koito sa poddurzani
+{
+    if(arguments.callee.caller === null) {console.log("%c You are not permitted to use this method!!!",  'color: red'); return;}
+    getRequest("/firm/getAllCities").then(data=>
+    {
+
+        var json = data;
+        document.getElementById("city2").innerHTML = "";
+        json.forEach(el => {
+            document.getElementById("city2").innerHTML += "<option value='"+ el["city"]+", "+ el["region"] +"'>"+ el["city"]+", "+ el["region"] +"</option>";
+        });
         $("#city2").selectpicker();
     });
 }
+
 function makeOrderTaxiAddress()//Suzdavane na poruchka ot adres
 {
     if(arguments.callee.caller === null) {console.log("%c You are not permitted to use this method!!!",  'color: red'); return;}
@@ -136,6 +151,8 @@ function makeOrderTaxiAddress()//Suzdavane na poruchka ot adres
                     {
                         if(data!="401")
                         {
+                            document.body.scrollTop = 0; 
+                            document.documentElement.scrollTop = 0;
                             waitingForOrderAcceptPage();
                             setIntervalMessage("taxi");
                         }
@@ -190,6 +207,8 @@ function makeOrderItemsAddress()//Suzdavane na poruchka za pazaruvane ot adres
                     {
                         if(data!="401")
                         {
+                            document.body.scrollTop = 0; 
+                            document.documentElement.scrollTop = 0;
                             waitingForOrderAcceptPage();
                             setIntervalMessage("items");
                         }
@@ -282,6 +301,8 @@ function makeOrderItemsCurrentLocation()//Suzdavane na poruchka ot tekushto mest
                             {
                                 if(data!="401")
                                 {
+                                    document.body.scrollTop = 0; 
+                                    document.documentElement.scrollTop = 0;
                                     waitingForOrderAcceptPage();
                                     setIntervalMessage("items");
                                 }
@@ -328,6 +349,8 @@ function makeOrderCurrentLocation()//Suzdavane na poruchka ot tekushto mestopolo
                             {
                                 if(data!="401")
                                 {
+                                    document.body.scrollTop = 0; 
+                                    document.documentElement.scrollTop = 0;
                                     waitingForOrderAcceptPage();
                                     setIntervalMessage("taxi");
                                 }
