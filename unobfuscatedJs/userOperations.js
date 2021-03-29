@@ -446,8 +446,8 @@ function getOrdersUser()//Vzemane na poruchki napraveni ot potrebitel
     getRequest("/order/getOrdersByUser").then(
         data=>
         {
-            var bodyTableOrders = document.getElementById("ordersTableBody");
-            bodyTableOrders.innerHTML = "";
+            var accordion = document.getElementById("accordion");
+            accordion.innerHTML = "";
             if(data.length === 0)
             {
                 document.getElementById("noOrders").style = "display:block";
@@ -463,11 +463,11 @@ function getOrdersUser()//Vzemane na poruchki napraveni ot potrebitel
                 if(order["items"] != "") listOrder = order["items"];
                 if(order["orderStatus"] == "OPEN")
                 {
-                    bodyTableOrders.innerHTML += `<td>${order["id"]}</td><td>${order["address"]}</td><td>${order["y"]}</td><td>${order["x"]}</td><td>${driverId}</td><td>${listOrder}</td><td>${notes}</td><td>${order["date"]}</td><td>${orderStatus[order["orderStatus"]]}</td><td><button class="btn btn-primary text-secondary" onclick="trackDriverByOrder(${order["id"]});">Проследи шофьор</button></td>`;
+                    accordion.innerHTML += `<div class="card"> <div  class="card-header bg-primary" id="heading${order["id"]}"> <h5 class="mb-0"> <a data-toggle="collapse" data-target="#order${order["id"]}" aria-expanded="false" aria-controls="order${order["id"]}">Поръчка №${order["id"]} Дата: ${order["date"]}  </a> </h5> </div> <div id="order${order["id"]}" class="collapse" aria-labelledby="heading${order["id"]}" data-parent="#accordion"> <div class="card-body"> <span class="font-weight-bold">ID: </span>${order["id"]}<br> <span class="font-weight-bold">Адрес: </span>${order["address"]}<br> <span class="font-weight-bold">Географска ширина: </span>${order["y"]}<br> <span class="font-weight-bold">Географска дължина: </span>${order["x"]}<br> <span class="font-weight-bold">ID на таксиметров шофьор: </span>${driverId}<br> <span class="font-weight-bold">Списък за пазаруване: </span>${listOrder}<br> <span class="font-weight-bold">Бележки: </span>${notes}<br> <span class="font-weight-bold">Дата и час на поръчка: </span>${order["date"]}<br> <span class="font-weight-bold">Статус на поръчка: </span>${orderStatus[order["orderStatus"]]}<br> <button class="btn btn-primary text-secondary" onclick="trackDriverByOrder(${order["id"]});">Проследи шофьор</button></div> </div> </div>`;
                 }
                 else
                 {
-                    bodyTableOrders.innerHTML += `<td>${order["id"]}</td><td>${order["address"]}</td><td>${order["y"]}</td><td>${order["x"]}</td><td>${driverId}</td><td>${listOrder}</td><td>${notes}</td><td>${order["date"]}</td><td>${orderStatus[order["orderStatus"]]}</td><td></td>`;
+                    accordion.innerHTML += `<div class="card"> <div  class="card-header bg-primary" id="heading${order["id"]}"> <h5 class="mb-0"> <a data-toggle="collapse" data-target="#order${order["id"]}" aria-expanded="false" aria-controls="order${order["id"]}">Поръчка №${order["id"]} Дата: ${order["date"]} </a> </h5> </div> <div id="order${order["id"]}" class="collapse" aria-labelledby="heading${order["id"]}" data-parent="#accordion"> <div class="card-body"> <span class="font-weight-bold">ID: </span>${order["id"]}<br> <span class="font-weight-bold">Адрес: </span>${order["address"]}<br> <span class="font-weight-bold">Географска ширина: </span>${order["y"]}<br> <span class="font-weight-bold">Географска дължина: </span>${order["x"]}<br> <span class="font-weight-bold">ID на таксиметров шофьор: </span>${driverId}<br> <span class="font-weight-bold">Списък за пазаруване: </span>${listOrder}<br> <span class="font-weight-bold">Бележки: </span>${notes}<br> <span class="font-weight-bold">Дата и час на поръчка: </span>${order["date"]}<br> <span class="font-weight-bold">Статус на поръчка: </span>${orderStatus[order["orderStatus"]]}</div> </div> </div>`;
                 }
             });
             }
@@ -481,8 +481,8 @@ function getOrdersDriver()//Vzemane na poruchki prieti ot shofyor
     getRequest("/order/getOrdersByDriver").then(
         data=>
         {
-            var bodyTableOrders = document.getElementById("ordersTableBody");
-            bodyTableOrders.innerHTML = "";
+            var accordion = document.getElementById("accordion");
+            accordion.innerHTML = "";
             if(data.length === 0)
             {
                 document.getElementById("noOrders").style = "display:block";
@@ -494,7 +494,7 @@ function getOrdersDriver()//Vzemane na poruchki prieti ot shofyor
                 var notes = "Няма";
                 if(order["notes"] != "") notes = order["notes"];
                 if(order["items"] != "") listOrder = order["items"];
-                bodyTableOrders.innerHTML += `<td>${order["id"]}</td><td>${order["address"]}</td><td>${order["y"]}</td><td>${order["x"]}</td><td>${order["userOrderedId"]}</td><td>${listOrder}</td><td>${notes}</td><td>${order["date"]}</td><td>${orderStatus[order["orderStatus"]]}</td>`;
+                accordion.innerHTML += `<div class="card"> <div  class="card-header bg-primary" id="heading${order["id"]}"> <h5 class="mb-0"> <a data-toggle="collapse" data-target="#order${order["id"]}" aria-expanded="false" aria-controls="order${order["id"]}">Поръчка №${order["id"]} Дата: ${order["date"]} </a> </h5> </div> <div id="order${order["id"]}" class="collapse" aria-labelledby="heading${order["id"]}" data-parent="#accordion"> <div class="card-body"> <span class="font-weight-bold">ID: </span>${order["id"]}<br> <span class="font-weight-bold">Адрес: </span>${order["address"]}<br> <span class="font-weight-bold">Географска ширина: </span>${order["y"]}<br> <span class="font-weight-bold">Географска дължина: </span>${order["x"]}<br> <span class="font-weight-bold">ID на потребител: </span>${order["userOrderedId"]}<br> <span class="font-weight-bold">Списък за пазаруване: </span>${listOrder}<br> <span class="font-weight-bold">Бележки: </span>${notes}<br> <span class="font-weight-bold">Дата и час на поръчка: </span>${order["date"]}<br> <span class="font-weight-bold">Статус на поръчка: </span>${orderStatus[order["orderStatus"]]}</div> </div> </div>`;
             });
             }
 
