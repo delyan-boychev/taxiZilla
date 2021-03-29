@@ -92,6 +92,7 @@ function aboutUsPage()//Smqna na stranica za nas
         $(".navbar-collapse").collapse('hide');
         getRequest(window.location.protocol+'//'+ window.location.host +'/pages/aboutUs.html').then(data=>{
         document.getElementById("pageContent").innerHTML = data;
+        new WOW().init();
         });
 }
 function pageRegisterFirm()//Smqna na stranica za registraciq na firma
@@ -191,4 +192,11 @@ function profileFirmPage()//Smqna na stranica za profila na firmata
         $('#nameCity').selectpicker();
 
 });
+}
+function helpPage()//Smqna na stranica za help menu
+{
+    if(arguments.callee.caller === null) {console.log("%c You are not permitted to use this method!!!",  'color: red'); return;}
+    $(".navbar-collapse").collapse('hide');
+    getRequest(window.location.protocol+'//'+ window.location.host +'/pages/helpPage.html').then(data=>{
+    document.getElementById("pageContent").innerHTML = data;});
 }
