@@ -27,6 +27,11 @@ export class AppController {
   {
     return this.appService.getPrivacyPolicy();
   }
+  @Get("/privacypolicyGoogleApp")
+  privacypolicyGoogleApp()
+  {
+    return this.appService.getPrivacyPolicyGoogleApp();
+  }
   @Get("/syncClock")
   syncClock()
   {
