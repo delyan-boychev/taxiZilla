@@ -11,7 +11,7 @@ export class RegisterFirmDTO
   @IsEmail()
   email:string;
 
-  @IsMobilePhone('bg-BG')
+  @IsNotEmpty()
   phoneNumber:string;
 
   @IsNotEmpty()
