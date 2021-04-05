@@ -41,5 +41,11 @@ export class taxiOrder extends BaseEntity
     @Column()
     date:string;
 
+    @Column({nullable:true})
+    rate:number;
+
+    @Column({default:""})
+    rateComment:string;
+
 
 }

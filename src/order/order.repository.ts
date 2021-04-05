@@ -1,3 +1,4 @@
+import { BadRequestException, UnauthorizedException } from "@nestjs/common";
 import { User } from "src/auth/user.entity";
 import { Drivers, DriversForTracking } from "src/coordsAndStatus.array";
 import { EntityRepository, Repository } from "typeorm";
@@ -20,6 +21,8 @@ export class OrderRepository extends Repository<taxiOrder>
         newOrder.driverId=driverId;
         newOrder.items = items;
         newOrder.ip = ip;
+        newOrder.rateComment="";
+        newOrder.rate=0;
         var today = new Date();
         var dd = String(today.getDate()).padStart(2, '0');
         var mm = String(today.getMonth() + 1).padStart(2, '0'); 
@@ -32,6 +35,21 @@ export class OrderRepository extends Repository<taxiOrder>
         await newOrder.save();
         await sender.save();
         return newOrder.id;
+    }
+    async rateOrder(sender:User,rating:number,rateComment:string,orderid:number)
+    {
+        const order = await this.getOrderById(orderid);
+        if(!order||order.rate!=0)
+        {
+            throw new BadRequestException();
+        }
+        if(order.userId!=sender.id)
+        {
+            throw new UnauthorizedException();
+        }
+        order.rate=rating;
+        order.rateComment = rateComment;
+        return order.rate;
     }
     async finishOrder(id:number)
     {
