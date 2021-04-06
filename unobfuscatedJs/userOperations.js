@@ -458,19 +458,21 @@ function getOrdersUser()//Vzemane na poruchki napraveni ot potrebitel
                 var driverId = "Няма";
                 var listOrder = "Няма";
                 var notes = "Няма";
+                var buttonTrack = `<br><button class="btn btn-primary text-secondary" onclick="trackDriverByOrder(${order["id"]});">Проследи шофьор</button>`;
+                var rateButton = `<br><div id="rateDiv${order["id"]}">
+               <span class="font-weight-bold">Оценка: </span>
+                <span id="rating${order["id"]}" class="feedback empty-stars mdb-rating"></span>`;
                 if(order["driverId"] != null) driverId = order["driverId"];
                 if(order["notes"] != "") notes = order["notes"];
                 if(order["items"] != "") listOrder = order["items"];
-                if(order["orderStatus"] == "OPEN")
-                {
-                    accordion.innerHTML += `<div class="card"> <div  class="card-header bg-primary" id="heading${order["id"]}"> <h5 class="mb-0"> <a data-toggle="collapse" data-target="#order${order["id"]}" aria-expanded="false" aria-controls="order${order["id"]}">Поръчка №${order["id"]} Дата: ${order["date"]}  </a> </h5> </div> <div id="order${order["id"]}" class="collapse" aria-labelledby="heading${order["id"]}" data-parent="#accordion"> <div class="card-body"> <span class="font-weight-bold">ID: </span>${order["id"]}<br> <span class="font-weight-bold">Адрес: </span>${order["address"]}<br> <span class="font-weight-bold">Географска ширина: </span>${order["y"]}<br> <span class="font-weight-bold">Географска дължина: </span>${order["x"]}<br> <span class="font-weight-bold">ID на таксиметров шофьор: </span>${driverId}<br> <span class="font-weight-bold">Списък за пазаруване: </span>${listOrder}<br> <span class="font-weight-bold">Бележки: </span>${notes}<br> <span class="font-weight-bold">Дата и час на поръчка: </span>${order["date"]}<br> <span class="font-weight-bold">Статус на поръчка: </span>${orderStatus[order["orderStatus"]]}<br> <button class="btn btn-primary text-secondary" onclick="trackDriverByOrder(${order["id"]});">Проследи шофьор</button></div> </div> </div>`;
-                }
-                else
-                {
-                    accordion.innerHTML += `<div class="card"> <div  class="card-header bg-primary" id="heading${order["id"]}"> <h5 class="mb-0"> <a data-toggle="collapse" data-target="#order${order["id"]}" aria-expanded="false" aria-controls="order${order["id"]}">Поръчка №${order["id"]} Дата: ${order["date"]} </a> </h5> </div> <div id="order${order["id"]}" class="collapse" aria-labelledby="heading${order["id"]}" data-parent="#accordion"> <div class="card-body"> <span class="font-weight-bold">ID: </span>${order["id"]}<br> <span class="font-weight-bold">Адрес: </span>${order["address"]}<br> <span class="font-weight-bold">Географска ширина: </span>${order["y"]}<br> <span class="font-weight-bold">Географска дължина: </span>${order["x"]}<br> <span class="font-weight-bold">ID на таксиметров шофьор: </span>${driverId}<br> <span class="font-weight-bold">Списък за пазаруване: </span>${listOrder}<br> <span class="font-weight-bold">Бележки: </span>${notes}<br> <span class="font-weight-bold">Дата и час на поръчка: </span>${order["date"]}<br> <span class="font-weight-bold">Статус на поръчка: </span>${orderStatus[order["orderStatus"]]}</div> </div> </div>`;
-                }
-            });
+                if(order["rate"] != 0 || order["orderStatus"] != "CLOSED") rateButton = "";
+                if(order["orderStatus"] != "OPEN") buttonTrack = "";
+                accordion.innerHTML += `<div class="card"> <div  class="card-header bg-primary" id="heading${order["id"]}"> <h5 class="mb-0"> <a data-toggle="collapse" data-target="#order${order["id"]}" aria-expanded="false" aria-controls="order${order["id"]}">Поръчка №${order["id"]} Дата: ${order["date"]}  </a> </h5> </div> <div id="order${order["id"]}" class="collapse" aria-labelledby="heading${order["id"]}" data-parent="#accordion"> <div class="card-body"> <span class="font-weight-bold">ID: </span>${order["id"]}<br> <span class="font-weight-bold">Адрес: </span>${order["address"]}<br> <span class="font-weight-bold">Географска ширина: </span>${order["y"]}<br> <span class="font-weight-bold">Географска дължина: </span>${order["x"]}<br> <span class="font-weight-bold">ID на таксиметров шофьор: </span>${driverId}<br> <span class="font-weight-bold">Списък за пазаруване: </span>${listOrder}<br> <span class="font-weight-bold">Бележки: </span>${notes}<br> <span class="font-weight-bold">Дата и час на поръчка: </span>${order["date"]}<br> <span class="font-weight-bold">Статус на поръчка: </span>${orderStatus[order["orderStatus"]]}${buttonTrack}${rateButton}</div> </div> </div>`;
+                });
             }
+            data.forEach(order => {
+                if(order["rate"] == 0 || order["orderStatus"] == "CLOSED") $(`#rating${order["id"]}`).mdbRate(order["id"]);
+            });
 
         }
     );
@@ -587,6 +589,13 @@ function resetPasswordFirm()//Post zaqvka za generirane na nova parola na firma
     }
     );});
     }
+}
+function rateOrder(stars, ratingComment, orderID)//Post zaqvka za ocenka na poruchka
+{
+    postRequest("/order/rateOrder", {rating: stars, ratingComment: ratingComment, orderID: orderID}).then(data =>{
+        document.getElementById("modalBody").innerText="Вашата оценка е изпратена усепшно!";
+        $("#modal").modal();
+    });
 }
 function changeEmail()//Post zaqvka za smqna na email adresa na potrebitel
 {
