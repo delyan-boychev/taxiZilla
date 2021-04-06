@@ -216,10 +216,14 @@ function getAllOrdersForList()//Injektvane na poruchki v tablica za razgledjdane
             var driverId = "Няма";
             var listOrder = "Няма";
             var notes = "Няма";
+            var rate = "Няма";
+            var rateComment = "Няма";
             if(order["driverId"] != null) driverId = order["driverId"];
             if(order["notes"] != "") notes = order["notes"];
+            if(order["rate"] != 0) rate = `${order["rate"]} звезди`;
+            if(order["rateComment"] != "") rateComment = order["rateComment"];
             if(order["items"] != "") listOrder = order["items"];
-            document.getElementById("bodyTable").innerHTML += `<tr><td>${order["id"]}</td><td>${order["address"]}</td><td>${order["y"]}</td><td>${order["x"]}</td><td>${driverId}</td><td>${order["userId"]}</td><td>${listOrder}</td><td>${notes}</td><td>${order["date"]}</td><td>${order["ip"]}</td><td>${orderStatus[order["orderStatus"]]}</td></tr>`;
+            document.getElementById("bodyTable").innerHTML += `<tr><td>${order["id"]}</td><td>${order["address"]}</td><td>${order["y"]}</td><td>${order["x"]}</td><td>${driverId}</td><td>${order["userId"]}</td><td>${listOrder}</td><td>${notes}</td><td>${order["date"]}</td><td>${order["ip"]}</td><td>${orderStatus[order["orderStatus"]]}</td><td>${rate}</td><td>${rateComment}</td></tr>`;
         });
         $('#allOrdersDt').DataTable(tableTextOrder);
         $('.dataTables_length').addClass('bs-select');
