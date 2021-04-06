@@ -65,7 +65,6 @@ export class OrderController {
         if(!rating) throw new BadRequestException();
         if(!orderID) throw new BadRequestException();
         if(!session.token || session.type == "Firm" || session.role == UserRoles.DRIVER)throw new UnauthorizedException();
-        console.log(true);
         return this.orderService.rateOrder(session, parseInt(rating), parseInt(orderID), ratingComment);
     }
     @Post("/rejectOrder/")
