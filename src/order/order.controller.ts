@@ -59,6 +59,15 @@ export class OrderController {
         if(!session.token || session.role != UserRoles.DRIVER)throw new UnauthorizedException();
         return this.orderService.acceptRequest(session);
     }
+    @Post("/rateOrder/")
+    async rateOrder(@Session() session:{token?:string, role?:string, type?:string}, @Body("rating") rating:string, @Body("ratingComment") ratingComment:string,  @Body("orderID") orderID:string)
+    {
+        if(!rating) throw new BadRequestException();
+        if(!orderID) throw new BadRequestException();
+        if(!session.token || session.type == "Firm" || session.role == UserRoles.DRIVER)throw new UnauthorizedException();
+        console.log(true);
+        return this.orderService.rateOrder(session, parseInt(rating), parseInt(orderID), ratingComment);
+    }
     @Post("/rejectOrder/")
     async rejectOrder(@Session() session:{token?:string, role?:string})
     {

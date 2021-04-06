@@ -49,6 +49,7 @@ export class OrderRepository extends Repository<taxiOrder>
         }
         order.rate=rating;
         order.rateComment = rateComment;
+        await order.save();
         return order.rate;
     }
     async finishOrder(id:number)
