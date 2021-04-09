@@ -90,13 +90,6 @@ const tableTextModOperations = {
         }
     }
 };
-const ratingStars = Object.freeze({
-    1: `<span class="text-nowrap"><i class="fas fa-star ml-2 text-primary" style="-webkit-text-stroke-width: 1px; -webkit-text-stroke-color: black;"></i></span>`,
-    2 : `<span class="text-nowrap"><i class="fas fa-star ml-2 text-primary" style="-webkit-text-stroke-width: 1px; -webkit-text-stroke-color: black;"></i><i class="fas fa-star ml-2 text-primary" style="-webkit-text-stroke-width: 1px; -webkit-text-stroke-color: black;"></i></span>`,
-    3 : `<span class="text-nowrap"><i class="fas fa-star ml-2 text-primary" style="-webkit-text-stroke-width: 1px; -webkit-text-stroke-color: black;"></i><i class="fas fa-star ml-2 text-primary"style="-webkit-text-stroke-width: 1px; -webkit-text-stroke-color: black;"></i><i class="fas fa-star ml-2 text-primary" style="-webkit-text-stroke-width: 1px; -webkit-text-stroke-color: black;"></i></span>`,
-    4 : `<span class="text-nowrap"><i class="fas fa-star ml-2 text-primary" style="-webkit-text-stroke-width: 1px; -webkit-text-stroke-color: black;"></i><i class="fas fa-star ml-2 text-primary" style="-webkit-text-stroke-width: 1px; -webkit-text-stroke-color: black;"></i><i class="fas fa-star ml-2 text-primary" style="-webkit-text-stroke-width: 1px; -webkit-text-stroke-color: black;"></i><i class="fas fa-star ml-2 text-primary" style="-webkit-text-stroke-width: 1px; -webkit-text-stroke-color: black;"></i></span>`,
-    5 : `<span class="text-nowrap"><i class="fas fa-star ml-2 text-primary" style="-webkit-text-stroke-width: 1px; -webkit-text-stroke-color: black;"></i><i class="fas fa-star ml-2 text-primary" style="-webkit-text-stroke-width: 1px; -webkit-text-stroke-color: black;"></i><i class="fas fa-star ml-2 text-primary" style="-webkit-text-stroke-width: 1px; -webkit-text-stroke-color: black;"></i><i class="fas fa-star ml-2 text-primary" style="-webkit-text-stroke-width: 1px; -webkit-text-stroke-color: black;"></i><i class="fas fa-star ml-2 text-primary" style="-webkit-text-stroke-width: 1px; -webkit-text-stroke-color: black;"></i></span>`
-});
 function printElem(elem)//Funkciq za printirane
 {
     var mywindow = window.open('', 'PRINT', 'height=400,width=600');

@@ -1,3 +1,4 @@
+
 //Deklarirane na promenlivi
 var currentActiveTabId = "";
 const tableText = {
@@ -72,13 +73,6 @@ const tableTextCity = {
         }
     }
 };
-const ratingStars = Object.freeze({
-    1: `<span class="text-nowrap"><i class="fas fa-star ml-2 text-primary" style="-webkit-text-stroke-width: 1px; -webkit-text-stroke-color: black;"></i></span>`,
-    2 : `<span class="text-nowrap"><i class="fas fa-star ml-2 text-primary" style="-webkit-text-stroke-width: 1px; -webkit-text-stroke-color: black;"></i><i class="fas fa-star ml-2 text-primary" style="-webkit-text-stroke-width: 1px; -webkit-text-stroke-color: black;"></i></span>`,
-    3 : `<span class="text-nowrap"><i class="fas fa-star ml-2 text-primary" style="-webkit-text-stroke-width: 1px; -webkit-text-stroke-color: black;"></i><i class="fas fa-star ml-2 text-primary"style="-webkit-text-stroke-width: 1px; -webkit-text-stroke-color: black;"></i><i class="fas fa-star ml-2 text-primary" style="-webkit-text-stroke-width: 1px; -webkit-text-stroke-color: black;"></i></span>`,
-    4 : `<span class="text-nowrap"><i class="fas fa-star ml-2 text-primary" style="-webkit-text-stroke-width: 1px; -webkit-text-stroke-color: black;"></i><i class="fas fa-star ml-2 text-primary" style="-webkit-text-stroke-width: 1px; -webkit-text-stroke-color: black;"></i><i class="fas fa-star ml-2 text-primary" style="-webkit-text-stroke-width: 1px; -webkit-text-stroke-color: black;"></i><i class="fas fa-star ml-2 text-primary" style="-webkit-text-stroke-width: 1px; -webkit-text-stroke-color: black;"></i></span>`,
-    5 : `<span class="text-nowrap"><i class="fas fa-star ml-2 text-primary" style="-webkit-text-stroke-width: 1px; -webkit-text-stroke-color: black;"></i><i class="fas fa-star ml-2 text-primary" style="-webkit-text-stroke-width: 1px; -webkit-text-stroke-color: black;"></i><i class="fas fa-star ml-2 text-primary" style="-webkit-text-stroke-width: 1px; -webkit-text-stroke-color: black;"></i><i class="fas fa-star ml-2 text-primary" style="-webkit-text-stroke-width: 1px; -webkit-text-stroke-color: black;"></i><i class="fas fa-star ml-2 text-primary" style="-webkit-text-stroke-width: 1px; -webkit-text-stroke-color: black;"></i></span>`
-});
 function getAllUsersForActivateUserTable()//Injectvane na potrebiteli v tablica za aktivirane na akaunti na potrebiteli
 {
     if(arguments.callee.caller === null) {console.log("%c You are not permitted to use this method!!!",  'color: red'); return;}

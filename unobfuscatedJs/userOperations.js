@@ -16,6 +16,13 @@ const orderStatus = Object.freeze({
     CLOSED: "Приключена",
     CANCELED: "Отказана",
     });
+    const ratingStars = Object.freeze({
+        1: `<span class="text-nowrap"><i class="fas fa-star ml-2 text-primary" style="-webkit-text-stroke-width: 1px; -webkit-text-stroke-color: black;"></i></span>`,
+        2 : `<span class="text-nowrap"><i class="fas fa-star ml-2 text-primary" style="-webkit-text-stroke-width: 1px; -webkit-text-stroke-color: black;"></i><i class="fas fa-star ml-2 text-primary" style="-webkit-text-stroke-width: 1px; -webkit-text-stroke-color: black;"></i></span>`,
+        3 : `<span class="text-nowrap"><i class="fas fa-star ml-2 text-primary" style="-webkit-text-stroke-width: 1px; -webkit-text-stroke-color: black;"></i><i class="fas fa-star ml-2 text-primary"style="-webkit-text-stroke-width: 1px; -webkit-text-stroke-color: black;"></i><i class="fas fa-star ml-2 text-primary" style="-webkit-text-stroke-width: 1px; -webkit-text-stroke-color: black;"></i></span>`,
+        4 : `<span class="text-nowrap"><i class="fas fa-star ml-2 text-primary" style="-webkit-text-stroke-width: 1px; -webkit-text-stroke-color: black;"></i><i class="fas fa-star ml-2 text-primary" style="-webkit-text-stroke-width: 1px; -webkit-text-stroke-color: black;"></i><i class="fas fa-star ml-2 text-primary" style="-webkit-text-stroke-width: 1px; -webkit-text-stroke-color: black;"></i><i class="fas fa-star ml-2 text-primary" style="-webkit-text-stroke-width: 1px; -webkit-text-stroke-color: black;"></i></span>`,
+        5 : `<span class="text-nowrap"><i class="fas fa-star ml-2 text-primary" style="-webkit-text-stroke-width: 1px; -webkit-text-stroke-color: black;"></i><i class="fas fa-star ml-2 text-primary" style="-webkit-text-stroke-width: 1px; -webkit-text-stroke-color: black;"></i><i class="fas fa-star ml-2 text-primary" style="-webkit-text-stroke-width: 1px; -webkit-text-stroke-color: black;"></i><i class="fas fa-star ml-2 text-primary" style="-webkit-text-stroke-width: 1px; -webkit-text-stroke-color: black;"></i><i class="fas fa-star ml-2 text-primary" style="-webkit-text-stroke-width: 1px; -webkit-text-stroke-color: black;"></i></span>`
+    });
 function loginSubmit()//Post zaqvka za login na klient
 {
     if(arguments.callee.caller === null) {console.log("%c You are not permitted to use this method!!!",  'color: red'); return;}
@@ -458,6 +465,7 @@ function getOrdersUser()//Vzemane na poruchki napraveni ot potrebitel
                 var driverId = "Няма";
                 var listOrder = "Няма";
                 var notes = "Няма";
+                var ratingComment = "Няма";
                 var buttonTrack = `<br><button class="btn btn-primary text-secondary" onclick="trackDriverByOrder(${order["id"]});">Проследи шофьор</button>`;
                 var rateButton = `<br><div id="rateDiv${order["id"]}">
                <span class="font-weight-bold">Оценка: </span>
@@ -465,8 +473,10 @@ function getOrdersUser()//Vzemane na poruchki napraveni ot potrebitel
                 if(order["driverId"] != null) driverId = order["driverId"];
                 if(order["notes"] != "") notes = order["notes"];
                 if(order["items"] != "") listOrder = order["items"];
+                if(order["rateComment"] != "") ratingComment = order["rateComment"];
                 if(order["rate"] != 0 || order["orderStatus"] != "CLOSED") rateButton = "";
                 if(order["orderStatus"] != "OPEN") buttonTrack = "";
+                if(order["rate"] != 0 && order["orderStatus"] == "CLOSED") rateButton = `<br><span class="font-weight-bold">Оценка: </span> ${ratingStars[order["rate"]]}<br><span class="font-weight-bold">Коментар: </span> ${ratingComment}`;
                 accordion.innerHTML += `<div class="card"> <div  class="card-header bg-primary" id="heading${order["id"]}"> <h5 class="mb-0"> <a data-toggle="collapse" data-target="#order${order["id"]}" aria-expanded="false" aria-controls="order${order["id"]}">Поръчка №${order["id"]} Дата: ${order["date"]}  </a> </h5> </div> <div id="order${order["id"]}" class="collapse" aria-labelledby="heading${order["id"]}" data-parent="#accordion"> <div class="card-body"> <span class="font-weight-bold">ID: </span>${order["id"]}<br> <span class="font-weight-bold">Адрес: </span>${order["address"]}<br> <span class="font-weight-bold">Географска ширина: </span>${order["y"]}<br> <span class="font-weight-bold">Географска дължина: </span>${order["x"]}<br> <span class="font-weight-bold">ID на таксиметров шофьор: </span>${driverId}<br> <span class="font-weight-bold">Списък за пазаруване: </span>${listOrder}<br> <span class="font-weight-bold">Бележки: </span>${notes}<br> <span class="font-weight-bold">Дата и час на поръчка: </span>${order["date"]}<br> <span class="font-weight-bold">Статус на поръчка: </span>${orderStatus[order["orderStatus"]]}${buttonTrack}${rateButton}</div> </div> </div>`;
                 });
             }
