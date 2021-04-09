@@ -91,11 +91,11 @@ const tableTextModOperations = {
     }
 };
 const ratingStars = Object.freeze({
-    1: `<i class="fas fa-star ml-2 text-yellow"></i>`,
-    2 : `<i class="fas fa-star ml-2 text-yellow"></i><i class="fas fa-star ml-2 text-yellow"></i>`,
-    3 : `<i class="fas fa-star ml-2 text-yellow"></i><i class="fas fa-star ml-2 text-yellow"></i><i class="fas fa-star ml-2 text-yellow"></i>`,
-    4 : `<i class="fas fa-star ml-2 text-yellow"></i><i class="fas fa-star ml-2 text-yellow"></i><i class="fas fa-star ml-2 text-yellow"></i><i class="fas fa-star ml-2 text-yellow"></i>`,
-    5 : `<i class="fas fa-star ml-2 text-yellow"></i><i class="fas fa-star ml-2 text-yellow"></i><i class="fas fa-star ml-2 text-yellow"></i><i class="fas fa-star ml-2 text-yellow"></i><i class="fas fa-star ml-2 text-yellow"></i>`
+    1: `<span class="text-nowrap"><i class="fas fa-star ml-2 text-primary"></i></span>`,
+    2 : `<span class="text-nowrap"><i class="fas fa-star ml-2 text-primary"></i><i class="fas fa-star ml-2 text-primary"></i></span>`,
+    3 : `<span class="text-nowrap"><i class="fas fa-star ml-2 text-primary"></i><i class="fas fa-star ml-2 text-primary"></i><i class="fas fa-star ml-2 text-primary"></i></span>`,
+    4 : `<span class="text-nowrap"><i class="fas fa-star ml-2 text-primary"></i><i class="fas fa-star ml-2 text-primary"></i><i class="fas fa-star ml-2 text-primary"></i><i class="fas fa-star ml-2 text-primary"></i></span>`,
+    5 : `<span class="text-nowrap"><i class="fas fa-star ml-2 text-primary"></i><i class="fas fa-star ml-2 text-primary"></i><i class="fas fa-star ml-2 text-primary"></i><i class="fas fa-star ml-2 text-primary"></i><i class="fas fa-star ml-2 text-primary"></i></span>`
 });
 function printElem(elem)//Funkciq za printirane
 {

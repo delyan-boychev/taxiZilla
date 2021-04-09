@@ -27,6 +27,9 @@ strong { font-weight: bold; }
 {
   overflow-x: hidden!important;
 }
+.text-nowrap {
+  white-space: nowrap;
+}
 break{
   flex-basis: 100%;
   width: 0px; 
