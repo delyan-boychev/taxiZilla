@@ -72,6 +72,13 @@ const tableTextCity = {
         }
     }
 };
+const ratingStars = Object.freeze({
+    1: `<span class="text-nowrap"><i class="fas fa-star ml-2 text-primary" style="-webkit-text-stroke-width: 1px; -webkit-text-stroke-color: black;"></i></span>`,
+    2 : `<span class="text-nowrap"><i class="fas fa-star ml-2 text-primary" style="-webkit-text-stroke-width: 1px; -webkit-text-stroke-color: black;"></i><i class="fas fa-star ml-2 text-primary" style="-webkit-text-stroke-width: 1px; -webkit-text-stroke-color: black;"></i></span>`,
+    3 : `<span class="text-nowrap"><i class="fas fa-star ml-2 text-primary" style="-webkit-text-stroke-width: 1px; -webkit-text-stroke-color: black;"></i><i class="fas fa-star ml-2 text-primary"style="-webkit-text-stroke-width: 1px; -webkit-text-stroke-color: black;"></i><i class="fas fa-star ml-2 text-primary" style="-webkit-text-stroke-width: 1px; -webkit-text-stroke-color: black;"></i></span>`,
+    4 : `<span class="text-nowrap"><i class="fas fa-star ml-2 text-primary" style="-webkit-text-stroke-width: 1px; -webkit-text-stroke-color: black;"></i><i class="fas fa-star ml-2 text-primary" style="-webkit-text-stroke-width: 1px; -webkit-text-stroke-color: black;"></i><i class="fas fa-star ml-2 text-primary" style="-webkit-text-stroke-width: 1px; -webkit-text-stroke-color: black;"></i><i class="fas fa-star ml-2 text-primary" style="-webkit-text-stroke-width: 1px; -webkit-text-stroke-color: black;"></i></span>`,
+    5 : `<span class="text-nowrap"><i class="fas fa-star ml-2 text-primary" style="-webkit-text-stroke-width: 1px; -webkit-text-stroke-color: black;"></i><i class="fas fa-star ml-2 text-primary" style="-webkit-text-stroke-width: 1px; -webkit-text-stroke-color: black;"></i><i class="fas fa-star ml-2 text-primary" style="-webkit-text-stroke-width: 1px; -webkit-text-stroke-color: black;"></i><i class="fas fa-star ml-2 text-primary" style="-webkit-text-stroke-width: 1px; -webkit-text-stroke-color: black;"></i><i class="fas fa-star ml-2 text-primary" style="-webkit-text-stroke-width: 1px; -webkit-text-stroke-color: black;"></i></span>`
+});
 function getAllUsersForActivateUserTable()//Injectvane na potrebiteli v tablica za aktivirane na akaunti na potrebiteli
 {
     if(arguments.callee.caller === null) {console.log("%c You are not permitted to use this method!!!",  'color: red'); return;}
@@ -220,7 +227,7 @@ function getAllOrdersForList()//Injektvane na poruchki v tablica za razgledjdane
             var rateComment = "Няма";
             if(order["driverId"] != null) driverId = order["driverId"];
             if(order["notes"] != "") notes = order["notes"];
-            if(order["rate"] != 0) rate = `${order["rate"]} звезди`;
+            if(order["rate"] != 0) rate = rate = ratingStars[order["rate"]];
             if(order["rateComment"] != "") rateComment = order["rateComment"];
             if(order["items"] != "") listOrder = order["items"];
             document.getElementById("bodyTable").innerHTML += `<tr><td>${order["id"]}</td><td>${order["address"]}</td><td>${order["y"]}</td><td>${order["x"]}</td><td>${driverId}</td><td>${order["userId"]}</td><td>${listOrder}</td><td>${notes}</td><td>${order["date"]}</td><td>${order["ip"]}</td><td>${orderStatus[order["orderStatus"]]}</td><td>${rate}</td><td>${rateComment}</td></tr>`;

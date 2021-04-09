@@ -90,6 +90,13 @@ const tableTextModOperations = {
         }
     }
 };
+const ratingStars = Object.freeze({
+    1: `<span class="text-nowrap"><i class="fas fa-star ml-2 text-primary" style="-webkit-text-stroke-width: 1px; -webkit-text-stroke-color: black;"></i></span>`,
+    2 : `<span class="text-nowrap"><i class="fas fa-star ml-2 text-primary" style="-webkit-text-stroke-width: 1px; -webkit-text-stroke-color: black;"></i><i class="fas fa-star ml-2 text-primary" style="-webkit-text-stroke-width: 1px; -webkit-text-stroke-color: black;"></i></span>`,
+    3 : `<span class="text-nowrap"><i class="fas fa-star ml-2 text-primary" style="-webkit-text-stroke-width: 1px; -webkit-text-stroke-color: black;"></i><i class="fas fa-star ml-2 text-primary"style="-webkit-text-stroke-width: 1px; -webkit-text-stroke-color: black;"></i><i class="fas fa-star ml-2 text-primary" style="-webkit-text-stroke-width: 1px; -webkit-text-stroke-color: black;"></i></span>`,
+    4 : `<span class="text-nowrap"><i class="fas fa-star ml-2 text-primary" style="-webkit-text-stroke-width: 1px; -webkit-text-stroke-color: black;"></i><i class="fas fa-star ml-2 text-primary" style="-webkit-text-stroke-width: 1px; -webkit-text-stroke-color: black;"></i><i class="fas fa-star ml-2 text-primary" style="-webkit-text-stroke-width: 1px; -webkit-text-stroke-color: black;"></i><i class="fas fa-star ml-2 text-primary" style="-webkit-text-stroke-width: 1px; -webkit-text-stroke-color: black;"></i></span>`,
+    5 : `<span class="text-nowrap"><i class="fas fa-star ml-2 text-primary" style="-webkit-text-stroke-width: 1px; -webkit-text-stroke-color: black;"></i><i class="fas fa-star ml-2 text-primary" style="-webkit-text-stroke-width: 1px; -webkit-text-stroke-color: black;"></i><i class="fas fa-star ml-2 text-primary" style="-webkit-text-stroke-width: 1px; -webkit-text-stroke-color: black;"></i><i class="fas fa-star ml-2 text-primary" style="-webkit-text-stroke-width: 1px; -webkit-text-stroke-color: black;"></i><i class="fas fa-star ml-2 text-primary" style="-webkit-text-stroke-width: 1px; -webkit-text-stroke-color: black;"></i></span>`
+});
 function printElem(elem)//Funkciq za printirane
 {
     var mywindow = window.open('', 'PRINT', 'height=400,width=600');
@@ -362,7 +369,7 @@ function getAllOrdersForListAndRemove()//Injektvane na poruchki v tablica za pre
             var rateComment = "Няма";
             if(order["driverId"] != null) driverId = order["driverId"];
             if(order["notes"] != "") notes = order["notes"];
-            if(order["rate"] != 0) rate = `${order["rate"]} звезди`;
+            if(order["rate"] != 0) rate = ratingStars[order["rate"]];
             if(order["rateComment"] != "") rateComment = order["rateComment"];
             if(order["items"] != "") listOrder = order["items"];
             document.getElementById("bodyTable").innerHTML += `<tr><td>${order["id"]}</td><td>${order["address"]}</td><td>${order["y"]}</td><td>${order["x"]}</td><td>${driverId}</td><td>${order["userId"]}</td><td>${listOrder}</td><td>${notes}</td><td>${order["date"]}</td><td>${order["ip"]}</td><td>${orderStatus[order["orderStatus"]]}</td><td>${rate}</td><td>${rateComment}</td><td class="text-danger h5"><i class='far fa-times-circle' style='cursor: pointer;' onclick='removeOrderShowModal("${order["id"]}");'></i></td></tr>`;
