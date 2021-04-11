@@ -171,7 +171,6 @@ function loadPageByHash() //Funkciq za loadvane na stranica po hash
                 homePage();
                 break;
         }
-        window.location.hash = "";
     }
     else {
         homePage();
