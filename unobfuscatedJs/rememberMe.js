@@ -205,6 +205,13 @@ function decryptLoginInfoAndLogin(is401)//Funkciq za avtomatichen login
     var cred = getCookie("rememberMe");
     var lastPage = getCookie("lastPage");
     if (cred != "" && (is401 || loginInfo["isLoggedIn"] == "false")) {
+        if (!is401) {
+            document.getElementById("pageContent").innerHTML = `<div class="text-center mt-3">
+            <div class="spinner-grow mt-3 text-primary text-center" style="width: 17rem; height: 17rem;" role="status">
+                <img src="./assets/img/logo300x300.png" class="text-center" style="height: 220px; width:220px;">
+            </div>
+        </div>`;
+        }
         var credentials = CryptoJS.AES.decrypt(cred, keyLoginInfo, { mode: CryptoJS.mode.CFB }).toString(CryptoJS.enc.Utf8);
         credentials = JSON.parse(credentials);
         const username = credentials["username"];
