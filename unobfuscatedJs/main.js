@@ -10,9 +10,8 @@ var settings = {
 //Zarejdane na kod pri otvarqne na prilozenieto
 $(document).ready(function () {
   setLoginInfo();
-  decryptLoginInfoAndLogin(false);
+  decryptLoginInfoAndLpogin(false);
   designChangeOnStart();
-  checkForLastPage();
   $('body').bsgdprcookies(settings);
   $('#cookiesBtn').on('click', function () {
     $('body').bsgdprcookies(settings, 'reinit');

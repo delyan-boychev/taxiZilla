@@ -125,7 +125,6 @@ function pageRegisterFirm()//Smqna na stranica za registraciq na firma
 function homePage()//Smqna na nachalna stranica
 {
     if (arguments.callee.caller === null) { console.log("%c You are not permitted to use this method!!!", 'color: red'); return; }
-    window.location.hash = "#homePage";
     $(".navbar-collapse").collapse('hide');
     getRequest(window.location.protocol + '//' + window.location.host + '/pages/homePage.html').then(data => {
         document.getElementById("pageContent").innerHTML = data;

@@ -153,12 +153,6 @@ function loadPageByHash() //Funkciq za loadvane na stranica po hash
             case "#aboutus":
                 aboutUsPage();
                 break;
-            case "#homepage":
-                homePage();
-                break;
-            case "#home":
-                homePage();
-                break;
             case "#helppage":
                 helpPage();
                 break;
@@ -254,6 +248,9 @@ function decryptLoginInfoAndLogin(is401)//Funkciq za avtomatichen login
                     );
             });
         }
+    }
+    else {
+        checkForLastPage();
     }
 }
 function logOut()//Funkciq za logout
