@@ -1,32 +1,36 @@
-<div class="text-center p-5"  id="regForm">
+<div class="text-center p-5" id="regForm">
 
     <p class="h4 mb-4">Регистрация като клиент</p>
     <form method="POST" action="" onsubmit="return false;">
-    <div class="input-group">
-    <input type="text" id="fName" class="form-control" placeholder="Име" required>
-    <div class="invalid-feedback">Името трябва да е по-дълго от 2 символа!</div>
-    </div>
-    <div class="input-group">
-    <input type="text" id="lName" class="form-control mt-4" placeholder="Фамилия" required> 
-    <div class="invalid-feedback">Фамилията трябва да е по-дълга от 2 символа!</div>
-    </div>
-    <div class="input-group">
-    <input type="email" id="email" class="form-control mt-4" placeholder="Имейл" required>
-    <div class="invalid-feedback">Имейл адресът е невалиден!</div>
-    </div>
-    <div class="input-group">
-    <input type="password" id="password" class="form-control mt-4" placeholder="Парола" aria-describedby="defaultRegisterFormPasswordHelpBlock" required>
-    <div class="invalid-feedback">Паролата трябва да е по-дълга от 7 символа и да съдържа поне 1 цифра.</div>
-    </div> 
-    <div class="input-group">
-        <input type="password" id="repeatPass" class="form-control mt-4" placeholder="Потвърждаване на парола" aria-describedby="defaultRegisterFormPasswordHelpBlock" required>
-        <div class="invalid-feedback">Двете пароли не съвпадат!</div>
+        <div class="input-group">
+            <input type="text" id="fName" class="form-control" placeholder="Име" required>
+            <div class="invalid-feedback">Името трябва да е по-дълго от 2 символа!</div>
         </div>
-    <div class="input-group">
-    <input type="text" id="phoneNumber" class="form-control mt-4" placeholder="Телефонен номер" aria-describedby="defaultRegisterFormPhoneHelpBlock" required>
-    <div class="invalid-feedback">Телефонният номер е невалиден!</div>
-    </div> 
-    <button class="btn btn-primary black-text my-4 btn-block" type="submit" onclick="registerSubmit()">Регистрация</button>
+        <div class="input-group">
+            <input type="text" id="lName" class="form-control mt-4" placeholder="Фамилия" required>
+            <div class="invalid-feedback">Фамилията трябва да е по-дълга от 2 символа!</div>
+        </div>
+        <div class="input-group">
+            <input type="email" id="email" class="form-control mt-4" placeholder="Имейл" required>
+            <div class="invalid-feedback">Имейл адресът е невалиден!</div>
+        </div>
+        <div class="input-group">
+            <input type="password" id="password" class="form-control mt-4" placeholder="Парола"
+                aria-describedby="defaultRegisterFormPasswordHelpBlock" required>
+            <div class="invalid-feedback">Паролата трябва да е по-дълга от 7 символа и да съдържа поне 1 цифра.</div>
+        </div>
+        <div class="input-group">
+            <input type="password" id="repeatPass" class="form-control mt-4" placeholder="Потвърждаване на парола"
+                aria-describedby="defaultRegisterFormPasswordHelpBlock" required>
+            <div class="invalid-feedback">Двете пароли не съвпадат!</div>
+        </div>
+        <div class="input-group">
+            <input type="text" id="phoneNumber" class="form-control mt-4" placeholder="Телефонен номер"
+                aria-describedby="defaultRegisterFormPhoneHelpBlock" required>
+            <div class="invalid-feedback">Телефонният номер е невалиден!</div>
+        </div>
+        <button class="btn btn-primary black-text my-4 btn-block" type="submit"
+            onclick="registerSubmit()">Регистрация</button>
     </form>
 
 </div>

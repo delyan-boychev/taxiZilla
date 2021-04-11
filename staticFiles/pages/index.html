@@ -9,86 +9,95 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="x-ua-compatible" content="ie=edge">
   <title>taxiZilla</title>
-  <link rel="icon" type="image/png" href="./assets/img/logo.png"/>
+  <link rel="icon" type="image/png" href="./assets/img/logo.png" />
   <link rel="stylesheet" href="./assets/fontawesome/css/all.css">
   <link href="./assets/css/bootstrap.min.css" rel="stylesheet">
   <link href="./assets/css/mdb.min.css" rel="stylesheet">
   <link href="./assets/css/addons/datatables.min.css" rel="stylesheet">
-<link href="./assets/css/addons/datatables-select.min.css" rel="stylesheet">
-<link href="./assets/css/style.css" rel="stylesheet">
-<link href="./assets/bootstrapselect/dist/css/bootstrap-select.min.css" rel="stylesheet">
+  <link href="./assets/css/addons/datatables-select.min.css" rel="stylesheet">
+  <link href="./assets/css/style.css" rel="stylesheet">
+  <link href="./assets/bootstrapselect/dist/css/bootstrap-select.min.css" rel="stylesheet">
   <style>
-    body, html { overflow-x:hidden; }
-    .map-container{
+    body,
+    html {
+      overflow-x: hidden;
+    }
+
+    .map-container {
       display: block;
-overflow:hidden;
-position:relative;
-}
-.map-container iframe{
-left:0;
-top:0;
-height:100%;
-width:100%;
-position:absolute;
-}
+      overflow: hidden;
+      position: relative;
+    }
+
+    .map-container iframe {
+      left: 0;
+      top: 0;
+      height: 100%;
+      width: 100%;
+      position: absolute;
+    }
   </style>
 </head>
-<body >
-  <div id="wrapper">
-          <nav id="navbar" class="navbar navbar-toggleable-xl navbar-light bg-primary sticky-top scrolling-navbar" style="font-size: 25px; background-image: url('/assets/img/navbar.png'); background-size: cover; background-position: top right;">
-              <div class="container">
-                  <div>
-                    <button class="navbar-toggler text-secondary ml-n4"  onclick="collapse()" type="button" data-toggle="collapse" data-target="#collapse"
-                      aria-controls="collapse" aria-expanded="false" aria-label="Toggle navigation">
-                      <span class="navbar-toggler-icon text-secondary"></span>
-                  </button>
-                    <a class="navbar-brand" onclick="homePage()"><img src="./assets/img/logo.png" /></a>
-                    
-                  </div>
-                  
 
-                  <div class="collapse navbar-collapse" id="collapse">
-                    <ul class="navbar-nav smooth-scroll ml-auto" id="navElements">
-                        <li class="nav-item">
-                            <a class="nav-link text-secondary" onclick="homePage()">Начална страница</a>
-                        </li>
-                        <li class="nav-item" id="makeOrderNav">
-                          <a class="nav-link text-secondary" onclick="makeOrderPage()">Поръчай такси</a>
-                        </li>
-                        <li class="nav-item dropdown" id="registerNav">
-                          <a class="nav-link dropdown-toggle  text-secondary" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            Регистриране
-                          </a>
-                          <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <a class="nav-link text-secondary" onclick="pageRegisterUser()">Регистриране като потребител</a>
-                            <div class="dropdown-divider"></div>
-                            <a class="dropdown-item  text-secondary" onclick="pageRegisterFirm()">Регистриране като фирма</a>
-                          </div>
-                        </li>
-                        <li class="nav-item dropdown" id="loginNav">
-                          <a class="nav-link dropdown-toggle  text-secondary" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            Влизане
-                          </a>
-                          <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <a class="nav-link text-secondary" onclick="loginPage()">Влизане като потребител</a>
-                            <div class="dropdown-divider"></div>
-                            <a class="dropdown-item  text-secondary" onclick="loginFirmPage()">Влизане като фирма</a>
-                          </div>
-                        </li>
-                        <li class="nav-item" id="makeOrderNav">
-                          <a class="nav-link text-secondary" onclick="aboutUsPage()">За нас</a>
-                        </li>
-                        <li class="nav-item" id="makeOrderNav">
-                          <a class="nav-link text-secondary" onclick="helpPage()">Как да работя с taxiZilla?</a>
-                        </li>
-                      
-                    </ul>
-                </div>
-                </div>
-              
-          </nav>
-      <main id="pageContent">
-      
+<body>
+  <div id="wrapper">
+    <nav id="navbar" class="navbar navbar-toggleable-xl navbar-light bg-primary sticky-top scrolling-navbar"
+      style="font-size: 25px; background-image: url('/assets/img/navbar.png'); background-size: cover; background-position: top right;">
+      <div class="container">
+        <div>
+          <button class="navbar-toggler text-secondary ml-n4" onclick="collapse()" type="button" data-toggle="collapse"
+            data-target="#collapse" aria-controls="collapse" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon text-secondary"></span>
+          </button>
+          <a class="navbar-brand" onclick="homePage()"><img src="./assets/img/logo.png" /></a>
+
+        </div>
+
+
+        <div class="collapse navbar-collapse" id="collapse">
+          <ul class="navbar-nav smooth-scroll ml-auto" id="navElements">
+            <li class="nav-item">
+              <a class="nav-link text-secondary" onclick="homePage()">Начална страница</a>
+            </li>
+            <li class="nav-item" id="makeOrderNav">
+              <a class="nav-link text-secondary" onclick="makeOrderPage()">Поръчай такси</a>
+            </li>
+            <li class="nav-item dropdown" id="registerNav">
+              <a class="nav-link dropdown-toggle  text-secondary" href="#" id="navbarDropdown" role="button"
+                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Регистриране
+              </a>
+              <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <a class="nav-link text-secondary" onclick="pageRegisterUser()">Регистриране като потребител</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item  text-secondary" onclick="pageRegisterFirm()">Регистриране като фирма</a>
+              </div>
+            </li>
+            <li class="nav-item dropdown" id="loginNav">
+              <a class="nav-link dropdown-toggle  text-secondary" href="#" id="navbarDropdown" role="button"
+                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Влизане
+              </a>
+              <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <a class="nav-link text-secondary" onclick="loginPage()">Влизане като потребител</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item  text-secondary" onclick="loginFirmPage()">Влизане като фирма</a>
+              </div>
+            </li>
+            <li class="nav-item" id="makeOrderNav">
+              <a class="nav-link text-secondary" onclick="aboutUsPage()">За нас</a>
+            </li>
+            <li class="nav-item" id="makeOrderNav">
+              <a class="nav-link text-secondary" onclick="helpPage()">Как да работя с taxiZilla?</a>
+            </li>
+
+          </ul>
+        </div>
+      </div>
+
+    </nav>
+    <main id="pageContent">
+
     </main>
     <div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
       <div class="modal-dialog" role="document">
@@ -100,7 +109,7 @@ position:absolute;
             </button>
           </div>
           <div class="modal-body" id="modalBody">
-            
+
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-primary black-text" data-dismiss="modal">Затвори</button>
@@ -141,4 +150,5 @@ position:absolute;
 <script type="text/javascript" src="./js/postAndGet.js"></script>
 <script type="text/javascript" src="./js/main.js"></script>
 <script type="text/javascript" src="./js/rememberMe.js"></script>
+
 </html>

@@ -8,16 +8,14 @@ var settings = {
   acceptButtonLabel: "Приемам"
 }
 //Zarejdane na kod pri otvarqne na prilozenieto
-$(document).ready(function()
-{
+$(document).ready(function () {
   setLoginInfo();
   decryptLoginInfoAndLogin(false);
   designChangeOnStart();
   checkForLastPage();
   $('body').bsgdprcookies(settings);
-
-  $('#cookiesBtn').on('click', function(){
-      $('body').bsgdprcookies(settings, 'reinit');
+  $('#cookiesBtn').on('click', function () {
+    $('body').bsgdprcookies(settings, 'reinit');
   });
 }
 );
