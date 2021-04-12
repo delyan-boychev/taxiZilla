@@ -20,6 +20,7 @@ import { use } from 'passport';
 import {ModeratorOperation} from './modOperation.entity';
 import { ModOperationRepository } from './modOperation.repository';
 import { OrderStatus } from 'src/order/enums/orderStatus.enum';
+import { SavedAddressRepository } from './savedAddress.repository';
 
 @Injectable()
 export class AuthService {
@@ -33,6 +34,7 @@ export class AuthService {
     private firmService:FirmService,
     private supportedCityRespository:SupportedCityRepository,
     private modRepository:ModOperationRepository,
+    private addressesRepository:SavedAddressRepository,
     private orderRepository:OrderRepository,
   ) { };
   generateString(length)//Funkciq za generirane na niz po zadadena duljina
@@ -94,6 +96,24 @@ export class AuthService {
   {
     return "false";
   }
+  }
+  async getUserAddresses(session:{token?:string})
+  {
+    let umail = await this.jwtService.decode(session.token);
+    let user = await this.userRepository.findOne({email:umail["email"]});
+    this.addressesRepository.getUserAddresses(user);
+  }
+  async deleteUserAddress(session:{token?:string}, addressID:number)
+  {
+    let umail = await this.jwtService.decode(session.token);
+    let user = await this.userRepository.findOne({email:umail["email"]});
+    this.addressesRepository.deleteAddress(user, addressID);
+  }
+  async saveUserAddress(session:{token?:string}, city:string, address:string)
+  {
+    let umail = await this.jwtService.decode(session.token);
+    let user = await this.userRepository.findOne({email:umail["email"]});
+    this.addressesRepository.saveUserAddress(user, city, address);
   }
   async verifyResetPassword(email:string,password:string,time:string)
   {

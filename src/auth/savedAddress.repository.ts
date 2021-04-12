@@ -7,7 +7,7 @@ import { User } from "./user.entity";
 @EntityRepository(SavedAddress)
 export class SavedAddressRepository extends Repository<SavedAddress>
 {
-    async saveUserAddress(sender:User,city:string,address:string)
+  async saveUserAddress(sender:User,city:string,address:string)
   {
     let newAddress = new SavedAddress();
     newAddress.user=sender;
