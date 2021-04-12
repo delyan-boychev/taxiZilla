@@ -257,6 +257,11 @@ function decryptLoginInfoAndLogin(is401)//Funkciq za avtomatichen login
         }
     }
     else {
+        document.getElementById("pageContent").innerHTML = `<div class="text-center mt-3">
+            <div class="spinner-grow mt-3 text-primary text-center" style="width: 17rem; height: 17rem;" role="status">
+                <img src="./assets/img/logo300x300.png" class="text-center" style="height: 220px; width:220px;">
+            </div>
+        </div>`;
         checkForLastPage();
     }
 }
