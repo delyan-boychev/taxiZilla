@@ -1,136 +1,159 @@
-
 <div class="container mt-5 pt-5">
 
-    <div class="row gutters-sm">
-      <div class="col-md-4 d-none d-md-block">
-        <div class="card">
-          <div class="card-body">
-            <nav class="nav flex-column nav-pills nav-gap-y-1">
-              <a href="#profile" data-toggle="tab" class="nav-item nav-link has-icon nav-link-faded text-secondary active"  onclick="hideTooltips()">
-                <i class="fas fa-info-circle"></i> Информация за фирмата
-              </a>
-              <a href="#account" data-toggle="tab" class="nav-item nav-link has-icon nav-link-faded text-secondary"  onclick="hideTooltips()">
-                <i class="fas fa-cog"></i> Настройки на профила
-              </a>
-              <a href="#security" data-toggle="tab" class="nav-item nav-link has-icon nav-link-faded text-secondary"  onclick="hideTooltips()">
-                <i class="fas fa-shield-alt"></i> Сигурност
-              </a>
-              <a href="#supportedCities" data-toggle="tab" class="nav-item nav-link has-icon nav-link-faded text-secondary" onclick='setTimeout(function() {getCitiesByRegCode(document.getElementById("nameRegion"));}, 500);'>
-                <i class="fas fa-city"></i> Поддържани населени места
-              </a>
-              <a href="#taxiDrivers" data-toggle="tab" class="nav-item nav-link has-icon nav-link-faded text-secondary">
-                <i class="fas fa-taxi"></i> Таксиметрови шофьори
-              </a>
-            </nav>
-          </div>
+  <div class="row gutters-sm">
+    <div class="col-md-4 d-none d-md-block">
+      <div class="card">
+        <div class="card-body">
+          <nav class="nav flex-column nav-pills nav-gap-y-1">
+            <a href="#profile" data-toggle="tab" class="nav-item nav-link has-icon nav-link-faded text-secondary active"
+              onclick="hideTooltips()">
+              <i class="fas fa-info-circle"></i> Информация за фирмата
+            </a>
+            <a href="#account" data-toggle="tab" class="nav-item nav-link has-icon nav-link-faded text-secondary"
+              onclick="hideTooltips()">
+              <i class="fas fa-cog"></i> Настройки на профила
+            </a>
+            <a href="#security" data-toggle="tab" class="nav-item nav-link has-icon nav-link-faded text-secondary"
+              onclick="hideTooltips()">
+              <i class="fas fa-shield-alt"></i> Сигурност
+            </a>
+            <a href="#supportedCities" data-toggle="tab"
+              class="nav-item nav-link has-icon nav-link-faded text-secondary"
+              onclick='setTimeout(function() {getCitiesByRegCode(document.getElementById("nameRegion"));}, 500);'>
+              <i class="fas fa-city"></i> Поддържани населени места
+            </a>
+            <a href="#taxiDrivers" data-toggle="tab" class="nav-item nav-link has-icon nav-link-faded text-secondary">
+              <i class="fas fa-taxi"></i> Таксиметрови шофьори
+            </a>
+          </nav>
         </div>
       </div>
-      <div class="col-md-8">
-        <div class="card">
-          <div class="card-header border-bottom mb-3 d-flex d-md-none">
-            <ul class="nav nav-tabs card-header-tabs nav-gap-x-1" role="tablist">
-              <li class="nav-item">
-                <a href="#profile" data-toggle="tab" class="nav-link has-icon active text-secondary"><i class="fas fa-info-circle"></i></a>
-              </li>
-              <li class="nav-item">
-                <a href="#account" data-toggle="tab" class="nav-link has-icon text-secondary"><i class="fas fa-cog"></i></a>
-              </li>
-              <li class="nav-item">
-                <a href="#security" data-toggle="tab" class="nav-link has-icon text-secondary"><i class="fas fa-shield-alt"></i></a>
-              </li>
-              <li class="nav-item">
-                <a href="#supportedCities" data-toggle="tab" class="nav-link has-icon text-secondary" onclick='setTimeout(function() {getCitiesByRegCode(document.getElementById("nameRegion"));}, 500);'><i class="fas fa-city"></i></a>
-              </li>
-              <li class="nav-item">
+    </div>
+    <div class="col-md-8">
+      <div class="card">
+        <div class="card-header border-bottom mb-3 d-flex d-md-none">
+          <ul class="nav nav-tabs card-header-tabs nav-gap-x-1" role="tablist">
+            <li class="nav-item">
+              <a href="#profile" data-toggle="tab" class="nav-link has-icon active text-secondary"><i
+                  class="fas fa-info-circle"></i></a>
+            </li>
+            <li class="nav-item">
+              <a href="#account" data-toggle="tab" class="nav-link has-icon text-secondary"><i
+                  class="fas fa-cog"></i></a>
+            </li>
+            <li class="nav-item">
+              <a href="#security" data-toggle="tab" class="nav-link has-icon text-secondary"><i
+                  class="fas fa-shield-alt"></i></a>
+            </li>
+            <li class="nav-item">
+              <a href="#supportedCities" data-toggle="tab" class="nav-link has-icon text-secondary"
+                onclick='setTimeout(function() {getCitiesByRegCode(document.getElementById("nameRegion"));}, 500);'><i
+                  class="fas fa-city"></i></a>
+            </li>
+            <li class="nav-item">
               <a href="#taxiDrivers" data-toggle="tab" class="nav-link has-icon text-secondary">
                 <i class="fas fa-taxi"></i>
               </a>
             </li>
+        </div>
+        <div class="card-body tab-content">
+          <div class="tab-pane active" id="profile">
+            <h5 class="font-weight-bold">Информация за фирмата</h5>
+            <hr>
+            <div><span class="font-weight-bold">Име на фирмата:</span>
+              <p id="firmName"></p>
+            </div>
+            <div><span class="font-weight-bold">ЕИК:</span>
+              <p id="eik"></p>
+            </div>
+            <div><span class="font-weight-bold">Град и адрес на седалище на фирмата:</span>
+              <p id="address"></p>
+            </div>
           </div>
-          <div class="card-body tab-content">
-            <div class="tab-pane active" id="profile">
-              <h5 class="font-weight-bold">Информация за фирмата</h5>
-              <hr>
-                <div><span class="font-weight-bold">Име на фирмата:</span> <p id="firmName"></p></div>
-                <div><span class="font-weight-bold">ЕИК:</span> <p id="eik"></p></div>
-                <div><span class="font-weight-bold">Град и адрес на седалище на фирмата:</span> <p id="address"></p></div>
+          <div class="tab-pane" id="account">
+            <h5 class="font-weight-bold">Настройки на профила</h5>
+            <hr>
+            <div class="form-group">
+              <input type="text" class="form-control" id="email" placeholder="Имейл">
+              <button class="btn btn-primary text-secondary rounded" type="button" onclick="changeEmail()">Смяна на
+                имейл</button>
             </div>
-            <div class="tab-pane" id="account">
-              <h5 class="font-weight-bold">Настройки на профила</h5>
-              <hr>
-                <div class="form-group">
-                  <input type="text" class="form-control" id="email" placeholder="Имейл">
-                  <button class="btn btn-primary text-secondary rounded" type="button" onclick="changeEmail()">Смяна на имейл</button>
-                </div>
-                <hr>
-                <div class="form-group">
-                  <label class="d-block text-danger">Изтриване на профил</label>
-                  <p class="text-muted font-size-sm">При изтриване на профила никога няма да можете да достъпите информацията от него!</p>
-                </div>
-                <input type="password" class="form-control mb-4" id="passDel" placeholder="Парола">
-                <div class="invalid-feedback">Не сте въвели парола!</div>
-                <button class="btn btn-danger rounded" type="button" onclick="delProfile()">Изтриване на профил</button>
+            <hr>
+            <div class="form-group">
+              <label class="d-block text-danger">Изтриване на профил</label>
+              <p class="text-muted font-size-sm">При изтриване на профила никога няма да можете да достъпите
+                информацията от него!</p>
             </div>
-            <div class="tab-pane" id="security">
-              <h5 class="font-weight-bold">Сигурност</h5>
-              <hr>
-                <div class="form-group">
-                  <label class="d-block">Смяна на парола</label>
-                  <input type="password" class="form-control" id="oldPass" placeholder="Стара парола">
-                  <div class="invalid-feedback">Не сте въвели парола!</div>
-                  <input type="password" class="form-control mt-4" id="newPass" placeholder="Нова парола">
-                  <div class="invalid-feedback">Паролата трябва да е по-дълга от 7 символа и да съдържа поне едно число!</div>
-                  <input type="password" class="form-control mt-4" id="newPassConfirm" placeholder="Потвърждаване на новата парола">
-                  <div class="invalid-feedback">Двете пароли не съвпадат!</div>
-                  <button type="button" class="btn btn-primary text-secondary" onclick="changePasswordFirm()">Смяна на парола</button>
-                </div>
-              <hr>
-              
-            </div>
-            <div class="tab-pane" id="supportedCities">
-              <h5 class="font-weight-bold">Поддържани населени места</h5>
-              <hr>
-              <h6 class="font-weight-bold">Добавяне на поддържано населено място</h6>
-              <label class="text-center mt-3">Област: </label><br>
-              <select class="form-control show-tick" data-style="btn-link border border-secondary" data-dropup-auto="false" onchange="getCitiesByRegCode(this)" id="nameRegion">
-                <option value="BLG">Благоевград</option>
-                <option value="BGS">Бургас</option>
-                <option value="VAR">Варна</option>
-                <option value="VTR">Велико Търново</option>
-                <option value="VID">Видин</option>
-                <option value="VRC">Враца</option>
-                <option value="GAB">Габрово</option>
-                <option value="DOB">Добрич</option>
-                <option value="KRZ">Кърджали</option>
-                <option value="KNL">Кюстендил</option>
-                <option value="LOV">Ловеч</option>
-                <option value="MON">Монтана</option>
-                <option value="PAZ">Пазарджик</option>
-                <option value="PER">Перник</option>
-                <option value="PVN">Плевен</option>
-                <option value="PVD">Пловдив</option>
-                <option value="RAZ">Разград</option>
-                <option value="RSE">Русе</option>
-                <option value="SLS">Силистра</option>
-                <option value="SLV">Сливен</option>
-                <option value="SML">Смолян</option>
-                <option value="SFO">Софийска област</option>
-                <option value="SOF">София</option>
-                <option value="SZR">Стара Загора</option>
-                <option value="TGV">Търговище</option>
-                <option value="HKV">Хасково</option>
-                <option value="SHU">Шумен</option>
-                <option value="JAM">Ямбол</option>
-              </select>
-              <label class="text-center mt-3">Населено място: </label>
-              <div class="d-flex justify-content-between ">
-                <select class="form-control show-tick" data-none-results-text="Няма намерени фирми" data-dropup-auto="false" data-style="btn-link border border-secondary" data-live-search="true" id="nameCity">
-                </select>
-                <i class="fas fa-plus mt-3 pt-2 ml-3" style="cursor: pointer;" onclick="addSupporttedCity()"></i>
+            <input type="password" class="form-control mb-4" id="passDel" placeholder="Парола">
+            <div class="invalid-feedback">Не сте въвели парола!</div>
+            <button class="btn btn-danger rounded" type="button" onclick="delProfile()">Изтриване на профил</button>
+          </div>
+          <div class="tab-pane" id="security">
+            <h5 class="font-weight-bold">Сигурност</h5>
+            <hr>
+            <div class="form-group">
+              <label class="d-block">Смяна на парола</label>
+              <input type="password" class="form-control" id="oldPass" placeholder="Стара парола">
+              <div class="invalid-feedback">Не сте въвели парола!</div>
+              <input type="password" class="form-control mt-4" id="newPass" placeholder="Нова парола">
+              <div class="invalid-feedback">Паролата трябва да е по-дълга от 7 символа и да съдържа поне едно число!
               </div>
-              <hr>
-              <h6 class="font-weight-bold">Добавени поддържани населени места</h6>
-              <div class="table-responsive">
+              <input type="password" class="form-control mt-4" id="newPassConfirm"
+                placeholder="Потвърждаване на новата парола">
+              <div class="invalid-feedback">Двете пароли не съвпадат!</div>
+              <button type="button" class="btn btn-primary text-secondary" onclick="changePasswordFirm()">Смяна на
+                парола</button>
+            </div>
+            <hr>
+
+          </div>
+          <div class="tab-pane" id="supportedCities">
+            <h5 class="font-weight-bold">Поддържани населени места</h5>
+            <hr>
+            <h6 class="font-weight-bold">Добавяне на поддържано населено място</h6>
+            <label class="text-center mt-3">Област: </label><br>
+            <select class="form-control show-tick" data-style="btn-link border border-secondary"
+              data-dropup-auto="false" onchange="getCitiesByRegCode(this)" id="nameRegion">
+              <option value="BLG">Благоевград</option>
+              <option value="BGS">Бургас</option>
+              <option value="VAR">Варна</option>
+              <option value="VTR">Велико Търново</option>
+              <option value="VID">Видин</option>
+              <option value="VRC">Враца</option>
+              <option value="GAB">Габрово</option>
+              <option value="DOB">Добрич</option>
+              <option value="KRZ">Кърджали</option>
+              <option value="KNL">Кюстендил</option>
+              <option value="LOV">Ловеч</option>
+              <option value="MON">Монтана</option>
+              <option value="PAZ">Пазарджик</option>
+              <option value="PER">Перник</option>
+              <option value="PVN">Плевен</option>
+              <option value="PVD">Пловдив</option>
+              <option value="RAZ">Разград</option>
+              <option value="RSE">Русе</option>
+              <option value="SLS">Силистра</option>
+              <option value="SLV">Сливен</option>
+              <option value="SML">Смолян</option>
+              <option value="SFO">Софийска област</option>
+              <option value="SOF">София</option>
+              <option value="SZR">Стара Загора</option>
+              <option value="TGV">Търговище</option>
+              <option value="HKV">Хасково</option>
+              <option value="SHU">Шумен</option>
+              <option value="JAM">Ямбол</option>
+            </select>
+            <label class="text-center mt-3">Населено място: </label>
+            <div class="d-flex justify-content-between ">
+              <select class="form-control show-tick" data-none-results-text="Няма намерени фирми"
+                data-dropup-auto="false" data-style="btn-link border border-secondary" data-live-search="true"
+                id="nameCity">
+              </select>
+              <i class="fas fa-plus mt-3 pt-2 ml-3" style="cursor: pointer;" onclick="addSupporttedCity()"></i>
+            </div>
+            <hr>
+            <h6 class="font-weight-bold">Добавени поддържани населени места</h6>
+            <div class="table-responsive">
               <table class="table table-striped">
                 <thead class="font-weight-bold">
                   <tr>
@@ -139,28 +162,30 @@
                   </tr>
                 </thead>
                 <tbody id="addedSupportedCities">
-                
+
                 </tbody>
               </table>
               <p class="text-center" id="noCities" style="display: none;">Няма добавени поддържани населени места!</p>
             </div>
-            </div>
-            <div class="tab-pane" id="taxiDrivers">
-              <h5 class="font-weight-bold">Таксиметрови шофьори</h5>
-              <hr>
-              <h6 class="font-weight-bold">Добавяне на таксиметрови шофьори</h6>
-              <input type="email" class="form-control mt-4" id="licensePlate" placeholder="Регистрационен номер на колата">
-              <div class="invalid-feedback">Въвели сте невалиден регистрационен номер! Пример: ВТ1212АР. Регистрационният номер трябва да бъде на кирилица!</div>
-              <div class="d-flex justify-content-between ">
-                <div class="w-100"> 
+          </div>
+          <div class="tab-pane" id="taxiDrivers">
+            <h5 class="font-weight-bold">Таксиметрови шофьори</h5>
+            <hr>
+            <h6 class="font-weight-bold">Добавяне на таксиметрови шофьори</h6>
+            <input type="email" class="form-control mt-4" id="licensePlate"
+              placeholder="Регистрационен номер на колата">
+            <div class="invalid-feedback">Въвели сте невалиден регистрационен номер! Пример: ВТ1212АР. Регистрационният
+              номер трябва да бъде на кирилица!</div>
+            <div class="d-flex justify-content-between ">
+              <div class="w-100">
                 <input type="email" class="form-control mt-4" id="emailDriver" placeholder="Имейл адрес на шофьора">
                 <div class="invalid-feedback">Въвели сте невалиден имейл адрес!</div>
-                </div>
-                <i class="fas fa-user-plus mt-4 pt-2 ml-3" style="cursor: pointer;" onclick="addTaxiDriver();"></i>
               </div>
-              <hr>
-              <h6 class="font-weight-bold">Добавени таксиметрови шофьори</h6>
-              <div class="table-responsive">
+              <i class="fas fa-user-plus mt-4 pt-2 ml-3" style="cursor: pointer;" onclick="addTaxiDriver();"></i>
+            </div>
+            <hr>
+            <h6 class="font-weight-bold">Добавени таксиметрови шофьори</h6>
+            <div class="table-responsive">
               <table class="table table-striped">
                 <thead class="font-weight-bold">
                   <tr>
@@ -172,15 +197,15 @@
                   </tr>
                 </thead>
                 <tbody id="addedTaxiDrivers">
-                
+
                 </tbody>
               </table>
               <p class="text-center" id="noDrivers" style="display: none;">Няма добавени таксиметрови шофьори!</p>
             </div>
           </div>
-          </div>
         </div>
       </div>
     </div>
-
   </div>
+
+</div>

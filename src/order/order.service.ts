@@ -37,6 +37,12 @@ export class OrderService {
             }
         }
     }
+    async rateOrder(@Session() session:{token?:string, role?:string, type?:string}, rating:number, orderID:number, ratingComment:string)
+    {
+        let uemail = await this.jwtService.decode(session.token);
+        let user = await this.userRepository.findOne({email:uemail["email"]});
+        return this.orderRepository.rateOrder(user, rating, ratingComment, orderID);
+    }
     async rejectRequestById(id:number)
     {
         let user = await this.userRepository.findOne({id});

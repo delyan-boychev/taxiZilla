@@ -1,103 +1,117 @@
-
 <div class="container mt-5 pt-5">
 
-    <div class="row gutters-sm">
-      <div class="col-md-4 d-none d-md-block">
-        <div class="card">
-          <div class="card-body">
-            <nav class="nav flex-column nav-pills nav-gap-y-1">
-              <a href="#profile" data-toggle="tab" class="nav-item nav-link has-icon nav-link-faded text-secondary active"  onclick="hideTooltips()">
-                <i class="fas fa-info-circle"></i> Информация за профила
-              </a>
-              <a href="#account" data-toggle="tab" class="nav-item nav-link has-icon nav-link-faded text-secondary"  onclick="hideTooltips()">
-                <i class="fas fa-cog"></i> Настройки на профила
-              </a>
-              <a href="#security" data-toggle="tab" class="nav-item nav-link has-icon nav-link-faded text-secondary"  onclick="hideTooltips()">
-                <i class="fas fa-shield-alt"></i> Сигурност
-              </a>
-              <a href="#orders" data-toggle="tab" class="nav-item nav-link has-icon nav-link-faded text-secondary"  onclick="hideTooltips()">
-                <i class="fas fa-tasks"></i> Направени поръчки
-              </a>
-            </nav>
-          </div>
+  <div class="row gutters-sm">
+    <div class="col-md-4 d-none d-md-block">
+      <div class="card">
+        <div class="card-body">
+          <nav class="nav flex-column nav-pills nav-gap-y-1">
+            <a href="#profile" data-toggle="tab" class="nav-item nav-link has-icon nav-link-faded text-secondary active"
+              onclick="hideTooltips()">
+              <i class="fas fa-info-circle"></i> Информация за профила
+            </a>
+            <a href="#account" data-toggle="tab" class="nav-item nav-link has-icon nav-link-faded text-secondary"
+              onclick="hideTooltips()">
+              <i class="fas fa-cog"></i> Настройки на профила
+            </a>
+            <a href="#security" data-toggle="tab" class="nav-item nav-link has-icon nav-link-faded text-secondary"
+              onclick="hideTooltips()">
+              <i class="fas fa-shield-alt"></i> Сигурност
+            </a>
+            <a href="#orders" data-toggle="tab" class="nav-item nav-link has-icon nav-link-faded text-secondary"
+              onclick="hideTooltips()">
+              <i class="fas fa-tasks"></i> Направени поръчки
+            </a>
+          </nav>
         </div>
       </div>
-      <div class="col-md-8">
-        <div class="card">
-          <div class="card-header border-bottom mb-3 d-flex d-md-none">
-            <ul class="nav nav-tabs card-header-tabs nav-gap-x-1" role="tablist">
-              <li class="nav-item">
-                <a href="#profile" data-toggle="tab" class="nav-link has-icon active text-secondary"><i class="fas fa-info-circle"></i></a>
-              </li>
-              <li class="nav-item">
-                <a href="#account" data-toggle="tab" class="nav-link has-icon text-secondary"><i class="fas fa-cog"></i></a>
-              </li>
-              <li class="nav-item">
-                <a href="#security" data-toggle="tab" class="nav-link has-icon text-secondary"><i class="fas fa-shield-alt"></i></a>
-              </li>
-              <li class="nav-item">
+    </div>
+    <div class="col-md-8">
+      <div class="card">
+        <div class="card-header border-bottom mb-3 d-flex d-md-none">
+          <ul class="nav nav-tabs card-header-tabs nav-gap-x-1" role="tablist">
+            <li class="nav-item">
+              <a href="#profile" data-toggle="tab" class="nav-link has-icon active text-secondary"><i
+                  class="fas fa-info-circle"></i></a>
+            </li>
+            <li class="nav-item">
+              <a href="#account" data-toggle="tab" class="nav-link has-icon text-secondary"><i
+                  class="fas fa-cog"></i></a>
+            </li>
+            <li class="nav-item">
+              <a href="#security" data-toggle="tab" class="nav-link has-icon text-secondary"><i
+                  class="fas fa-shield-alt"></i></a>
+            </li>
+            <li class="nav-item">
               <a href="#orders" data-toggle="tab" class="nav-link has-icon text-secondary">
                 <i class="fas fa-tasks"></i>
               </a>
             </li>
+        </div>
+        <div class="card-body tab-content">
+          <div class="tab-pane active" id="profile">
+            <h5 class="font-weight-bold">Информация за профила</h5>
+            <hr>
+            <div class="form-group">
+              <input type="text" class="form-control" id="fName" placeholder="Име">
+              <div class="invalid-feedback">Името трябва да бъде по-дълго от 2 символа!</div>
+            </div>
+            <div class="form-group">
+              <input type="text" class="form-control" id="lName" placeholder="Фамилия">
+              <div class="invalid-feedback">Фамилията трябва да бъде по-дълга от 2 символа!</div>
+            </div>
+            <div class="form-group">
+              <input type="text" class="form-control" id="phoneNumber" placeholder="Телефонен номер">
+              <div class="invalid-feedback">Телефонният номер е невалиден!</div>
+            </div>
+            <div>
+              <p id="role"> </p>
+            </div>
+            <button type="button" class="btn btn-primary text-secondary" onclick="editProfile()">Редактиране на
+              профила</button>
           </div>
-          <div class="card-body tab-content">
-            <div class="tab-pane active" id="profile">
-              <h5 class="font-weight-bold">Информация за профила</h5>
-              <hr>
-              <div class="form-group">
-                <input type="text" class="form-control" id="fName" placeholder="Име">
-                <div class="invalid-feedback">Името трябва да бъде по-дълго от 2 символа!</div>
-              </div>
-              <div class="form-group">
-                <input type="text" class="form-control" id="lName" placeholder="Фамилия">
-                <div class="invalid-feedback">Фамилията трябва да бъде по-дълга от 2 символа!</div>
-              </div>
-              <div class="form-group">
-                <input type="text" class="form-control" id="phoneNumber" placeholder="Телефонен номер">
-                <div class="invalid-feedback">Телефонният номер е невалиден!</div>
-              </div>
-                <div><p id="role"> </p></div>
-                <button type="button" class="btn btn-primary text-secondary" onclick="editProfile()">Редактиране на профила</button>
+          <div class="tab-pane" id="account">
+            <h5 class="font-weight-bold">Настройки на профила</h5>
+            <hr>
+            <div class="form-group">
+              <input type="text" class="form-control" id="newEmail" placeholder="Имейл">
+              <div class="invalid-feedback">Невалиден имейл адрес!</div>
+              <button class="btn btn-primary text-secondary" type="button" onclick="changeEmail()">Смяна на
+                имейл</button>
             </div>
-            <div class="tab-pane" id="account">
-              <h5 class="font-weight-bold">Настройки на профила</h5>
-              <hr>
-                <div class="form-group">
-                  <input type="text" class="form-control" id="newEmail" placeholder="Имейл">
-                  <div class="invalid-feedback">Невалиден имейл адрес!</div>
-                  <button class="btn btn-primary text-secondary" type="button" onclick="changeEmail()">Смяна на имейл</button>
-                </div>
-            </div>
-            <div class="tab-pane" id="security">
-              <h5 class="font-weight-bold">Сигурност</h5>
-              <hr>
-                <div class="form-group">
-                  <label class="d-block">Смяна на парола</label>
-                  <input type="password" class="form-control" id="oldPass" placeholder="Стара парола">
-                  <div class="invalid-feedback">Не сте въвели парола!</div>
-                  <input type="password" class="form-control mt-4" id="newPass" placeholder="Нова парола">
-                  <div class="invalid-feedback">Паролата трябва да е по-дълга от 7 символа и да съдържа поне едно число!</div>
-                  <input type="password" class="form-control mt-4" id="newPassConfirm" placeholder="Потвърждаване на новата парола">
-                  <div class="invalid-feedback">Двете пароли не съвпадат!</div>
-                  <button type="button" class="btn btn-primary text-secondary" onclick="changePassword()">Смяна на парола</button>
-                </div>
-              <hr>
-              
-            </div>
-            <div class="tab-pane" id="orders">
-              <h5 class="font-weight-bold">Направени поръчки</h5>
-              <hr>
-              <div class="alert alert-warning" role="alert">
-                Ако не можете да намерите поръчката си означава, че тя все още се обработва! Когато бъде обработена, ще успеете да я видите отдолу!
+          </div>
+          <div class="tab-pane" id="security">
+            <h5 class="font-weight-bold">Сигурност</h5>
+            <hr>
+            <div class="form-group">
+              <label class="d-block">Смяна на парола</label>
+              <input type="password" class="form-control" id="oldPass" placeholder="Стара парола">
+              <div class="invalid-feedback">Не сте въвели парола!</div>
+              <input type="password" class="form-control mt-4" id="newPass" placeholder="Нова парола">
+              <div class="invalid-feedback">Паролата трябва да е по-дълга от 7 символа и да съдържа поне едно число!
               </div>
-              <div id="accordion">
-              </div>
-              <p class="text-center" id="noOrders" style="display: none;">Няма направени поръчки!</p>
+              <input type="password" class="form-control mt-4" id="newPassConfirm"
+                placeholder="Потвърждаване на новата парола">
+              <div class="invalid-feedback">Двете пароли не съвпадат!</div>
+              <button type="button" class="btn btn-primary text-secondary" onclick="changePassword()">Смяна на
+                парола</button>
             </div>
+            <hr>
+
+          </div>
+          <div class="tab-pane" id="orders">
+            <h5 class="font-weight-bold">Направени поръчки</h5>
+            <hr>
+            <div class="alert alert-warning" role="alert">
+              Ако не можете да намерите поръчката си означава, че тя все още се обработва! Когато бъде обработена, ще
+              успеете да я видите отдолу!
+            </div>
+            <div id="accordion">
+            </div>
+            <p class="text-center" id="noOrders" style="display: none;">Няма направени поръчки!</p>
           </div>
         </div>
       </div>
     </div>
-
   </div>
+
+</div>
