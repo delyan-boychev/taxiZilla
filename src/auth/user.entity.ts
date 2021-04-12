@@ -2,6 +2,7 @@ import { BaseEntity, Column, Entity, ManyToMany, ManyToOne, OneToMany, PrimaryGe
 import { UserRoles } from "./enums/userRoles.enum";
 import { Firm } from "../firm/firm.entity";
 import { taxiOrder } from "src/order/order.entity";
+import { SavedAddress } from "./savedAddress.entity";
 
 //Модел на таблицата user в базата данни
 @Entity()
@@ -45,7 +46,10 @@ export class User extends BaseEntity
 
   @ManyToOne(type => Firm, firm => firm.drivers)
   firm: Firm;
+
   @Column()
   lastChangePassword:string;
 
+  @OneToMany(type => SavedAddress, city => city.user)
+  savedAddresses:SavedAddress[];
 }

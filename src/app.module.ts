@@ -13,6 +13,7 @@ import { FirmModule } from './firm/firm.module';
 import { OrderModule } from './order/order.module';
 import { taxiOrder } from './order/order.entity';
 import { ModeratorOperation } from './auth/modOperation.entity';
+import { SavedAddress } from './auth/savedAddress.entity';
 
 @Module({
   imports: [
@@ -22,7 +23,7 @@ import { ModeratorOperation } from './auth/modOperation.entity';
       username: 'taxiZilla',
       password: 'VhCNrHnMEB3sE?9_',
       database: 'taxiZilla',
-      entities:[User,Firm,taxiOrder, SupportedCity, ModeratorOperation],
+      entities:[User,Firm,taxiOrder, SupportedCity, ModeratorOperation, SavedAddress],
       synchronize:true,
     })
     

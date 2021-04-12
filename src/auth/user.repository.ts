@@ -5,6 +5,7 @@ import { User } from "./user.entity";
 import * as bcrypt from 'bcrypt';
 import { Session, UnauthorizedException, UseGuards } from "@nestjs/common";
 import e from "express";
+import { SavedAddress } from "./savedAddress.entity";
 
 //Операции с базата данни
 @EntityRepository(User)
