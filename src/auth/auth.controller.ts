@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, Req, Res, Session, UnauthorizedException, UseGuards, ValidationPipe } from '@nestjs/common';
+import { BadRequestException, Body, Controller, Get, Param, Post, Req, Res, Session, UnauthorizedException, UseGuards, ValidationPipe } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import * as nodemailer from 'nodemailer';
 import { PrimaryGeneratedColumn } from 'typeorm';
@@ -174,6 +174,27 @@ export class AuthController {
   {
     if(!session.token || session.type != "User")throw new UnauthorizedException();
     return await this.authService.changeEmail(session, newEmail);
+  }
+  @Get("/getUserAddresses")
+  async getUserAddresses(@Session() session:{token?:string, type?:string})
+  {
+    if(!session.token || session.type != "User")throw new UnauthorizedException();
+    return await this.authService.getUserAddresses(session);
+  }
+  @Post("/saveUserAddress")
+  async saveUserAddress(@Session() session:{token?:string, type?:string}, @Body("city") city:string, @Body("address") address:string)
+  {
+    if(!session.token || session.type != "User")throw new UnauthorizedException();
+    if(!city) throw new BadRequestException();
+    if(!address) throw new BadRequestException();
+    return await this.authService.saveUserAddress(session, city, address);
+  }
+  @Post("/deleteUserAddress")
+  async deleteUserAddress(@Session() session:{token?:string, type?:string}, @Body("addressId") addressId:string)
+  {
+    if(!session.token || session.type != "User")throw new UnauthorizedException();
+    if(!addressId) throw new BadRequestException();
+    return await this.authService.deleteUserAddress(session, parseInt(addressId));
   }
   @Post("/getCitiesByFirmId")
   async getCitiesByFirmId(@Session() session:{token?:string, type?:string}, @Body("firmID") firmID:string)
