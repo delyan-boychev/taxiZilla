@@ -76,12 +76,14 @@ function makeOrderPage()//Smqna na stranica za poruchka
     window.location.hash = "#makeOrderPage";
     getRequest(window.location.protocol + '//' + window.location.host + '/pages/makeOrderPage.html').then(data => {
         document.getElementById("pageContent").innerHTML = data;
-        if (!window.mobileCheck()) {
+        /*if (!window.mobileCheck()) {
             document.getElementById("formOrderTaxi").innerHTML = '<input type="text" id="addressTaxi" class="form-control" placeholder="Адрес"><div class="invalid-feedback">Адресът трябва да е по-дълъг от 5 символа!</div><br><label class="text-left mt-3">Населено място: </label><select class="form-control selectpicker show-tick" data-dropup-auto="false" data-none-results-text="Няма намерени наслени места" data-style="btn-link ml-0 border border-secondary" data-live-search="true" id="city"></select><br><textarea placeholder="Бележки(по избор)" class="form-control mt-3" id="notes" style="resize: none; height: 200px" rows="3"></textarea><br><button id="currentLocationReload" class="btn btn-primary ml-0 mt-3 black-text btn-block rounded" type="submit" onclick="updateMapAddress()">Обнови картата</button><br><button class="btn btn-primary ml-0 black-text mt-3 btn-block rounded" type="submit" onclick="makeOrderTaxiAddress()">Направи поръчка</button>';
             document.getElementById("formOrderItems").innerHTML = '<input type="text" id="addressTaxiItems" class="form-control" placeholder="Адрес"><div class="invalid-feedback">Адресът трябва да е по-дълъг от 5 символа!</div><br><label class="text-left mt-3">Населено място: </label><select class="form-control selectpicker show-tick" data-none-results-text="Няма намерени наслени места" data-dropup-auto="false"  data-style="btn-link ml-0 border border-secondary" data-live-search="true" id="city2"></select><br><textarea placeholder="Указания за пазаруване" class="form-control mt-3" id="items" style="resize: none; height: 200px" rows="3"></textarea><div class="invalid-feedback">Указанията за пазаруване трябва да са по-дълги от 5 символа!</div><br><button id="currentLocationReload" class="btn btn-primary ml-0 mt-3 black-text btn-block rounded" type="submit" onclick="updateMapAddressItems()">Обнови картата</button><br><button class="btn btn-primary ml-0 black-text mt-2 btn-block rounded" type="submit" onclick="makeOrderItemsAddress()">Направи поръчка</button>';
-        }
-        getAllCities();
-        getAllCities2();
+        }*/
+        var radio = {};
+        radio.value = "savedAddress";
+        changeAddressTypeTab(radio);
+        changeAddressTypeTabItems(radio);
     });
 }
 function aboutUsPage()//Smqna na stranica za nas

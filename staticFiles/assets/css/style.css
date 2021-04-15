@@ -23,6 +23,13 @@ strong { font-weight: bold; }
     transform: rotate(359deg);
   }
 }
+
+.bootstrap-select .dropdown-menu li small {
+	white-space: normal;
+}
+.toggle-on.btn {
+  color: #2b2a29;
+}
 .modal-open
 {
   overflow-x: hidden!important;
@@ -59,6 +66,13 @@ break{
       background-color: #24355C;
     }
   }
+.dropdown-menu {
+  word-wrap: break-word; white-space: normal;
+}
+.dropdown-item
+{
+  word-wrap: break-word; white-space: normal;
+}
 a.active {
     background-color: #2b2a29 !important;
     color:  #ffed00 !important;

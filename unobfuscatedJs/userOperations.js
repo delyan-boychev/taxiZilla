@@ -68,6 +68,21 @@ function getSupportedCitiesByFirm()//Vzemane na poddurzani gradove kato firma
     });
 
 }
+function saveAddress(typeOrder)//Funkciq za zapazvane na adres
+{
+    if (arguments.callee.caller === null) { console.log("%c You are not permitted to use this method!!!", 'color: red'); return; }
+    var address;
+    var city;
+    if (typeOrder == "taxi") {
+        address = $("#addressTaxi").val();
+        city = $("#city").val();
+    }
+    else {
+        address = $("#addressTaxiItems").val();
+        city = $("#city2").val();
+    }
+    postRequest("/auth/saveUserAddress", { city: city, address: address });
+}
 function addSupporttedCity()//Dobavqne na poddurzan grad
 {
     if (arguments.callee.caller === null) { console.log("%c You are not permitted to use this method!!!", 'color: red'); return; }
@@ -86,6 +101,30 @@ function addSupporttedCity()//Dobavqne na poddurzan grad
         }
         );
 }
+function getSavedAddresses()//Funkciq za vzemane na vsichki zapazeni gradove
+{
+    if (arguments.callee.caller === null) { console.log("%c You are not permitted to use this method!!!", 'color: red'); return; }
+    getRequest("/auth/getUserAddresses").then(data => {
+        var selectPickerAddress = document.getElementById("addressTaxi");
+        selectPickerAddress.innerHTML = "";
+        data.forEach(el => {
+            selectPickerAddress.innerHTML += `<option>${el["address"]}, ${el["city"]}</option>`;
+        });
+        $("#addressTaxi").selectpicker();
+    });
+}
+function getSavedAddresses2()//Funkciq za vzemane na vsichki zapazeni gradove za porucka za pazaruvane
+{
+    if (arguments.callee.caller === null) { console.log("%c You are not permitted to use this method!!!", 'color: red'); return; }
+    getRequest("/auth/getUserAddresses").then(data => {
+        var selectPickerAddress = document.getElementById("addressTaxiItems");
+        selectPickerAddress.innerHTML = "";
+        data.forEach(el => {
+            selectPickerAddress.innerHTML += `<option>${el["address"]}, ${el["city"]}</option>`;
+        });
+        $("#addressTaxiItems").selectpicker();
+    });
+}
 function getAllCities()//Vzemane na vsichki gradove, koito sa poddurzani
 {
     if (arguments.callee.caller === null) { console.log("%c You are not permitted to use this method!!!", 'color: red'); return; }
@@ -94,6 +133,7 @@ function getAllCities()//Vzemane na vsichki gradove, koito sa poddurzani
         var json = data;
         document.getElementById("city").innerHTML = "";
         json.forEach(el => {
+
             document.getElementById("city").innerHTML += "<option value='" + el["city"] + ", " + el["region"] + "'>" + el["city"] + ", " + el["region"] + "</option>";
         });
         $("#city").selectpicker();
@@ -116,8 +156,11 @@ function getAllCities2()//Vzemane na vsichki gradove, koito sa poddurzani
 function makeOrderTaxiAddress()//Suzdavane na poruchka ot adres
 {
     if (arguments.callee.caller === null) { console.log("%c You are not permitted to use this method!!!", 'color: red'); return; }
-
-    if ($("#addressTaxi").val().length < 6) {
+    var address = $("#addressTaxi option:selected").text();
+    if (document.getElementById("saveAddress")) {
+        address = $("#addressTaxi").val() + ", " + $("#city").val();
+    }
+    if (address.length < 6) {
         $('#addressTaxi').addClass("is-invalid");
     }
     else {
@@ -129,21 +172,27 @@ function makeOrderTaxiAddress()//Suzdavane na poruchka ot adres
                 type: "GET",
                 data:
                 {
-                    SingleLine: $("#addressTaxi").val() + ", " + $("#city").val(),
+                    SingleLine: address,
                     f: "json"
                 }
             }).done(function (json) {
                 getServerDate().then(dateServer => {
+
                     postRequest("/order/createOrder",
                         {
                             x: json.candidates[0].location.x,
                             y: json.candidates[0].location.y,
-                            address: $("#addressTaxi").val() + ", " + $("#city").val(),
+                            address: address,
                             key: algorithm(),
                             offset: dateServer["offset"],
                             notes: $('#notes').val(),
                         }).then(data => {
                             if (data != "401") {
+                                if (document.getElementById("saveAddress")) {
+                                    if (document.getElementById("saveAddress").checked) {
+                                        saveAddress("taxi");
+                                    }
+                                }
                                 document.body.scrollTop = 0;
                                 document.documentElement.scrollTop = 0;
                                 waitingForOrderAcceptPage();
@@ -161,8 +210,12 @@ function makeOrderItemsAddress()//Suzdavane na poruchka za pazaruvane ot adres
     if (arguments.callee.caller === null) { console.log("%c You are not permitted to use this method!!!", 'color: red'); return; }
     $("input").removeClass("is-invalid");
     $("input").removeClass("is-valid");
+    var address = $("#addressTaxiItems option:selected").val();
+        if (document.getElementById("saveAddress2")) {
+            address = $("#addressTaxiItems").val() + ", " + $("#city2").val();
+        }
     var isChecked = true;
-    if ($("#addressTaxiItems").val().length < 6) {
+    if (address.length < 6) {
         $('#addressTaxiItems').addClass("is-invalid");
         isChecked = false;
     }
@@ -179,7 +232,7 @@ function makeOrderItemsAddress()//Suzdavane na poruchka za pazaruvane ot adres
                 type: "GET",
                 data:
                 {
-                    SingleLine: $("#addressTaxiItems").val() + ", " + $("#city2").val(),
+                    SingleLine: address,
                     f: "json"
                 }
             }).done(function (json) {
@@ -188,12 +241,17 @@ function makeOrderItemsAddress()//Suzdavane na poruchka za pazaruvane ot adres
                         {
                             x: json.candidates[0].location.x,
                             y: json.candidates[0].location.y,
-                            address: $("#addressTaxiItems").val() + ", " + $("#city2").val(),
+                            address: address,
                             key: algorithm(),
                             offset: dateServer["offset"],
                             items: $('#items').val(),
                         }).then(data => {
                             if (data != "401") {
+                                if (document.getElementById("saveAddress2")) {
+                                    if (document.getElementById("saveAddress2").checked) {
+                                        saveAddress("items");
+                                    }
+                                }
                                 document.body.scrollTop = 0;
                                 document.documentElement.scrollTop = 0;
                                 waitingForOrderAcceptPage();
@@ -1028,7 +1086,7 @@ function getCitiesByRegCode(sel)//Zaqvka za vzimane na naseleni mesta po kod na 
 {
     if (arguments.callee.caller === null) { console.log("%c You are not permitted to use this method!!!", 'color: red'); return; }
     postRequest("/firm/getCitiesByRegCode", {
-        regCode: sel.value
+        regCode: sel.valuea
     }).then(data => {
         document.getElementById("nameCity").innerHTML = "";
         data.forEach(city => {

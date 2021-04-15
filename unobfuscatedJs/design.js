@@ -6,6 +6,56 @@ function refreshPage()//Refreshvane na stranicata
 function escapeQuotes(str) {
     return str.replace(/"/g, '\\"').replace(/'/g, "\\'");
 }
+function changeAddressTypeTab(radio) {
+    if (arguments.callee.caller === null) { console.log("%c You are not permitted to use this method!!!", 'color: red'); return; }
+    var addressTypeTab = document.getElementById("addressTypeContent");
+    if (radio.value == "savedAddress") {
+        addressTypeTab.innerHTML = `<select class="form-control selectpicker show-tick"
+        data-dropup-auto="false" data-none-results-text="Няма запазени адреси"
+        data-style="btn-link ml-0 border border-secondary" data-live-search="true" id="addressTaxi"></select>`;
+        getSavedAddresses();
+    }
+    else {
+        addressTypeTab.innerHTML = `<input type="text" id="addressTaxi" class="form-control " placeholder="Адрес"><br><p class="ml-2">Запазване на адреса: </p><input type="checkbox" id="saveAddress" data-toggle="toggle"><br><label
+        class="text-left mt-3">Населено място: </label><select class="form-control selectpicker show-tick"
+        data-dropup-auto="false" data-none-results-text="Няма намерени наслени места"
+        data-style="btn-link ml-0 border border-secondary" data-live-search="true" id="city"></select>`;
+        $("#saveAddress").bootstrapToggle({
+            on: "Да",
+            off: "Не",
+            size: "sm",
+            onstyle: 'primary',
+            offstyle: 'secondary'
+        });
+        getAllCities();
+    }
+
+}
+function changeAddressTypeTabItems(radio) {
+    if (arguments.callee.caller === null) { console.log("%c You are not permitted to use this method!!!", 'color: red'); return; }
+    var addressTypeTab = document.getElementById("addressTypeContent2");
+    if (radio.value == "savedAddress") {
+        addressTypeTab.innerHTML = `<select class="form-control selectpicker show-tick"
+        data-dropup-auto="false" data-none-results-text="Няма запазени адреси"
+        data-style="btn-link ml-0 border border-secondary" data-live-search="true" id="addressTaxiItems"></select>`;
+        getSavedAddresses2();
+    }
+    else {
+        addressTypeTab.innerHTML = `<input type="text" id="addressTaxiItems" class="form-control " placeholder="Адрес"><br><p class="ml-2">Запазване на адреса: </p><input type="checkbox" id="saveAddress2" data-toggle="toggle"><br><label
+        class="text-left mt-3">Населено място: </label><select class="form-control selectpicker show-tick"
+        data-dropup-auto="false" data-none-results-text="Няма намерени наслени места"
+        data-style="btn-link ml-0 border border-secondary" data-live-search="true" id="city2"></select>`;
+        $("#saveAddress2").bootstrapToggle({
+            on: "Да",
+            off: "Не",
+            size: "sm",
+            onstyle: 'primary',
+            offstyle: 'secondary'
+        });
+        getAllCities2();
+    }
+
+}
 function hideTooltips()//Izchistvane na tooltipovete
 {
     if (arguments.callee.caller === null) { console.log("%c You are not permitted to use this method!!!", 'color: red'); return; }
@@ -52,14 +102,22 @@ function showCurrentPosition()//Update na karta ot tekushto mestopolozenie
 function updateMapAddress()//Update na karta ot zadaden adres
 {
     if (arguments.callee.caller === null) { console.log("%c You are not permitted to use this method!!!", 'color: red'); return; }
-    document.getElementById("map").src = "https://maps.google.com/maps?q=" + $("#addressTaxi").val() + ", " + $("#city").val() + "&t=&z=17&ie=UTF8&iwloc=&output=embed"; $([document.documentElement, document.body]).animate({
+    var address = $("#addressTaxi option:selected").val();
+    if (document.getElementById("saveAddress")) {
+        address = $("#addressTaxi").val() + ", " + $("#city").val();
+    }
+    document.getElementById("map").src = "https://maps.google.com/maps?q=" + address + "&t=&z=17&ie=UTF8&iwloc=&output=embed"; $([document.documentElement, document.body]).animate({
         scrollTop: $("#map").offset().top
     }, 1000);
 }
 function updateMapAddressItems()//Update na karta ot zadaden adres
 {
     if (arguments.callee.caller === null) { console.log("%c You are not permitted to use this method!!!", 'color: red'); return; }
-    document.getElementById("map").src = "https://maps.google.com/maps?q=" + $("#addressTaxiItems").val() + ", " + $("#city2").val() + "&t=&z=17&ie=UTF8&iwloc=&output=embed"; $([document.documentElement, document.body]).animate({
+    var address = $("#addressTaxiItems option:selected").val();
+    if (document.getElementById("saveAddress2")) {
+        address = $("#addressTaxiItems").val() + ", " + $("#city2").val();
+    }
+    document.getElementById("map").src = "https://maps.google.com/maps?q=" + address + "&t=&z=17&ie=UTF8&iwloc=&output=embed"; $([document.documentElement, document.body]).animate({
         scrollTop: $("#map").offset().top
     }, 1000);
 }

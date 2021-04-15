@@ -101,7 +101,7 @@ export class AuthService {
   {
     let umail = await this.jwtService.decode(session.token);
     let user = await this.userRepository.findOne({email:umail["email"]});
-    this.addressesRepository.getUserAddresses(user);
+    return await this.addressesRepository.getUserAddresses(user);
   }
   async deleteUserAddress(session:{token?:string}, addressID:number)
   {

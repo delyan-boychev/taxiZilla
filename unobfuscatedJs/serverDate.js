@@ -21,8 +21,6 @@ const getServerDate = async (
   { fetchSample } = { fetchSample: fetchSampleImplementation }
 ) => {
   let best = { uncertainty: Number.MAX_VALUE };
-  for (let index = 0; index < 10; index++) {
-    console.log(index);
     try {
 
       const { requestDate, responseDate, serverDate } = await fetchSample();
@@ -40,7 +38,6 @@ const getServerDate = async (
     } catch (exception) {
       console.warn(exception);
     }
-  }
 
   return best;
 };
