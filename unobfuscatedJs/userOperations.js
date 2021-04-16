@@ -68,6 +68,49 @@ function getSupportedCitiesByFirm()//Vzemane na poddurzani gradove kato firma
     });
 
 }
+function saveAddressProfile()//Fuknciq za zapazvane na adres ot profila
+{
+    if (arguments.callee.caller === null) { console.log("%c You are not permitted to use this method!!!", 'color: red'); return; }
+    if ($("#address").val().length < 5) {
+        $("#address").addClass("is-invalid");
+    }
+    else {
+        $("#address").addClass("is-valid");
+        postRequest("/auth/saveUserAddress", { city: $("#city").val(), address: $("#address").val() });
+        document.getElementById("modalBody").innerText = "Адресът е запазен успешно!";
+        actionOnCloseModal = getSavedAddressesProfile;
+        $("#modal").modal();
+    }
+
+}
+function removeSavedAddress(id)//Funkciq za premahvane na zapazen adres po id
+{
+    if (arguments.callee.caller === null) { console.log("%c You are not permitted to use this method!!!", 'color: red'); return; }
+    postRequest("/auth/deleteUserAddress", { addressId: id });
+    document.getElementById("modalBody").innerText = "Адресът е премахнат успешно!";
+    actionOnCloseModal = getSavedAddressesProfile;
+    $("#modal").modal();
+
+}
+function getSavedAddressesProfile()//Funkciq za vzemane na adresite v profil
+{
+    if (arguments.callee.caller === null) { console.log("%c You are not permitted to use this method!!!", 'color: red'); return; }
+    getRequest("/auth/getUserAddresses").then(data => {
+        var tableAddresses = document.getElementById("savedAddressesList");
+        if (data.length === 0) {
+            document.getElementById("noCities").style = "display: block;";
+            tableAddresses.innerHTML = "";
+        }
+        else {
+            document.getElementById("noCities").style = "display: none;";
+            tableAddresses.innerHTML = "";
+            data.forEach(el => {
+                tableAddresses.innerHTML += `<tr><td>${el["address"]}, ${el["city"]}</td><td><i class='far fa-times-circle text-danger h5' style='cursor: pointer;' onclick='removeSavedAddress(${el["id"]});'></i></td></tr>`;
+            });
+            $("#addressTaxi").selectpicker();
+        }
+    });
+}
 function saveAddress(typeOrder)//Funkciq za zapazvane na adres
 {
     if (arguments.callee.caller === null) { console.log("%c You are not permitted to use this method!!!", 'color: red'); return; }
@@ -211,9 +254,9 @@ function makeOrderItemsAddress()//Suzdavane na poruchka za pazaruvane ot adres
     $("input").removeClass("is-invalid");
     $("input").removeClass("is-valid");
     var address = $("#addressTaxiItems option:selected").val();
-        if (document.getElementById("saveAddress2")) {
-            address = $("#addressTaxiItems").val() + ", " + $("#city2").val();
-        }
+    if (document.getElementById("saveAddress2")) {
+        address = $("#addressTaxiItems").val() + ", " + $("#city2").val();
+    }
     var isChecked = true;
     if (address.length < 6) {
         $('#addressTaxiItems').addClass("is-invalid");
@@ -956,6 +999,7 @@ function changePasswordFirm()//Post zaqvka za smqna na parola na firma
             );
     }
 }
+
 function editProfile()//Post zaqvka za redaktirane na profil na klient
 {
     if (arguments.callee.caller === null) { console.log("%c You are not permitted to use this method!!!", 'color: red'); return; }
@@ -1086,7 +1130,7 @@ function getCitiesByRegCode(sel)//Zaqvka za vzimane na naseleni mesta po kod na 
 {
     if (arguments.callee.caller === null) { console.log("%c You are not permitted to use this method!!!", 'color: red'); return; }
     postRequest("/firm/getCitiesByRegCode", {
-        regCode: sel.valuea
+        regCode: sel.value
     }).then(data => {
         document.getElementById("nameCity").innerHTML = "";
         data.forEach(city => {

@@ -21,6 +21,10 @@
               onclick="hideTooltips()">
               <i class="fas fa-tasks"></i> Направени поръчки
             </a>
+            <a href="#savedAddresses" data-toggle="tab" class="nav-item nav-link has-icon nav-link-faded text-secondary"
+              onclick="hideTooltips()">
+              <i class="fas fa-map-marked-alt"></i> Запазени адреси
+            </a>
           </nav>
         </div>
       </div>
@@ -44,6 +48,11 @@
             <li class="nav-item">
               <a href="#orders" data-toggle="tab" class="nav-link has-icon text-secondary">
                 <i class="fas fa-tasks"></i>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="#savedAddresses" data-toggle="tab" class="nav-link has-icon text-secondary">
+                <i class="fas fa-map-marked-alt"></i>
               </a>
             </li>
         </div>
@@ -75,7 +84,7 @@
             <div class="form-group">
               <input type="text" class="form-control" id="newEmail" placeholder="Имейл">
               <div class="invalid-feedback">Невалиден имейл адрес!</div>
-              <button class="btn btn-primary text-secondary" type="button" onclick="changeEmail()">Смяна на
+              <button class="btn btn-primary text-secondary mt-4" type="button" onclick="changeEmail()">Смяна на
                 имейл</button>
             </div>
           </div>
@@ -92,7 +101,7 @@
               <input type="password" class="form-control mt-4" id="newPassConfirm"
                 placeholder="Потвърждаване на новата парола">
               <div class="invalid-feedback">Двете пароли не съвпадат!</div>
-              <button type="button" class="btn btn-primary text-secondary" onclick="changePassword()">Смяна на
+              <button type="button" class="btn btn-primary text-secondary mt-4" onclick="changePassword()">Смяна на
                 парола</button>
             </div>
             <hr>
@@ -108,6 +117,38 @@
             <div id="accordion">
             </div>
             <p class="text-center" id="noOrders" style="display: none;">Няма направени поръчки!</p>
+          </div>
+          <div class="tab-pane" id="savedAddresses">
+            <h5 class="font-weight-bold">Запазени адреси</h5>
+            <hr>
+            <h6 class="font-weight-bold">Добавяне на адрес</h6>
+            <input type="text" class="form-control mt-4" id="address"
+                placeholder="Адрес">
+            <label class="text-center mt-3">Населено място: </label>
+            <div class="d-flex justify-content-between ">
+              <select class="form-control show-tick" data-none-results-text="Няма намерени фирми"
+                data-dropup-auto="false" data-style="btn-link border border-secondary" data-live-search="true"
+                id="city">
+              </select>
+              <i class="fas fa-plus mt-3 pt-2 ml-3" style="cursor: pointer;" onclick="saveAddressProfile()"></i>
+            </div>
+            <hr>
+            <h6 class="font-weight-bold">Запазени адреси</h6>
+            <div class="table-responsive">
+              <table class="table table-striped">
+                <thead class="font-weight-bold">
+                  <tr>
+                    <th>Адрес</th>
+                  </tr>
+                </thead>
+                <tbody id="savedAddressesList">
+
+                </tbody>
+              </table>
+              <p class="text-center" id="noCities" style="display: none;">Няма запазени адреси!</p>
+            </div>
+
+
           </div>
         </div>
       </div>
