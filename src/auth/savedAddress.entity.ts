@@ -7,7 +7,7 @@ export class SavedAddress extends BaseEntity
     @PrimaryGeneratedColumn()
     id:number;
     
-    @ManyToOne(type => User, user => user.savedAddresses)
+    @ManyToOne(type => User, user => user.savedAddresses, {onDelete:'CASCADE'})
     @JoinColumn()
     user:User;
 
