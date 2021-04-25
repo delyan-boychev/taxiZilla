@@ -33,6 +33,7 @@ export class SavedAddressRepository extends Repository<SavedAddress>
   {
     let address = await this.findOne(addressId);
     if(!address)throw new BadRequestException();
+    console.log(address.user);
     if(address.user!=sender && sender.role!=UserRoles.ADMIN)
     {
         throw new UnauthorizedException();
