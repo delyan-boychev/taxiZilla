@@ -157,7 +157,7 @@ export class FirmController {
   @Post("/moderationVerifyFirm/")
   async moderationVerifyFirm(@Session() session:{token?:string, role?:string}, @Body("firmID")firmID:string)
   {
-    if(!session.token || session.role != UserRoles.ADMIN) throw new UnauthorizedException();
+    if(!session.token || (session.role != UserRoles.ADMIN && session.role != UserRoles.MODERATOR)) throw new UnauthorizedException();
     return await this.firmService.moderationVerifyFirm(session,parseInt(firmID));
   }
   @Post("/removeFirmByAdmin/")
