@@ -412,13 +412,20 @@ export class AuthService {
     }
     
     let result = await this.userRepository.verifyUser(username);
-    return this.getVerifyPage(result);
+    if((result as BadRequestException) !== undefined)
+    {
+      return this.getVerifyPage(result.toString());
+    }
+    else
+    {
+      return result;
+    }
   }
-  getVerifyPage(verified:boolean):string
+  getVerifyPage(verified:string):string
   {
     //Взимане на страницата за потвърждение зависи от това дали се е потвърдил или не.
     const fs = require("fs");
-    if(verified === true) return fs.readFileSync(join(__dirname, "/../../staticFiles/pages/verifiedTrue.html")).toString();
+    if(verified === "true") return fs.readFileSync(join(__dirname, "/../../staticFiles/pages/verifiedTrue.html")).toString();
     else return fs.readFileSync(join(__dirname, "/../../staticFiles/pages/verifiedFalse.html")).toString();
   }
   //Смяна на email на потребител

@@ -3,7 +3,7 @@ import { RegisterUserDTO } from "./dto/registerUser.dto";
 import { UserRoles } from "./enums/userRoles.enum";
 import { User } from "./user.entity";
 import * as bcrypt from 'bcrypt';
-import { Session, UnauthorizedException, UseGuards } from "@nestjs/common";
+import { BadRequestException, Session, UnauthorizedException, UseGuards } from "@nestjs/common";
 import e from "express";
 import { SavedAddress } from "./savedAddress.entity";
 
@@ -112,15 +112,22 @@ export class UserRepository extends Repository<User>
   async verifyUser(email: string)
   {
     let user: User = await this.findOne({ email });
-    if (user.verified)
+    if(user)
     {
-      return false;  
+      if (user.verified)
+      {
+        return false;  
+      }
+      else
+      {
+        user.verified = true;
+        await user.save();
+        return true;
+      }
     }
     else
     {
-      user.verified = true;
-      await user.save();
-      return true;
+      return new BadRequestException();
     }
   }
   //Вписване на потребител

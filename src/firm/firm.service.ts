@@ -170,23 +170,30 @@ export class FirmService {
       const now = new Date();
       const fs = require("fs");
       const firm = await this.firmRepository.findOne({email: emaddr});
-      const lastChangePassword = new Date(firm.lastChangePassword);
-      lastChangePassword.setHours(lastChangePassword.getHours() + 1);
-      if(now.getTime()>timeSt.getTime())
+      if(firm)
       {
-        return fs.readFileSync(join(__dirname, "/../../staticFiles/pages/passwordChangeExpired.html")).toString();
-      }
-      else if(lastChangePassword.getTime() > now.getTime())
-      {
-        return fs.readFileSync(join(__dirname, "/../../staticFiles/pages/passwordChangeExpired.html")).toString();
+        const lastChangePassword = new Date(firm.lastChangePassword);
+        lastChangePassword.setHours(lastChangePassword.getHours() + 1);
+        if(now.getTime()>timeSt.getTime())
+        {
+          return fs.readFileSync(join(__dirname, "/../../staticFiles/pages/passwordChangeExpired.html")).toString();
+        }
+        else if(lastChangePassword.getTime() > now.getTime())
+        {
+          return fs.readFileSync(join(__dirname, "/../../staticFiles/pages/passwordChangeExpired.html")).toString();
+        }
+        else
+        {
+          const bcrypt = require('bcrypt');
+          firm.lastChangePassword = now.toString();
+          firm.passHash= await bcrypt.hash(passw,firm.salt);
+          await firm.save();
+          return fs.readFileSync(join(__dirname, "/../../staticFiles/pages/passwordChanged.html")).toString();
+        }
       }
       else
       {
-        const bcrypt = require('bcrypt');
-        firm.lastChangePassword = now.toString();
-        firm.passHash= await bcrypt.hash(passw,firm.salt);
-        await firm.save();
-        return fs.readFileSync(join(__dirname, "/../../staticFiles/pages/passwordChanged.html")).toString();
+        return new BadRequestException();
       }
       
     }
@@ -211,10 +218,10 @@ export class FirmService {
     });
     return "Sended";
   }
-  getVerifyPage(verified:boolean):string
+  getVerifyPage(verified:string):string
   {
     const fs = require("fs");
-    if(verified === true) return fs.readFileSync(join(__dirname, "/../../staticFiles/pages/verifiedTrue.html")).toString();
+    if(verified === "true") return fs.readFileSync(join(__dirname, "/../../staticFiles/pages/verifiedTrue.html")).toString();
     else return fs.readFileSync(join(__dirname, "/../../staticFiles/pages/verifiedFalse.html")).toString();
   }
   async getProfile(@Session() session:{token?: string, type?:string,role?:UserRoles})
@@ -237,7 +244,14 @@ export class FirmService {
       return new BadRequestException();
     }
     let result = await this.firmRepository.verifyFirm(eik);
-    return this.getVerifyPage(result);
+    if((result as BadRequestException) !== undefined)
+    {
+      return this.getVerifyPage(result.toString());
+    }
+    else
+    {
+      return result;
+    }
   }
   async addTaxiDriver(@Session() session:{token?: string, type?:string,role?:UserRoles},email:string, licensePlate:string)
   {

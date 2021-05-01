@@ -4,7 +4,7 @@ import { Firm } from "./firm.entity";
 import * as bcrypt from 'bcrypt';
 import e from "express";
 import { User } from "src/auth/user.entity";
-import { Session, UnauthorizedException, UseGuards } from "@nestjs/common";
+import { BadRequestException, Session, UnauthorizedException, UseGuards } from "@nestjs/common";
 import { UserRoles } from "src/auth/enums/userRoles.enum";
 
 @EntityRepository(Firm)
@@ -163,15 +163,22 @@ export class FirmRepository extends Repository<Firm>
   async verifyFirm(eik:string)
   {
     let firm:Firm = await this.findOne({ eik });
-    if (firm.verified)
+    if(firm)
     {
-      return false;  
+      if (firm.verified)
+      {
+        return false;  
+      }
+      else
+      {
+        firm.verified = true;
+        await firm.save();
+        return "true";
+      }
     }
     else
     {
-      firm.verified = true;
-      await firm.save();
-      return true;
+      return new BadRequestException();
     }
   }
   async getAllFirms()
