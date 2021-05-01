@@ -245,7 +245,7 @@ export class FirmService {
     }
     let result = await this.firmRepository.verifyFirm(eik);
     console.log(result);
-    if(Object.getPrototypeOf(result) === BadRequestException.prototype)
+    if(Object.getPrototypeOf(result) !== BadRequestException.prototype)
     {
       return this.getVerifyPage(result.toString());
     }
