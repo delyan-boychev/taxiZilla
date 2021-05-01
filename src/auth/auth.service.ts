@@ -412,7 +412,7 @@ export class AuthService {
     }
     
     let result = await this.userRepository.verifyUser(username);
-    if((result as BadRequestException) !== undefined)
+    if(Object.getPrototypeOf(result) !== BadRequestException.prototype)
     {
       return this.getVerifyPage(result.toString());
     }
