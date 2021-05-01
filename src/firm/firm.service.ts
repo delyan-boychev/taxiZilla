@@ -163,7 +163,7 @@ export class FirmService {
       }
       catch(ex)
       {
-        throw new BadRequestException();
+        return new BadRequestException();
       }
 
       const timeSt = new Date(timeStr);
@@ -234,7 +234,7 @@ export class FirmService {
     }
     catch(ex)
     {
-      throw new BadRequestException();
+      return new BadRequestException();
     }
     let result = await this.firmRepository.verifyFirm(eik);
     return this.getVerifyPage(result);

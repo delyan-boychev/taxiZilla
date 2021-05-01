@@ -129,7 +129,7 @@ export class AuthService {
     }
     catch(ex)
     {
-      throw new BadRequestException();
+      return new BadRequestException();
     }
     const timeSt = new Date(timeStr);
     const now = new Date();
@@ -408,7 +408,7 @@ export class AuthService {
     }
     catch(ex)
     {
-      throw new BadRequestException();
+      return new BadRequestException();
     }
     
     let result = await this.userRepository.verifyUser(username);
