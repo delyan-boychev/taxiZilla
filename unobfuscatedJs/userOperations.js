@@ -200,13 +200,17 @@ function makeOrderTaxiAddress()//Suzdavane na poruchka ot adres
 {
     if (arguments.callee.caller === null) { console.log("%c You are not permitted to use this method!!!", 'color: red'); return; }
     var address = $("#addressTaxi option:selected").text();
-    if (document.getElementById("saveAddress")) {
-        address = $("#addressTaxi").val() + ", " + $("#city").val();
+    var saveAdressExists = document.getElementById("saveAddress");
+    if (saveAdressExists) {
+        address = $("#addressTaxi").val();
     }
     if (address.length < 6) {
         $('#addressTaxi').addClass("is-invalid");
     }
     else {
+        if (saveAdressExists) {
+            address += ", " + $("#city").val();
+        }
         $('#addressTaxi').addClass("is-valid");
         $.ajax(
             {
@@ -231,7 +235,7 @@ function makeOrderTaxiAddress()//Suzdavane na poruchka ot adres
                             notes: $('#notes').val(),
                         }).then(data => {
                             if (data != "401") {
-                                if (document.getElementById("saveAddress")) {
+                                if (saveAdressExists) {
                                     if (document.getElementById("saveAddress").checked) {
                                         saveAddress("taxi");
                                     }
@@ -254,20 +258,25 @@ function makeOrderItemsAddress()//Suzdavane na poruchka za pazaruvane ot adres
     $("input").removeClass("is-invalid");
     $("input").removeClass("is-valid");
     var address = $("#addressTaxiItems option:selected").val();
-    if (document.getElementById("saveAddress2")) {
-        address = $("#addressTaxiItems").val() + ", " + $("#city2").val();
+    var saveAdressExists = document.getElementById("saveAddress2");
+    if (saveAdressExists) {
+        address = $("#addressTaxiItems").val();
     }
     var isChecked = true;
     if (address.length < 6) {
         $('#addressTaxiItems').addClass("is-invalid");
         isChecked = false;
     }
-    if ($('#items').val().length < 3) {
+    if ($('#items').val().length < 5) {
         $('#items').addClass("is-invalid");
         isChecked = false;
     }
     if (isChecked) {
+        if (saveAdressExists) {
+            address += ", " + $("#city2").val();
+        }
         $('#addressTaxiItems').addClass("is-valid");
+        $('#items').addClass("is-valid");
         $.ajax(
             {
                 async: true,
@@ -290,7 +299,7 @@ function makeOrderItemsAddress()//Suzdavane na poruchka za pazaruvane ot adres
                             items: $('#items').val(),
                         }).then(data => {
                             if (data != "401") {
-                                if (document.getElementById("saveAddress2")) {
+                                if (saveAdressExists) {
                                     if (document.getElementById("saveAddress2").checked) {
                                         saveAddress("items");
                                     }
